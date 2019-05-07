@@ -19,9 +19,15 @@ lines.length is number
 eval.state   is number # 0 = data, 1 = procedure
 eval.lineno  is number
 
+error.msg is text
+
 PROCEDURE:
 sub-procedure error
-    display "LDPL Error: Malformed statement (" source.file ":" eval.lineno ")"
+    if error.msg is equal to "" then 
+        store "Malformed statement" in error.msg
+    end if 
+    display "\e[1;31mLDPL Error: " error.msg " (\e[0m" source.file ":" eval.lineno "\e[1;31m)\e[0m" crlf
+    store "" in error.msg
 end sub-procedure
 
 sub-procedure eval.line
@@ -38,7 +44,8 @@ sub-procedure eval.line
     else if line.tokens:0 is equal to "DISPLAY" then 
         display "display" crlf
     else
-        display "Unknown statement: " line.tokens:0 crlf 
+        in error.msg join "unknown statement: " line.tokens:0
+        call error 
     end if
 end sub-procedure
 
@@ -51,6 +58,12 @@ sub-procedure main
         if reader.char is equal to "\n" then 
             # first line is line 1 
             add 1 and eval.lineno in eval.lineno
+
+            # skip empty lines
+            if reader.tok is equal to "" then 
+                add 1 and reader.ci in reader.ci
+                continue 
+            end if
 
             # store current token in tokens vector
             store reader.tok in line.tokens:line.tokens.length
