@@ -221,9 +221,11 @@ sub-procedure main
 
             if reader.text? is equal to 0 then 
                 # store current token in tokens vector
-                store reader.tok in line.tokens:line.tokens.length
-                add 1 and line.tokens.length in line.tokens.length
-                store "" in reader.tok
+                if reader.tok is not equal to "" then 
+                    store reader.tok in line.tokens:line.tokens.length
+                    add 1 and line.tokens.length in line.tokens.length
+                    store "" in reader.tok
+                end if 
             else 
                 # store string verbatum 
                 join reader.tok and reader.char in reader.tok
