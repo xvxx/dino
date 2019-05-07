@@ -6,9 +6,48 @@
 # - [ ] call sub-procedure for line
 
 DATA:
-source is text 
+#--<-source->----------------------------------------------------
+source.name       is text
+source.text       is text 
+source.size       is number
+source.idx        is number
+source.lines      is text vector
+source.line-count is number
+
+#--<-line->------------------------------------------------------
+line.text   is text
+line.token  is text
 line.tokens is text vector
+line.tsize  is number
+line.char   is text
+
+#--<-lines->-----------------------------------------------------
+lines.list is text vector 
+lines.size is number
 
 PROCEDURE:
-load file argv:0 in source
 display "ok" crlf
+
+store argv:0 in source.name
+load file argv:0 in source.text
+store length of source.text in source.size
+
+while source.idx is less than source.size do
+    get character at source.idx from source.text in line.char
+    if line.char is equal to "\n" then
+        store line.text in source.lines:source.line-count
+        add 1 and source.line-count in source.line-count
+        store "" in line.text
+        store "" in line.token
+    else if line.char is equal to " " then 
+        store line.token in line.tokens:line.tsize
+        add 1 and line.tsize in line.tsize
+        store "" in line.token
+    else
+        join line.text and line.char in line.text
+        join line.token and line.char in line.token
+    end if 
+    add 1 and source.idx in source.idx
+repeat
+
+display "lines: " source.line-count crlf 
