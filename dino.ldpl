@@ -18,6 +18,7 @@ lines.length is number
 
 eval.state   is number # 0 = data, 1 = procedure
 eval.lineno  is number
+eval.line    is text
 
 error.msg is text
 
@@ -44,7 +45,7 @@ sub-procedure eval.line
     else if line.tokens:0 is equal to "DISPLAY" then 
         display "display" crlf
     else
-        in error.msg join "unknown statement: " line.tokens:0
+        in error.msg join "Unknown statement: " eval.line
         call error 
     end if
 end sub-procedure
@@ -73,9 +74,9 @@ sub-procedure main
             # store line in lines vector
             store reader.line in source.lines:source.lines.length
             add 1 and source.lines.length in source.lines.length
-            store "" in reader.line
 
             # eval line
+            store reader.line in eval.line 
             call eval.line
 
             # reset line
