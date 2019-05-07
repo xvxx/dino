@@ -1,0 +1,14 @@
+# TODO:
+
+# - [ ] Scan for line break
+# - [ ] Tokenize line
+# - [ ] Switch on first token in line
+# - [ ] call sub-procedure for line
+
+DATA:
+source is text 
+line.tokens is text vector
+
+PROCEDURE:
+load file argv:0 in source
+display "ok" crlf
