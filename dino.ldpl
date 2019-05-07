@@ -28,7 +28,13 @@ sub-procedure error
         store "Malformed statement" in error.msg
     end if 
     display "\e[1;31mLDPL Error: " error.msg " (\e[0m" source.file ":" eval.lineno "\e[1;31m)\e[0m" crlf
-    store "" in error.msg
+    exit
+end sub-procedure
+
+sub-procedure eval.code-line
+end sub-procedure
+
+sub-procedure eval.data-line
 end sub-procedure
 
 sub-procedure eval.line
@@ -36,12 +42,21 @@ sub-procedure eval.line
         if line.tokens.length is greater than 1 then 
             call error 
         end if 
-        store 0 in eval.state 
+        store 0 in eval.state
     else if line.tokens:0 is equal to "PROCEDURE:" then 
         if line.tokens.length is greater than 1 then 
             call error 
         end if 
         store 1 in eval.state 
+    else if eval.state is equal to 0 then 
+        call eval.data-line
+    else if eval.state is equal to 1 then 
+        call eval.code-line
+    else 
+        in error.msg join "Unknown state: " eval.state
+        call error 
+    end if
+
     else if line.tokens:0 is equal to "DISPLAY" then 
         display "display" crlf
     else
