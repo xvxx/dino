@@ -14,6 +14,7 @@ reader.text? is number # boolean
 
 line.tokens        is text vector
 line.tokens.length is number
+line.tokens.i      is number
 line.number        is number 
 
 eval.state   is number # 1=data, 2=procedure
@@ -186,7 +187,7 @@ sub-procedure eval.store
     if eval.token.type is equal to 1 then 
         store eval.token.text in variable.tvalues:variable.name
     else if eval.token.type is equal to 2 then 
-        store eval.token.text in variable.nvalues:variable.name
+        store eval.token.number in variable.nvalues:variable.name
     else 
         call error 
     end if 
@@ -301,8 +302,13 @@ sub-procedure main
             store reader.line in eval.line 
             call eval.line
 
-            # reset line
+            # reset line and tokens
             store "" in reader.line
+            store 0 in line.tokens.i
+            while line.tokens.i is less than line.tokens.length do
+                store "" in line.tokens:line.tokens.i
+                add 1 and line.tokens.i in line.tokens.i
+            repeat
             store 0 in line.tokens.length
         else if reader.char is equal to " " then
             # store space in line
