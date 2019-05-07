@@ -5,10 +5,11 @@ source.length       is number
 source.lines        is text vector
 source.lines.length is number
 
-reader.ci   is number # current character index 
-reader.char is text   # current character
-reader.tok  is text   # current token 
-reader.line is text   # current line 
+reader.ci    is number # current character index 
+reader.char  is text   # current character
+reader.tok   is text   # current token 
+reader.line  is text   # current line 
+reader.text? is number # boolean
 
 line.tokens        is text vector
 line.tokens.length is number
@@ -154,19 +155,37 @@ sub-procedure main
             # reset line
             store "" in reader.line
             store 0 in line.tokens.length
-        else if reader.char is equal to " " then 
+        else if reader.char is equal to " " then
             # store space in line
             join reader.line and reader.char in reader.line
 
-            # store current token in tokens vector
-            store reader.tok in line.tokens:line.tokens.length
-            add 1 and line.tokens.length in line.tokens.length
-            store "" in reader.tok
+            if reader.text? is equal to 0 then 
+                # store current token in tokens vector
+                store reader.tok in line.tokens:line.tokens.length
+                add 1 and line.tokens.length in line.tokens.length
+                store "" in reader.tok
+            else 
+                # store string verbatum 
+                join reader.tok and reader.char in reader.tok
+            end if
+        else if reader.char is equal to "\"" then 
+            if reader.text? is equal to 0 then 
+                # open string 
+                store 1 in reader.text?
+            else 
+                # close string
+                store 0 in reader.text?
+            end if 
+            join reader.tok and reader.char in reader.tok
+            join reader.line and reader.char in reader.line
         else 
-            # upcase letter
-            store reader.char in upcase.letter
-            call upcase-letter 
-            store upcase.letter in reader.char 
+            # don't upcase text
+            if reader.text? is equal to 0 then
+                # upcase letter
+                store reader.char in upcase.letter
+                call upcase-letter 
+                store upcase.letter in reader.char 
+            end if
 
             # store char in current token 
             join reader.tok and reader.char in reader.tok
