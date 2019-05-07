@@ -17,6 +17,8 @@ reader.tokens.length is number
 lines is text vector
 lines.length is number 
 
+eval.line.i is number
+
 PROCEDURE:
 display "ok" crlf
 
@@ -41,45 +43,45 @@ store length of source.code in source.length
 #   dew it...
 
 sub-procedure eval.line
-    display "whoop" crlf
+  display "whoop" crlf
 end sub-procedure
 
 sub-procedure main   
-  store length of source.code in source.length
-  while reader.ci is less than source.length do 
-    get character at reader.ci from source.code in reader.char
-    if reader.char is equal to "\n" then 
-      # store current token in tokens vector
-      store reader.tok in reader.tokens:reader.tokens.length
-      add 1 and reader.tokens.length in reader.tokens.length
-      store "" in reader.tok
-      
-      # store line in lines vector
-      store reader.line in reader.lines:reader.lines.length
-      add 1 and reader.lines.length in reader.lines.length
-      store "" in reader.line
+    store length of source.code in source.length
+    while reader.ci is less than source.length do 
+        get character at reader.ci from source.code in reader.char
+        if reader.char is equal to "\n" then 
+            # store current token in tokens vector
+            store reader.tok in reader.tokens:reader.tokens.length
+            add 1 and reader.tokens.length in reader.tokens.length
+            store "" in reader.tok
+            
+            # store line in lines vector
+            store reader.line in reader.lines:reader.lines.length
+            add 1 and reader.lines.length in reader.lines.length
+            store "" in reader.line
 
-      # eval line
-      call eval.line
-    else if reader.char is equal to " " then 
-      # store space in line
-      join reader.line and reader.char in reader.line
+            # eval line
+            call eval.line
+        else if reader.char is equal to " " then 
+            # store space in line
+            join reader.line and reader.char in reader.line
 
-      # store current token in tokens vector
-      store reader.tok in reader.tokens:reader.tokens.length
-      add 1 and reader.tokens.length in reader.tokens.length
-      store "" in reader.tok
-    else 
-      # store char in current token 
-      join reader.tok and reader.char in reader.tok
+            # store current token in tokens vector
+            store reader.tok in reader.tokens:reader.tokens.length
+            add 1 and reader.tokens.length in reader.tokens.length
+            store "" in reader.tok
+        else 
+            # store char in current token 
+            join reader.tok and reader.char in reader.tok
 
-      # store char in current line
-      join reader.line and reader.char in reader.line
-    end if 
+            # store char in current line
+            join reader.line and reader.char in reader.line
+        end if 
 
-    # increment reader counter
-    add 1 and reader.ci in reader.ci
-  repeat
+        # increment reader counter
+        add 1 and reader.ci in reader.ci
+    repeat
 end sub-procedure
 
 call main
