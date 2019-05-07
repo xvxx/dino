@@ -1,3 +1,3 @@
 test:
-	@ldpl -i=upcase.ldpl idpl.ldpl -o=idpl 
-	@./idpl hi.ldpl
+	@ldpl -i=upcase.ldpl dino.ldpl -o=dino
+	@./dino hi.ldpl

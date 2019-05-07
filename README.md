@@ -1,4 +1,4 @@
-# IDPL - An LDPL Interpreter, written in LDPL
+# 🦕 Dino - An LDPL Interpreter, written in LDPL
 
 Very basic interpreter.
 
