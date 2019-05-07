@@ -124,6 +124,7 @@ sub-procedure eval.token-to-value
         store "\n" in eval.token.text
     else if eval.token.char is equal to "\"" then 
         store 1 in eval.token.type
+        # TODO: strip quotes here, not in DISPLAY 
         store eval.token in eval.token.text
     else
         # check for literal number
@@ -141,7 +142,7 @@ sub-procedure eval.token-to-value
             if eval.token.type is equal to 1 then 
                 store variable.tvalues:eval.token in eval.token.text
             else if eval.token.type is equal to 2 then 
-                store variable.tvalues:eval.token in eval.token.number
+                store variable.nvalues:eval.token in eval.token.number
             else 
                 call error
             end if
