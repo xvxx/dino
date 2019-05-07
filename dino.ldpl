@@ -220,9 +220,11 @@ sub-procedure main
             add 1 and line.number in line.number
 
             # store current token in tokens vector
-            store reader.tok in line.tokens:line.tokens.length
-            add 1 and line.tokens.length in line.tokens.length
-            store "" in reader.tok
+            if reader.tok is not equal to "" then 
+                store reader.tok in line.tokens:line.tokens.length
+                add 1 and line.tokens.length in line.tokens.length
+                store "" in reader.tok
+            end if
             
             # store line in lines vector
             store reader.line in source.lines:source.lines.length
