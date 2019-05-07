@@ -110,6 +110,7 @@ sub-procedure eval.store
     end if 
 end sub-procedure
 
+# evaluate line in PROCEDURE: section
 sub-procedure eval.code-line
     if line.tokens:0 is equal to "DISPLAY" then
         call eval.display
@@ -121,6 +122,7 @@ sub-procedure eval.code-line
     end if
 end sub-procedure
 
+# evaluate line in DATA: section
 sub-procedure eval.data-line
     if line.tokens:1 is equal to "IS" then 
         store line.tokens:0 in variable.name
@@ -146,6 +148,7 @@ sub-procedure eval.data-line
     call error 
 end sub-procedure
 
+# evaluate single line of LDPL code
 sub-procedure eval.line
     if line.tokens:0 is equal to "DATA:" then
         if line.tokens.length is greater than 1 then 
