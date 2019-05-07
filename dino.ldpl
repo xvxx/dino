@@ -16,9 +16,14 @@ line.tokens.length is number
 lines is text vector
 lines.length is number 
 
-eval.state   is number # 0 = data, 1 = procedure
+eval.state   is number # 1=data, 2=procedure
 eval.lineno  is number
 eval.line    is text
+
+variable.types   is number vector # 1=n,2=t,3=nv,4=tv
+variable.tvalues is text vector
+variable.nvalues is number vector
+variable.name    is text 
 
 error.msg is text
 
@@ -32,9 +37,37 @@ sub-procedure error
 end sub-procedure
 
 sub-procedure eval.code-line
+    if line.tokens:0 is equal to "DISPLAY" then 
+        display "display" crlf
+    else
+        in error.msg join "Unknown statement: " eval.line
+        call error 
+    end if
 end sub-procedure
 
 sub-procedure eval.data-line
+    if line.tokens:1 is equal to "IS" then 
+        store line.tokens:0 in variable.name
+        if line.tokens:2 is equal to "TEXT" then 
+            if line.tokens:3 is equal to "VECTOR" then 
+                store 3 in variable.types:variable.name
+            else
+                store 1 in variable.types:variable.name
+            end if
+            return
+        else if line.tokens:2 is equal to "NUMBER" then
+            if line.tokens:3 is equal to "VECTOR" then 
+                store 4 in variable.types:variable.name
+            else
+                store 2 in variable.types:variable.name
+            end if
+
+            return
+        end if 
+    end if 
+
+    in error.msg join "Unknown statement: " eval.line
+    call error 
 end sub-procedure
 
 sub-procedure eval.line
@@ -42,25 +75,18 @@ sub-procedure eval.line
         if line.tokens.length is greater than 1 then 
             call error 
         end if 
-        store 0 in eval.state
+        store 1 in eval.state
     else if line.tokens:0 is equal to "PROCEDURE:" then 
         if line.tokens.length is greater than 1 then 
             call error 
         end if 
-        store 1 in eval.state 
-    else if eval.state is equal to 0 then 
-        call eval.data-line
+        store 2 in eval.state 
     else if eval.state is equal to 1 then 
+        call eval.data-line
+    else if eval.state is equal to 2 then 
         call eval.code-line
     else 
         in error.msg join "Unknown state: " eval.state
-        call error 
-    end if
-
-    else if line.tokens:0 is equal to "DISPLAY" then 
-        display "display" crlf
-    else
-        in error.msg join "Unknown statement: " eval.line
         call error 
     end if
 end sub-procedure
