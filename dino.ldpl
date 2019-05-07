@@ -7,6 +7,7 @@ source.lines.length is number
 
 reader.ci    is number # current character index 
 reader.char  is text   # current character
+reader.prev  is text   # previous character
 reader.tok   is text   # current token 
 reader.line  is text   # current line 
 reader.text? is number # boolean
@@ -128,7 +129,9 @@ sub-procedure main
     load file argv:0 in source.code
     store length of source.code in source.length
     while reader.ci is less than source.length do 
+        store reader.char in reader.prev
         get character at reader.ci from source.code in reader.char
+
         if reader.char is equal to "\n" then 
             # first line is line 1 
             add 1 and eval.lineno in eval.lineno
@@ -169,13 +172,16 @@ sub-procedure main
                 join reader.tok and reader.char in reader.tok
             end if
         else if reader.char is equal to "\"" then 
-            if reader.text? is equal to 0 then 
-                # open string 
-                store 1 in reader.text?
-            else 
-                # close string
-                store 0 in reader.text?
+            if reader.prev is not equal to "\\" then 
+                if reader.text? is equal to 0 then 
+                    # open string 
+                    store 1 in reader.text?
+                else 
+                    # close string
+                    store 0 in reader.text?
+                end if 
             end if 
+            
             join reader.tok and reader.char in reader.tok
             join reader.line and reader.char in reader.line
         else 
