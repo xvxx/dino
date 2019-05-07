@@ -1,23 +1,21 @@
 DATA:
-source.file   is text
-source.code   is text
-source.length is number
+source.file         is text
+source.code         is text
+source.length       is number
+source.lines        is text vector
+source.lines.length is number 
 
 reader.ci   is number # current character index 
 reader.char is text   # current character
 reader.tok  is text   # current token 
 reader.line is text   # current line 
 
-reader.lines        is text vector
-reader.lines.length is number 
-
-reader.tokens        is text vector
-reader.tokens.length is number
+line.tokens        is text vector
+line.tokens.length is number
 
 lines is text vector
 lines.length is number 
 
-eval.line.i is number
 
 PROCEDURE:
 display "ok" crlf
@@ -43,7 +41,13 @@ store length of source.code in source.length
 #   dew it...
 
 sub-procedure eval.line
-  display "whoop" crlf
+    if line.tokens:0 is equal to "PROCEDURE:" then 
+        display "hep hep" crlf
+    else if line.tokens:0 is equal to "DISPLAY" then 
+        display "display" crlf
+    else
+        display "Unknown statement: " line.tokens:0 crlf 
+    end if
 end sub-procedure
 
 sub-procedure main   
@@ -52,26 +56,35 @@ sub-procedure main
         get character at reader.ci from source.code in reader.char
         if reader.char is equal to "\n" then 
             # store current token in tokens vector
-            store reader.tok in reader.tokens:reader.tokens.length
-            add 1 and reader.tokens.length in reader.tokens.length
+            store reader.tok in line.tokens:line.tokens.length
+            add 1 and line.tokens.length in line.tokens.length
             store "" in reader.tok
             
             # store line in lines vector
-            store reader.line in reader.lines:reader.lines.length
-            add 1 and reader.lines.length in reader.lines.length
+            store reader.line in source.lines:source.lines.length
+            add 1 and source.lines.length in source.lines.length
             store "" in reader.line
 
             # eval line
             call eval.line
+
+            # reset line
+            store "" in reader.line
+            store 0 in line.tokens.length
         else if reader.char is equal to " " then 
             # store space in line
             join reader.line and reader.char in reader.line
 
             # store current token in tokens vector
-            store reader.tok in reader.tokens:reader.tokens.length
-            add 1 and reader.tokens.length in reader.tokens.length
+            store reader.tok in line.tokens:line.tokens.length
+            add 1 and line.tokens.length in line.tokens.length
             store "" in reader.tok
         else 
+            # upcase letter
+            store reader.char in upcase.letter
+            call upcase-letter 
+            store upcase.letter in reader.char 
+
             # store char in current token 
             join reader.tok and reader.char in reader.tok
 
