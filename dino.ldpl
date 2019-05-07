@@ -34,15 +34,21 @@ variable.nvalues is number vector
 variable.name    is text 
 
 error.msg is text
+error.i   is number
 
 PROCEDURE:
 # IN: error.msg is text (optional)
 sub-procedure error
-    display "\e[1;33m"
-    display "lines: " source.lines.length crlf 
-    display "line: " reader.line crlf 
-    display "line tokens: " line.tokens.length crlf 
-    display "\e[0m"
+    display "\e[1;33mlines: \e[0m" source.lines.length crlf 
+    display "\e[1;33mline: \e[0m" reader.line crlf 
+    display "\e[1;33mline tokens: \e[0m" line.tokens.length crlf 
+    display "\e[1;33mtokens: \e[0m" 
+    while error.i is less than line.tokens.length do 
+        display "\e[32;1m<\e[0m" line.tokens:error.i "\e[32;1m>\e[0m "
+        add 1 and error.i in error.i
+    repeat
+
+    display "\e[0m" crlf
 
     if error.msg is equal to "" then 
         store "Malformed statement" in error.msg
@@ -212,12 +218,6 @@ sub-procedure main
         if reader.char is equal to "\n" then 
             # first line is line 1 
             add 1 and line.number in line.number
-
-            # skip empty lines
-            if reader.tok is equal to "" then 
-                add 1 and reader.ci in reader.ci
-                continue 
-            end if
 
             # store current token in tokens vector
             store reader.tok in line.tokens:line.tokens.length
