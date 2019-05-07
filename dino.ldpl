@@ -19,6 +19,7 @@ line.number        is number
 eval.state   is number # 1=data, 2=procedure
 eval.line    is text
 eval.i       is number
+eval.first   is text # first char, to check for comments
 
 eval.token          is text
 eval.token.type     is number #1=n,2=t,3=var,4=?,5=crlf
@@ -43,8 +44,11 @@ sub-procedure error
     exit
 end sub-procedure
 
+# Convert text token to literal value or, if it's variable, the 
+# variable's value. 
 sub-procedure eval.token-to-value
     get character at 0 from eval.token in eval.token.char
+
     if eval.token is equal to "CRLF" then 
         store 1 in eval.token.type
         store "\n" in eval.token.text
@@ -52,6 +56,7 @@ sub-procedure eval.token-to-value
         store 1 in eval.token.type
         store eval.token in eval.token.text
     else
+        # check for literal number
         store eval.token.char in is-digit.in
         call is-digit
         if is-digit.out is equal to 1 then 
@@ -67,12 +72,12 @@ sub-procedure eval.token-to-value
                 store variable.tvalues:eval.token in eval.token.text
             else if eval.token.type is equal to 2 then 
                 store variable.tvalues:eval.token in eval.token.number
+            else 
+                call error
             end if
         else 
             call error
         end if
-        store 3 in eval.token.type
-        store eval.token in eval.token.variable
     end if
 end sub-procedure
 
@@ -150,6 +155,12 @@ end sub-procedure
 
 # evaluate single line of LDPL code
 sub-procedure eval.line
+    # ignore lines that start with comments
+    get character at 0 from line.tokens:0 in eval.first
+    if eval.first is equal to "#" then 
+        return
+    end if 
+
     if line.tokens:0 is equal to "DATA:" then
         if line.tokens.length is greater than 1 then 
             call error 
