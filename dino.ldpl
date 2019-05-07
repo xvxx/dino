@@ -14,18 +14,19 @@ reader.text? is number # boolean
 
 line.tokens        is text vector
 line.tokens.length is number
+line.number        is number 
 
 eval.state   is number # 1=data, 2=procedure
-eval.lineno  is number
 eval.line    is text
 eval.i       is number
 
-eval.token        is text
-eval.token.type   is number #1=n,2=t,3=nvar,4=tvar,5=crlf
-eval.token.text   is text
-eval.token.number is number 
-eval.token.char   is text
-
+eval.token          is text
+eval.token.type     is number #1=n,2=t,3=var,4=?,5=crlf
+eval.token.char     is text
+eval.token.number   is number 
+eval.token.text     is text
+eval.token.variable is text
+  
 variable.types   is number vector #1=n,2=t,3=nv,4=tv
 variable.tvalues is text vector
 variable.nvalues is number vector
@@ -38,7 +39,7 @@ sub-procedure error
     if error.msg is equal to "" then 
         store "Malformed statement" in error.msg
     end if 
-    display "\e[1;31mLDPL Error: " error.msg " (\e[0m" source.file ":" eval.lineno "\e[1;31m)\e[0m" crlf
+    display "\e[1;31mLDPL Error: " error.msg " (\e[0m" source.file ":" line.number "\e[1;31m)\e[0m" crlf
     exit
 end sub-procedure
 
@@ -50,9 +51,28 @@ sub-procedure eval.token-to-value
     else if eval.token.char is equal to "\"" then 
         store 1 in eval.token.type
         store eval.token in eval.token.text
-    else 
-        store 2 in eval.token.type
-        store eval.token in eval.token.number
+    else
+        store eval.token.char in is-digit.in
+        call is-digit
+        if is-digit.out is equal to 1 then 
+            store 2 in eval.token.type
+            store eval.token in eval.token.number
+            return 
+        end if
+            
+        # assume variable
+        if variable.types:eval.token is greater than 0 then 
+            store variable.types:eval.token in eval.token.type
+            if eval.token.type is equal to 1 then 
+                store variable.tvalues:eval.token in eval.token.text
+            else if eval.token.type is equal to 2 then 
+                store variable.tvalues:eval.token in eval.token.number
+            end if
+        else 
+            call error
+        end if
+        store 3 in eval.token.type
+        store eval.token in eval.token.variable
     end if
 end sub-procedure
 
@@ -64,7 +84,11 @@ sub-procedure eval.display
         call eval.token-to-value
         if eval.token.type is equal to 1 then 
             display eval.token.text
-        else 
+        else if eval.token.type is equal to 2 then 
+            display eval.token.number
+        else if eval.token.type is equal to 3 then
+            display eval.token.text
+        else if eval.token.type is equal to 4 then
             display eval.token.number
         end if
         add 1 and eval.i in eval.i
@@ -153,7 +177,7 @@ sub-procedure main
 
         if reader.char is equal to "\n" then 
             # first line is line 1 
-            add 1 and eval.lineno in eval.lineno
+            add 1 and line.number in line.number
 
             # skip empty lines
             if reader.tok is equal to "" then 
