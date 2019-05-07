@@ -3,7 +3,7 @@ source.file         is text
 source.code         is text
 source.length       is number
 source.lines        is text vector
-source.lines.length is number 
+source.lines.length is number
 
 reader.ci   is number # current character index 
 reader.char is text   # current character
@@ -16,11 +16,25 @@ line.tokens.length is number
 lines is text vector
 lines.length is number 
 
+eval.state   is number # 0 = data, 1 = procedure
+eval.lineno  is number
 
 PROCEDURE:
+sub-procedure error
+    display "LDPL Error: Malformed statement (" source.file ":" eval.lineno ")"
+end sub-procedure
+
 sub-procedure eval.line
-    if line.tokens:0 is equal to "PROCEDURE:" then 
-        display "hep hep" crlf
+    if line.tokens:0 is equal to "DATA:" then
+        if line.tokens.length is greater than 1 then 
+            call error 
+        end if 
+        store 0 in eval.state 
+    else if line.tokens:0 is equal to "PROCEDURE:" then 
+        if line.tokens.length is greater than 1 then 
+            call error 
+        end if 
+        store 1 in eval.state 
     else if line.tokens:0 is equal to "DISPLAY" then 
         display "display" crlf
     else
@@ -35,6 +49,9 @@ sub-procedure main
     while reader.ci is less than source.length do 
         get character at reader.ci from source.code in reader.char
         if reader.char is equal to "\n" then 
+            # first line is line 1 
+            add 1 and eval.lineno in eval.lineno
+
             # store current token in tokens vector
             store reader.tok in line.tokens:line.tokens.length
             add 1 and line.tokens.length in line.tokens.length
