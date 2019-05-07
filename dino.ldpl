@@ -36,7 +36,14 @@ variable.name    is text
 error.msg is text
 
 PROCEDURE:
+# IN: error.msg is text (optional)
 sub-procedure error
+    display "\e[1;33m"
+    display "lines: " source.lines.length crlf 
+    display "line: " reader.line crlf 
+    display "line tokens: " line.tokens.length crlf 
+    display "\e[0m"
+
     if error.msg is equal to "" then 
         store "Malformed statement" in error.msg
     end if 
@@ -46,6 +53,9 @@ end sub-procedure
 
 # Convert text token to literal value or, if it's variable, the 
 # variable's value. 
+#  IN: eval.token is text
+# OUT: eval.token.type 
+#      eval.token.text OR eval.token.number
 sub-procedure eval.token-to-value
     get character at 0 from eval.token in eval.token.char
 
@@ -82,6 +92,8 @@ sub-procedure eval.token-to-value
 end sub-procedure
 
 # DISPLAY $...
+#  IN: line.tokens
+#      line.tokens.length
 sub-procedure eval.display
     store 1 in eval.i
     while eval.i is less than line.tokens.length do 
@@ -101,6 +113,8 @@ sub-procedure eval.display
 end sub-procedure
 
 # STORE $1 IN $3
+#  IN: line.tokens
+#      line.tokens.length
 sub-procedure eval.store
     store line.tokens:1 in eval.token
     call eval.token-to-value
@@ -116,6 +130,8 @@ sub-procedure eval.store
 end sub-procedure
 
 # evaluate line in PROCEDURE: section
+#  IN: line.tokens
+#      eval.line
 sub-procedure eval.code-line
     if line.tokens:0 is equal to "DISPLAY" then
         call eval.display
@@ -128,6 +144,7 @@ sub-procedure eval.code-line
 end sub-procedure
 
 # evaluate line in DATA: section
+#  IN: line.tokens
 sub-procedure eval.data-line
     if line.tokens:1 is equal to "IS" then 
         store line.tokens:0 in variable.name
@@ -154,6 +171,8 @@ sub-procedure eval.data-line
 end sub-procedure
 
 # evaluate single line of LDPL code
+#  IN: line.tokens
+#      line.tokens.length
 sub-procedure eval.line
     # ignore lines that start with comments
     get character at 0 from line.tokens:0 in eval.first
@@ -181,6 +200,7 @@ sub-procedure eval.line
     end if
 end sub-procedure
 
+#  IN: argv
 sub-procedure main   
     store argv:0 in source.file
     load file argv:0 in source.code
