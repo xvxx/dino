@@ -18,28 +18,6 @@ lines.length is number
 
 
 PROCEDURE:
-display "ok" crlf
-
-store argv:0 in source.file
-load file argv:0 in source.code
-store length of source.code in source.length
-
-# Algorithm:
-#  xgo through each character
-#  xif it's normal, add it to the current line and current token
-#  xif it's a space, end the current token
-#  xif it's a newline, end the current line and token
-# When line ends:
-#   switch on first token
-# If display:
-#   eval tokens -> values
-#   print
-# If store:
-#   eval token
-#   store value in one of 4 variable vectors (t,n,tv,nv)
-# if store length of:
-#   dew it...
-
 sub-procedure eval.line
     if line.tokens:0 is equal to "PROCEDURE:" then 
         display "hep hep" crlf
@@ -51,6 +29,8 @@ sub-procedure eval.line
 end sub-procedure
 
 sub-procedure main   
+    store argv:0 in source.file
+    load file argv:0 in source.code
     store length of source.code in source.length
     while reader.ci is less than source.length do 
         get character at reader.ci from source.code in reader.char
