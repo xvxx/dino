@@ -1,15 +1,18 @@
-# TODO:
-
-# - [ ] Scan for line break
-# - [ ] Tokenize line
-# - [ ] Switch on first token in line
-# - [ ] call sub-procedure for line
-
 DATA:
+source.file   is text
 source.code   is text
 source.length is number
 
-reader.c is number # current character index 
+reader.ci   is number # current character index 
+reader.char is text   # current character
+reader.tok  is text   # current token 
+reader.line is text   # current line 
+
+reader.lines        is text vector
+reader.lines.length is number 
+
+reader.tokens        is text vector
+reader.tokens.length is number
 
 lines is text vector
 lines.length is number 
@@ -17,15 +20,15 @@ lines.length is number
 PROCEDURE:
 display "ok" crlf
 
-store argv:0 in source.name
-load file argv:0 in source.text
-store length of source.text in source.size
+store argv:0 in source.file
+load file argv:0 in source.code
+store length of source.code in source.length
 
 # Algorithm:
-#   go through each character
-#   if it's normal, add it to the current line and current token
-#   if it's a space, end the current token
-#   if it's a newline, end the current line and token
+#  xgo through each character
+#  xif it's normal, add it to the current line and current token
+#  xif it's a space, end the current token
+#  xif it's a newline, end the current line and token
 # When line ends:
 #   switch on first token
 # If display:
@@ -37,13 +40,46 @@ store length of source.text in source.size
 # if store length of:
 #   dew it...
 
-store length of source.code in source.length
-while reader.c is less than source.length
-    
-    add 1 and reader.c in reader.c
-repeat
+sub-procedure eval.line
+    display "whoop" crlf
+end sub-procedure
 
+sub-procedure main   
+  store length of source.code in source.length
+  while reader.ci is less than source.length do 
+    get character at reader.ci from source.code in reader.char
+    if reader.char is equal to "\n" then 
+      # store current token in tokens vector
+      store reader.tok in reader.tokens:reader.tokens.length
+      add 1 and reader.tokens.length in reader.tokens.length
+      store "" in reader.tok
+      
+      # store line in lines vector
+      store reader.line in reader.lines:reader.lines.length
+      add 1 and reader.lines.length in reader.lines.length
+      store "" in reader.line
 
+      # eval line
+      call eval.line
+    else if reader.char is equal to " " then 
+      # store space in line
+      join reader.line and reader.char in reader.line
 
-display "lines: " source.line-count crlf 
-display "tokens: " tokenc crlf
+      # store current token in tokens vector
+      store reader.tok in reader.tokens:reader.tokens.length
+      add 1 and reader.tokens.length in reader.tokens.length
+      store "" in reader.tok
+    else 
+      # store char in current token 
+      join reader.tok and reader.char in reader.tok
+
+      # store char in current line
+      join reader.line and reader.char in reader.line
+    end if 
+
+    # increment reader counter
+    add 1 and reader.ci in reader.ci
+  repeat
+end sub-procedure
+
+call main
