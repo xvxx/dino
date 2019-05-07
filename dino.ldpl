@@ -19,8 +19,15 @@ lines.length is number
 eval.state   is number # 1=data, 2=procedure
 eval.lineno  is number
 eval.line    is text
+eval.i       is number
 
-variable.types   is number vector # 1=n,2=t,3=nv,4=tv
+eval.token        is text
+eval.token.type   is number #1=n,2=t,3=nvar,4=tvar,5=crlf
+eval.token.text   is text
+eval.token.number is number 
+eval.token.char   is text
+
+variable.types   is number vector #1=n,2=t,3=nv,4=tv
 variable.tvalues is text vector
 variable.nvalues is number vector
 variable.name    is text 
@@ -36,9 +43,33 @@ sub-procedure error
     exit
 end sub-procedure
 
+sub-procedure eval.token-to-value
+    get character at 0 from eval.token in eval.token.char
+    if eval.token is equal to "CRLF" then 
+        store 1 in eval.token.type
+        store "\n" in eval.token.text
+    else if eval.token.char is equal to "\"" then 
+        store 1 in eval.token.type
+        store eval.token in eval.token.text
+    else 
+        store 2 in eval.token.type
+        store eval.token in eval.token.number
+    end if
+end sub-procedure
+
 sub-procedure eval.code-line
-    if line.tokens:0 is equal to "DISPLAY" then 
-        display "display" crlf
+    if line.tokens:0 is equal to "DISPLAY" then
+        store 1 in eval.i
+        while eval.i is less than line.tokens.length do 
+            store line.tokens:eval.i in eval.token
+            call eval.token-to-value
+            if eval.token.type is equal to 1 then 
+                display eval.token.text
+            else 
+                display eval.token.number
+            end if
+            add 1 and eval.i in eval.i
+        repeat 
     else
         in error.msg join "Unknown statement: " eval.line
         call error 
