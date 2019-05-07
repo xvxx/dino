@@ -27,6 +27,12 @@ eval.token.char     is text
 eval.token.number   is number 
 eval.token.text     is text
 eval.token.variable is text
+
+text.strip-quotes.in  is text
+text.strip-quotes.out is text
+text.strip-quotes.i   is number
+text.strip-quotes.len is number
+text.strip-quotes.c   is text
   
 variable.types        is number vector #1=n,2=t,3=nv,4=tv
 variable.type         is number 
@@ -73,6 +79,35 @@ sub-procedure error
     end if 
     display "\e[1;31mLDPL Error: " error.msg " (\e[0m" source.file ":" line.number "\e[1;31m)\e[0m" crlf
     exit
+end sub-procedure
+
+#  IN: text.strip-quotes.in
+# OUT: text.strip-quotes.out
+sub-procedure text.strip-quotes
+    # check if first char is a quote
+    get character at 0 from text.strip-quotes.in in text.strip-quotes.c
+    if text.strip-quotes.c is not equal to "\"" then 
+        store text.strip-quotes.in in text.strip-quotes.out
+        return
+    end if
+
+    # check if last char is a quote
+    store length of text.strip-quotes.in in text.strip-quotes.len
+    subtract 1 from text.strip-quotes.len in text.strip-quotes.len
+    get character at text.strip-quotes.len from text.strip-quotes.in in text.strip-quotes.c
+    if text.strip-quotes.c is not equal to "\"" then 
+        store text.strip-quotes.in in text.strip-quotes.out
+        return
+    end if
+
+    # strip quotes
+    store "" in text.strip-quotes.out
+    store 1 in text.strip-quotes.i     
+    while text.strip-quotes.i is less than text.strip-quotes.len do 
+        get character at text.strip-quotes.i from text.strip-quotes.in in text.strip-quotes.c
+        join text.strip-quotes.out and text.strip-quotes.c in text.strip-quotes.out
+        add 1 and text.strip-quotes.i in text.strip-quotes.i
+    repeat
 end sub-procedure
 
 # Convert text token to literal value or, if it's variable, the 
@@ -124,11 +159,15 @@ sub-procedure eval.display
         store line.tokens:eval.i in eval.token
         call eval.token-to-value
         if eval.token.type is equal to 1 then 
-            display eval.token.text
+            store eval.token.text in text.strip-quotes.in 
+            call text.strip-quotes
+            display text.strip-quotes.out
         else if eval.token.type is equal to 2 then 
             display eval.token.number
         else if eval.token.type is equal to 3 then
-            display eval.token.text
+            store eval.token.text in text.strip-quotes.in 
+            call text.strip-quotes
+            display text.strip-quotes.out
         else if eval.token.type is equal to 4 then
             display eval.token.number
         end if
@@ -203,6 +242,11 @@ end sub-procedure
 #  IN: line.tokens
 #      line.tokens.length
 sub-procedure eval.line
+    # ignore empty lines
+    if line.tokens.length is equal to 0 then 
+        return
+    end if 
+
     # ignore lines that start with comments
     get character at 0 from line.tokens:0 in eval.first
     if eval.first is equal to "#" then 
