@@ -15,9 +15,6 @@ reader.text? is number # boolean
 line.tokens        is text vector
 line.tokens.length is number
 
-lines is text vector
-lines.length is number 
-
 eval.state   is number # 1=data, 2=procedure
 eval.lineno  is number
 eval.line    is text
@@ -59,19 +56,41 @@ sub-procedure eval.token-to-value
     end if
 end sub-procedure
 
+# DISPLAY $...
+sub-procedure eval.display
+    store 1 in eval.i
+    while eval.i is less than line.tokens.length do 
+        store line.tokens:eval.i in eval.token
+        call eval.token-to-value
+        if eval.token.type is equal to 1 then 
+            display eval.token.text
+        else 
+            display eval.token.number
+        end if
+        add 1 and eval.i in eval.i
+    repeat     
+end sub-procedure
+
+# STORE $1 IN $3
+sub-procedure eval.store
+    store line.tokens:1 in eval.token
+    call eval.token-to-value
+    store line.tokens:3 in variable.name
+
+    if eval.token.type is equal to 1 then 
+        store eval.token.text in variable.tvalues:variable.name
+    else if eval.token.type is equal to 2 then 
+        store eval.token.text in variable.nvalues:variable.name
+    else 
+        call error 
+    end if 
+end sub-procedure
+
 sub-procedure eval.code-line
     if line.tokens:0 is equal to "DISPLAY" then
-        store 1 in eval.i
-        while eval.i is less than line.tokens.length do 
-            store line.tokens:eval.i in eval.token
-            call eval.token-to-value
-            if eval.token.type is equal to 1 then 
-                display eval.token.text
-            else 
-                display eval.token.number
-            end if
-            add 1 and eval.i in eval.i
-        repeat 
+        call eval.display
+    else if line.tokens:0 is equal to "STORE" then 
+        call eval.store
     else
         in error.msg join "Unknown statement: " eval.line
         call error 
@@ -181,7 +200,7 @@ sub-procedure main
                     store 0 in reader.text?
                 end if 
             end if 
-            
+
             join reader.tok and reader.char in reader.tok
             join reader.line and reader.char in reader.line
         else 
