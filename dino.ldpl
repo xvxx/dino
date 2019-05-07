@@ -28,10 +28,13 @@ eval.token.number   is number
 eval.token.text     is text
 eval.token.variable is text
   
-variable.types   is number vector #1=n,2=t,3=nv,4=tv
-variable.tvalues is text vector
-variable.nvalues is number vector
-variable.name    is text 
+variable.types        is number vector #1=n,2=t,3=nv,4=tv
+variable.type         is number 
+variable.tvalues      is text vector
+variable.nvalues      is number vector
+variable.name         is text 
+variable.names        is text vector
+variable.names.length is number
 
 error.msg is text
 error.i   is number
@@ -47,9 +50,24 @@ sub-procedure error
         display "\e[32;1m<\e[0m" line.tokens:error.i "\e[32;1m>\e[0m "
         add 1 and error.i in error.i
     repeat
-
     display "\e[0m" crlf
 
+    display "\e[1;33menv: \e[0m" crlf
+    store 0 in error.i
+    while error.i is less than variable.names.length do 
+        store variable.names:error.i in variable.name
+        store variable.types:variable.name in variable.type
+        display "* \e[0;1m" variable.name "(" variable.type "): \e[0m" 
+        if variable.types:variable.name is equal to 1 then 
+            display variable.tvalues:variable.name
+        else if variable.types:variable.name is equal to 2 then
+            display variable.nvalues:variable.name
+        end if 
+        display crlf
+
+        add 1 and error.i in error.i
+    repeat
+    
     if error.msg is equal to "" then 
         store "Malformed statement" in error.msg
     end if 
@@ -154,6 +172,11 @@ end sub-procedure
 sub-procedure eval.data-line
     if line.tokens:1 is equal to "IS" then 
         store line.tokens:0 in variable.name
+
+        # track used variable names for reflection
+        store variable.name in variable.names:variable.names.length
+        add 1 and variable.names.length in variable.names.length
+
         if line.tokens:2 is equal to "TEXT" then 
             if line.tokens:3 is equal to "VECTOR" then 
                 store 3 in variable.types:variable.name
