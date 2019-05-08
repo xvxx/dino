@@ -42,7 +42,7 @@ Try it out:
     - [x] DATA:
     - [ ] accept number
     - [ ] while greater than or equal to 
-    - [ ] modulo 
+    - [x] modulo 
 - [ ] factorial.ldpl
     - [ ] while greater than
     - [x] multiply
@@ -54,3 +54,9 @@ Try it out:
     - [x] divide 
 - [ ] ldpltests
 - [ ] all of standard 
+- [ ] math
+    - [ ] abs
+    - [ ] ceil
+    - [ ] floor
+    - [ ] store random in
+    - [ ] in - solve 
