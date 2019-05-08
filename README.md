@@ -24,13 +24,13 @@ Try it out:
     - [x] crlf
     - [x] string literal
 - [ ] 99bottles.ldpl
-  - [ ] if
-    - [ ] EQUAL TO
+  - [x] if
+    - [x] EQUAL TO
     - [x] NOT EQUAL TO
     - [x] GREATER THAN
-    - [ ] LESS THAN
-    - [ ] GREATER THAN OR EQUAL TO
-    - [ ] LESS THAN OR EQUAL TO
+    - [x] LESS THAN
+    - [x] GREATER THAN OR EQUAL TO
+    - [x] LESS THAN OR EQUAL TO
   - [x] else
   - [ ] while
     - [ ] is greater than
