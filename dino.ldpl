@@ -50,26 +50,26 @@ line.tokens.i          is number # for clearing the list TODO: INIT?
 # --- The Evaluator --------------------------------------------------
 # --- ...turns a text vector of tokens into a value.
 # IN:
-eval.line           is text
-eval.token          is text
-eval.until-else     is number # incremented when evaling to ELSE
-eval.jump-to-else   is number # incremented when jumping to ELSE
-eval.open-if        is number # incremented when opening ifs 
+eval.line               is text
+eval.token              is text
+eval.jump-to-end-if     is number # open-if we're jumping in
+eval.jump-to-else       is number # open-if we're jumping in
+eval.open-if            is number # incremented when opening ifs 
 
-# OUT:
-eval.state          is number # 1=data, 2=procedure
-eval.token.type     is number #1=n,2=t,3=var,4=?,5=crlf
-eval.token.number   is number
-eval.token.text     is text
-eval.token.variable is text
+# OUT:  
+eval.state              is number # 1=data, 2=procedure
+eval.token.type         is number #1=n,2=t,3=var,4=?,5=crlf
+eval.token.number       is number
+eval.token.text         is text
+eval.token.variable     is text
 
-# LOCAL:
-eval.i              is number
-eval.first          is text # first char, to check for comments
-eval.token.char     is text
-eval.if.a           is number
-eval.if.b           is number
-eval.if.c           is number
+# LOCAL:    
+eval.i                  is number
+eval.first              is text # first char, to check for comments
+eval.token.char         is text
+eval.if.a               is number
+eval.if.b               is number
+eval.if.c               is number
 # -------------------------------------------------- The Evaluator ---
 
 # --- The Environment ------------------------------------------------
@@ -253,6 +253,8 @@ sub-procedure eval.if
         if line.tokens:3 is equal to "GREATER" then
             if line.tokens:4 is equal to "THAN" then
                 if line.tokens:6 is equal to "THEN" then
+                    add 1 and eval.open-if in eval.open-if
+
                     # eval $a and $b 
                     store line.tokens:1 in eval.token
                     call eval.token-to-value
@@ -261,12 +263,10 @@ sub-procedure eval.if
                     call eval.token-to-value
                     store eval.token.number in eval.if.b
 
-                    add 1 and eval.open-if in eval.open-if
                     if eval.if.a is greater than eval.if.b then 
-                        add 1 and eval.until-else in eval.until-else
                         display "GREATER" crlf
                     else 
-                        add 1 and eval.jump-to-else in eval.jump-to-else
+                        store eval.open-if in eval.jump-to-else
                         display "LESSER" crlf
                     end if 
                 else
@@ -311,14 +311,16 @@ sub-procedure eval.code-line
     else if line.tokens:0 is equal to "IF" then
         call eval.if
     else if line.tokens:0 is equal to "ELSE" then
-        if eval.until-else is greater than 0 then 
-            subtract 1 from eval.until-else in eval.until-else
-        else
+        if eval.open-if is greater than 0 then 
+            store eval.open-if in eval.jump-to-end-if
+        else 
             call error 
-        end if 
+        end if
     else if line.tokens:0 is equal to "END" then
         if line.tokens:1 is equal to "IF" then
             subtract 1 from eval.open-if in eval.open-if
+        else 
+            call error 
         end if
     else
         in error.msg join "Unknown statement: " eval.line
@@ -373,20 +375,38 @@ sub-procedure eval.line
         return
     end if
 
+    # skip this statement if we're jumping to an END IF
+    if eval.jump-to-end-if is greater than 0 then
+        if line.tokens:0 is equal to "END" then
+            if line.tokens:1 is equal to "IF" then
+                if eval.open-if is equal to eval.jump-to-end-if then
+                    store 0 in eval.jump-to-end-if
+                end if
+                subtract 1 from eval.open-if in eval.open-if
+            end if
+        else if line.tokens:0 is equal to "IF" then 
+            add 1 and eval.open-if in eval.open-if
+        end if
+        return
+    end if
+
     # skip this statement if we're jumping to an ELSE/END IF
     if eval.jump-to-else is greater than 0 then
-        if line.tokens:0 is equal to "ELSE" then 
-            subtract 1 from eval.jump-to-else in eval.jump-to-else
-            return
+        if line.tokens:0 is equal to "ELSE" then
+            if eval.open-if is equal to eval.jump-to-else then 
+                store 0 in eval.jump-to-else
+            end if 
         else if line.tokens:0 is equal to "END" then 
             if line.tokens:1 is equal to "IF" then 
-                subtract 1 from eval.jump-to-else in eval.jump-to-else
+                if eval.open-if is equal to eval.jump-to-else then
+                    store 0 in eval.jump-to-else
+                end if
                 subtract 1 from eval.open-if in eval.open-if
-                return
             end if
-        else 
-            return
+        else if line.tokens:0 is equal to "IF" then 
+            add 1 and eval.open-if in eval.open-if
         end if 
+        return
     end if
 
     if line.tokens:0 is equal to "DATA:" then
