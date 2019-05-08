@@ -226,6 +226,9 @@ end sub-procedure
 #  IN: line.tokens
 #      line.tokens.length
 sub-procedure eval.accept
+    if line.tokens.length is greater than 2 then 
+        call error 
+    end if
     store env.types:line.tokens:1 in eval.token.type
     if eval.token.type is equal to 1 then
         store env.nvalues:eval.token in eval.token.number
