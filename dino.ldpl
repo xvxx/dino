@@ -349,42 +349,43 @@ sub-procedure eval.if
     store eval.if.b in eval.token 
     call eval.token-to-value
     store eval.token.number in eval.if.b
-
+    
+    # track the if
     add 1 and eval.open-if in eval.open-if
+    store 0 in eval.if.c
+
     if eval.if.compare is equal to "eq" then 
         if eval.if.a is equal to eval.if.b then 
-        else 
-            store eval.open-if in eval.jump-to-else
+            store 1 in eval.if.c
         end if
     else if eval.if.compare is equal to "ne" then 
         if eval.if.a is not equal to eval.if.b then 
-        else
-            store eval.open-if in eval.jump-to-else
+            store 1 in eval.if.c
         end if
     else if eval.if.compare is equal to "gt" then 
         if eval.if.a is greater than eval.if.b then 
-        else
-            store eval.open-if in eval.jump-to-else
+            store 1 in eval.if.c
         end if
     else if eval.if.compare is equal to "lt" then 
         if eval.if.a is less than eval.if.b then 
-        else
-            store eval.open-if in eval.jump-to-else
+            store 1 in eval.if.c
         end if
     else if eval.if.compare is equal to "gte" then 
         if eval.if.a is greater than or equal to eval.if.b then 
-        else
-            store eval.open-if in eval.jump-to-else
+            store 1 in eval.if.c
         end if
     else if eval.if.compare is equal to "lte" then 
         if eval.if.a is less than or equal to eval.if.b then 
-        else
-            store eval.open-if in eval.jump-to-else
+            store 1 in eval.if.c
         end if
     else
         join "Unknown eval.if.compare value: " and eval.if.compare in error.msg
         call error
     end if 
+
+    if eval.if.c is equal to 0 then 
+        store eval.open-if in eval.jump-to-else
+    end if
 end sub-procedure
 
 # STORE $1 IN $3
