@@ -16,11 +16,12 @@
 #   @**&   **** ****.****.****#######(  
 
 # === DESIGN =========================================================
-#     Dino operates on each line, one at a time. Other than that, it's
-#     a bit like a Lisp:
+#     Dino operates on each line, one at a time. Other than that, 
+#     it's a bit like a Lisp:
 #     1. The Reader turns a text input into a text vector of tokens.
 #     2. The Evaluator turns a text vector of tokens into a value.
-#     3. The Printer prints a value.
+#     3. The Environment keeps track of variables and their values.
+#     4. The Printer prints values.
 # ========================================================= DESIGN ===
 
 DATA:
@@ -35,7 +36,7 @@ line.tokens          is text vector  # this line's tokens
 line.tokens.length   is number
 line.number          is number       # current line number
 
-# LOCALS:
+# LOCAL:
 reader.input.length  is number # input length
 reader.ci            is number # current character index 
 reader.char          is text   # current character
@@ -48,40 +49,56 @@ line.tokens.i        is number # for clearing the list TODO: INIT?
 
 # --- The Evaluator --------------------------------------------------
 # --- ...turns a text vector of tokens into a value.
-eval.state          is number # 1=data, 2=procedure
+# IN: 
 eval.line           is text   
-eval.i              is number
-eval.first          is text # first char, to check for comments
-
 eval.token          is text
+
+# OUT: 
+eval.state          is number # 1=data, 2=procedure
 eval.token.type     is number #1=n,2=t,3=var,4=?,5=crlf
-eval.token.char     is text
 eval.token.number   is number 
 eval.token.text     is text
 eval.token.variable is text
+
+# LOCAL: 
+eval.i              is number
+eval.first          is text # first char, to check for comments
+eval.token.char     is text
 # -------------------------------------------------- The Evaluator ---
 
+# --- The Environment ------------------------------------------------
+# --- ...tracks variables and their values.
+# OUT:
+env.types        is number vector # 1=n,2=t,3=nv,4=tv
+env.tvalues      is text vector   # Text variable values
+env.nvalues      is number vector # Number variable values
+env.names        is text vector   # Names of all variables
+env.names.length is number 
+
+# LOCAL:
+env.name         is text 
+env.type         is number      
+# ------------------------------------------------ The Environment ---
+
 # --- Text Helpers ---------------------------------------------------
-#  IN:
+# IN:
 text.strip-quotes.in  is text
+
 # OUT:
 text.strip-quotes.out is text
+
 # LOCAL:
 text.strip-quotes.i   is number
 text.strip-quotes.len is number
 text.strip-quotes.c   is text
 # --------------------------------------------------- Text Helpers ---
-  
-variable.types        is number vector #1=n,2=t,3=nv,4=tv
-variable.type         is number 
-variable.tvalues      is text vector
-variable.nvalues      is number vector
-variable.name         is text 
-variable.names        is text vector
-variable.names.length is number
 
-error.msg is text
-error.i   is number
+# --- Errors ---------------------------------------------------------
+# IN:
+error.msg   is text    # error message to display
+# LOCAL:
+error.i     is number
+# --------------------------------------------------------- Errors ---
 
 PROCEDURE:
 # IN: error.msg is text (optional)
@@ -97,14 +114,14 @@ sub-procedure error
 
     display "\e[1;33menv: \e[0m" crlf
     store 0 in error.i
-    while error.i is less than variable.names.length do 
-        store variable.names:error.i in variable.name
-        store variable.types:variable.name in variable.type
-        display "* \e[0;1m" variable.name "(" variable.type "): \e[0m" 
-        if variable.types:variable.name is equal to 1 then 
-            display variable.tvalues:variable.name
-        else if variable.types:variable.name is equal to 2 then
-            display variable.nvalues:variable.name
+    while error.i is less than env.names.length do 
+        store env.names:error.i in env.name
+        store env.types:env.name in env.type
+        display "* \e[0;1m" env.name "(" env.type "): \e[0m" 
+        if env.types:env.name is equal to 1 then 
+            display env.tvalues:env.name
+        else if env.types:env.name is equal to 2 then
+            display env.nvalues:env.name
         end if 
         display crlf
 
@@ -173,12 +190,12 @@ sub-procedure eval.token-to-value
         end if
             
         # assume variable
-        if variable.types:eval.token is greater than 0 then 
-            store variable.types:eval.token in eval.token.type
+        if env.types:eval.token is greater than 0 then 
+            store env.types:eval.token in eval.token.type
             if eval.token.type is equal to 1 then 
-                store variable.tvalues:eval.token in eval.token.text
+                store env.tvalues:eval.token in eval.token.text
             else if eval.token.type is equal to 2 then 
-                store variable.nvalues:eval.token in eval.token.number
+                store env.nvalues:eval.token in eval.token.number
             else 
                 call error
             end if
@@ -219,12 +236,12 @@ end sub-procedure
 sub-procedure eval.store
     store line.tokens:1 in eval.token
     call eval.token-to-value
-    store line.tokens:3 in variable.name
+    store line.tokens:3 in env.name
 
     if eval.token.type is equal to 1 then 
-        store eval.token.text in variable.tvalues:variable.name
+        store eval.token.text in env.tvalues:env.name
     else if eval.token.type is equal to 2 then 
-        store eval.token.number in variable.nvalues:variable.name
+        store eval.token.number in env.nvalues:env.name
     else 
         call error 
     end if 
@@ -248,24 +265,24 @@ end sub-procedure
 #  IN: line.tokens
 sub-procedure eval.data-line
     if line.tokens:1 is equal to "IS" then 
-        store line.tokens:0 in variable.name
+        store line.tokens:0 in env.name
 
         # track used variable names for reflection
-        store variable.name in variable.names:variable.names.length
-        add 1 and variable.names.length in variable.names.length
+        store env.name in env.names:env.names.length
+        add 1 and env.names.length in env.names.length
 
         if line.tokens:2 is equal to "TEXT" then 
             if line.tokens:3 is equal to "VECTOR" then 
-                store 3 in variable.types:variable.name
+                store 3 in env.types:env.name
             else
-                store 1 in variable.types:variable.name
+                store 1 in env.types:env.name
             end if
             return
         else if line.tokens:2 is equal to "NUMBER" then
             if line.tokens:3 is equal to "VECTOR" then 
-                store 4 in variable.types:variable.name
+                store 4 in env.types:env.name
             else
-                store 2 in variable.types:variable.name
+                store 2 in env.types:env.name
             end if
 
             return
