@@ -71,11 +71,9 @@ eval.token.char         is text
 eval.tmp.a              is number # tmp var
 eval.tmp.b              is number # tmp var
 eval.tmp.c              is number # tmp var
-eval.if.a               is number
-eval.if.b               is number
-eval.if.c               is number
 eval.cond.compare       is text   # eq,ne,lt,gt,lte,gte 
 eval.cond.not           is number # 0=false,1=true
+eval.cond.opener        is text   # DO or THEN 
 # -------------------------------------------------- The Evaluator ---
 
 # --- The Environment ------------------------------------------------
@@ -305,10 +303,16 @@ end sub-procedure
 # OUT: eval.conditional? # 0 false, 1 true
 sub-procedure eval.conditional
     store 0 in eval.conditional?
+
+    if line.tokens:0 is equal to "IF" then 
+        store "THEN" in eval.cond.opener
+    else
+        store "DO" in eval.cond.opener
+    end if
     
     if line.tokens:3 is equal to "EQUAL" then 
         if line.tokens:4 is equal to "TO" then 
-            if line.tokens:6 is equal to "THEN" then 
+            if line.tokens:6 is equal to eval.cond.opener then 
                 store "eq" in eval.cond.compare
                 store line.tokens:5 in eval.tmp.b
             else
@@ -320,7 +324,7 @@ sub-procedure eval.conditional
     else if line.tokens:3 is equal to "NOT" then 
         if line.tokens:4 is equal to "EQUAL" then 
             if line.tokens:5 is equal to "TO" then 
-                if line.tokens:7 is equal to "THEN" then 
+                if line.tokens:7 is equal to eval.cond.opener then 
                     store "ne" in eval.cond.compare
                     store line.tokens:6 in eval.tmp.b
                 else 
@@ -337,7 +341,7 @@ sub-procedure eval.conditional
             if line.tokens:5 is equal to "OR" then 
                 if line.tokens:6 is equal to "EQUAL" then 
                     if line.tokens:7 is equal to "TO" then 
-                        if line.tokens:9 is equal to "THEN" then 
+                        if line.tokens:9 is equal to eval.cond.opener then 
                             store "gte" in eval.cond.compare
                             store line.tokens:8 in eval.tmp.b
                         else 
@@ -350,7 +354,7 @@ sub-procedure eval.conditional
                     call error
                 end if
             else
-                if line.tokens:6 is equal to "THEN" then 
+                if line.tokens:6 is equal to eval.cond.opener then 
                     store "gt" in eval.cond.compare
                     store line.tokens:5 in eval.tmp.b
                 else
@@ -365,7 +369,7 @@ sub-procedure eval.conditional
             if line.tokens:5 is equal to "OR" then 
                 if line.tokens:6 is equal to "EQUAL" then 
                     if line.tokens:7 is equal to "TO" then 
-                        if line.tokens:9 is equal to "THEN" then 
+                        if line.tokens:9 is equal to eval.cond.opener then 
                             store "lte" in eval.cond.compare
                             store line.tokens:8 in eval.tmp.b
                         else 
@@ -378,7 +382,7 @@ sub-procedure eval.conditional
                     call error
                 end if
             else
-                if line.tokens:6 is equal to "THEN" then 
+                if line.tokens:6 is equal to eval.cond.opener then 
                     store "lt" in eval.cond.compare
                     store line.tokens:5 in eval.tmp.b
                 else
@@ -452,7 +456,7 @@ sub-procedure eval.if
     # track the if
     add 1 and eval.open-if in eval.open-if
 
-    # check connditional
+    # check conditional
     call eval.conditional
     
     # jump if false
