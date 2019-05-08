@@ -240,17 +240,42 @@ sub-procedure eval.display
     repeat
 end sub-procedure
 
-# 0  1         2  3       4    5         6
-# IF $num-expr IS GREATER THAN $num-expr THEN
-#   1
-# ELSE
-#   2
-# END IF
+# 0  1         2  3       4     5         6         7
+# IF $num-expr IS GREATER THAN  $num-expr THEN
+# IF $num-expr IS NOT     EQUAL TO        $num-expr THEN
 #  IN: line.tokens
 #      line.tokens.length
 sub-procedure eval.if
     if line.tokens:2 is equal to "IS" then
-        if line.tokens:3 is equal to "GREATER" then
+        if line.tokens:3 is equal to "NOT" then
+            if line.tokens:4 is equal to "EQUAL" then
+                if line.tokens:5 is equal to "TO" then
+                    if line.tokens:7 is equal to "THEN" then
+                        add 1 and eval.open-if in eval.open-if
+                        
+                        # eval $a and $b 
+                        store line.tokens:1 in eval.token
+                        call eval.token-to-value
+                        store eval.token.number in eval.if.a
+                        store line.tokens:6 in eval.token
+                        call eval.token-to-value
+                        store eval.token.number in eval.if.b
+
+                        if eval.if.a is not equal to eval.if.b then 
+                            # not equal
+                        else 
+                            store eval.open-if in eval.jump-to-else
+                        end if 
+                    else 
+                        call error
+                    end if
+                else 
+                    call error
+                end if
+            else
+                call error
+            end if
+        else if line.tokens:3 is equal to "GREATER" then
             if line.tokens:4 is equal to "THAN" then
                 if line.tokens:6 is equal to "THEN" then
                     add 1 and eval.open-if in eval.open-if
@@ -264,10 +289,9 @@ sub-procedure eval.if
                     store eval.token.number in eval.if.b
 
                     if eval.if.a is greater than eval.if.b then 
-                        display "GREATER" crlf
+                        # greater
                     else 
                         store eval.open-if in eval.jump-to-else
-                        display "LESSER" crlf
                     end if 
                 else
                     call error
