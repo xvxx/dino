@@ -95,9 +95,10 @@ text.strip-quotes.c   is text
 
 # --- Errors ---------------------------------------------------------
 # IN:
-error.msg   is text    # error message to display
+error.msg is text    # error message to display
+
 # LOCAL:
-error.i     is number
+error.i   is number
 # --------------------------------------------------------- Errors ---
 
 PROCEDURE:
