@@ -1,22 +1,22 @@
-#                                  .    
-#                               &*****   
+#                                  .
+#                               &*****
 #     dino:                   (********@
-#      ~ an ~                 ***/      
-#       ~ LDPL ~             @***       
-#        ~ interpreter ~     &@       
-#         ~ in ~            %**%%       
-#          ~ LDPL ~         &**((       
-#                        %%******       
-#                (( ((&**********       
-#          (@********************       
-#         /**********************       
-#        ***********************,.&     
-#       ***********************######   
-#     (*** ****/**************@#%####,  
-#   @**&   **** ****.****.****#######(  
+#      ~ an ~                 ***/
+#       ~ LDPL ~             @***
+#        ~ interpreter ~     &@
+#         ~ in ~            %**%%
+#          ~ LDPL ~         &**((
+#                        %%******
+#                (( ((&**********
+#          (@********************
+#         /**********************
+#        ***********************,.&
+#       ***********************######
+#     (*** ****/**************@#%####,
+#   @**&   **** ****.****.****#######(
 
 # === DESIGN =========================================================
-#     Dino operates on each line, one at a time. Other than that, 
+#     Dino operates on each line, one at a time. Other than that,
 #     it's a bit like a Lisp:
 #     1. The Reader turns a text input into a text vector of tokens.
 #     2. The Evaluator turns a text vector of tokens into a value.
@@ -27,43 +27,52 @@
 DATA:
 # --- The Reader -----------------------------------------------------
 # --- ...turns each line of source code into a vector of tokens.
-# IN: 
-reader.input         is text   # source code
-reader.name          is text   # filename
- 
-# OUT: 
-line.tokens          is text vector  # this line's tokens
-line.tokens.length   is number
-line.number          is number       # current line number
+# IN:
+reader.input           is text   # source code
+reader.name            is text   # filename
+reader.state           is number # 1=normal,2=ifyes,3=ifno
 
-# LOCAL:
-reader.input.length  is number # input length
-reader.ci            is number # current character index 
-reader.char          is text   # current character
-reader.prev          is text   # previous character
-reader.tok           is text   # current token 
-reader.line          is text   # current line 
-reader.text?         is number # boolean
-line.tokens.i        is number # for clearing the list TODO: INIT? 
+# CONST:  
+reader.state.normal    is number # 1
+reader.state.if-true   is number # 2
+reader.state.if-false  is number # 3
+  
+# OUT:  
+line.tokens            is text vector  # this line's tokens
+line.tokens.length     is number
+line.number            is number       # current line number
+  
+# LOCAL:  
+reader.input.length    is number # input length
+reader.ci              is number # current character index
+reader.char            is text   # current character
+reader.prev            is text   # previous character
+reader.tok             is text   # current token
+reader.line            is text   # current line
+reader.text?           is number # boolean
+line.tokens.i          is number # for clearing the list TODO: INIT?
 # ----------------------------------------------------- The Reader ---
 
 # --- The Evaluator --------------------------------------------------
 # --- ...turns a text vector of tokens into a value.
-# IN: 
-eval.line           is text   
+# IN:
+eval.line           is text
 eval.token          is text
 
-# OUT: 
+# OUT:
 eval.state          is number # 1=data, 2=procedure
 eval.token.type     is number #1=n,2=t,3=var,4=?,5=crlf
-eval.token.number   is number 
+eval.token.number   is number
 eval.token.text     is text
 eval.token.variable is text
 
-# LOCAL: 
+# LOCAL:
 eval.i              is number
 eval.first          is text # first char, to check for comments
 eval.token.char     is text
+eval.if.a           is number
+eval.if.b           is number
+eval.if.c           is number
 # -------------------------------------------------- The Evaluator ---
 
 # --- The Environment ------------------------------------------------
@@ -73,11 +82,11 @@ env.types        is number vector # 1=n,2=t,3=nv,4=tv
 env.tvalues      is text vector   # Text variable values
 env.nvalues      is number vector # Number variable values
 env.names        is text vector   # Names of all variables
-env.names.length is number 
+env.names.length is number
 
 # LOCAL:
-env.name         is text 
-env.type         is number      
+env.name         is text
+env.type         is number
 # ------------------------------------------------ The Environment ---
 
 # --- Text Helpers ---------------------------------------------------
@@ -104,10 +113,10 @@ error.i   is number
 PROCEDURE:
 # IN: error.msg is text (optional)
 sub-procedure error
-    display "\e[1;33mline: \e[0m" reader.line crlf 
-    display "\e[1;33mline tokens: \e[0m" line.tokens.length crlf 
-    display "\e[1;33mtokens: \e[0m" 
-    while error.i is less than line.tokens.length do 
+    display "\e[1;33mline: \e[0m" reader.line crlf
+    display "\e[1;33mline tokens: \e[0m" line.tokens.length crlf
+    display "\e[1;33mtokens: \e[0m"
+    while error.i is less than line.tokens.length do
         display "\e[32;1m<\e[0m" line.tokens:error.i "\e[32;1m>\e[0m "
         add 1 and error.i in error.i
     repeat
@@ -115,23 +124,23 @@ sub-procedure error
 
     display "\e[1;33menv: \e[0m" crlf
     store 0 in error.i
-    while error.i is less than env.names.length do 
+    while error.i is less than env.names.length do
         store env.names:error.i in env.name
         store env.types:env.name in env.type
-        display "* \e[0;1m" env.name "(" env.type "): \e[0m" 
-        if env.types:env.name is equal to 1 then 
+        display "* \e[0;1m" env.name "(" env.type "): \e[0m"
+        if env.types:env.name is equal to 1 then
             display env.tvalues:env.name
         else if env.types:env.name is equal to 2 then
             display env.nvalues:env.name
-        end if 
+        end if
         display crlf
 
         add 1 and error.i in error.i
     repeat
-    
-    if error.msg is equal to "" then 
+
+    if error.msg is equal to "" then
         store "Malformed statement" in error.msg
-    end if 
+    end if
     display "\e[1;31mLDPL Error: " error.msg " (\e[0m" reader.name ":" line.number "\e[1;31m)\e[0m" crlf
     exit
 end sub-procedure
@@ -141,7 +150,7 @@ end sub-procedure
 sub-procedure text.strip-quotes
     # check if first char is a quote
     get character at 0 from text.strip-quotes.in in text.strip-quotes.c
-    if text.strip-quotes.c is not equal to "\"" then 
+    if text.strip-quotes.c is not equal to "\"" then
         store text.strip-quotes.in in text.strip-quotes.out
         return
     end if
@@ -150,57 +159,57 @@ sub-procedure text.strip-quotes
     store length of text.strip-quotes.in in text.strip-quotes.len
     subtract 1 from text.strip-quotes.len in text.strip-quotes.len
     get character at text.strip-quotes.len from text.strip-quotes.in in text.strip-quotes.c
-    if text.strip-quotes.c is not equal to "\"" then 
+    if text.strip-quotes.c is not equal to "\"" then
         store text.strip-quotes.in in text.strip-quotes.out
         return
     end if
 
     # strip quotes
     store "" in text.strip-quotes.out
-    store 1 in text.strip-quotes.i     
-    while text.strip-quotes.i is less than text.strip-quotes.len do 
+    store 1 in text.strip-quotes.i
+    while text.strip-quotes.i is less than text.strip-quotes.len do
         get character at text.strip-quotes.i from text.strip-quotes.in in text.strip-quotes.c
         join text.strip-quotes.out and text.strip-quotes.c in text.strip-quotes.out
         add 1 and text.strip-quotes.i in text.strip-quotes.i
     repeat
 end sub-procedure
 
-# Convert text token to literal value or, if it's variable, the 
-# variable's value. 
+# Convert text token to literal value or, if it's variable, the
+# variable's value.
 #  IN: eval.token is text
-# OUT: eval.token.type 
+# OUT: eval.token.type
 #      eval.token.text OR eval.token.number
 sub-procedure eval.token-to-value
     get character at 0 from eval.token in eval.token.char
 
-    if eval.token is equal to "CRLF" then 
+    if eval.token is equal to "CRLF" then
         store 1 in eval.token.type
         store "\n" in eval.token.text
-    else if eval.token.char is equal to "\"" then 
+    else if eval.token.char is equal to "\"" then
         store 1 in eval.token.type
-        # TODO: strip quotes here, not in DISPLAY 
+        # TODO: strip quotes here, not in DISPLAY
         store eval.token in eval.token.text
     else
         # check for literal number
         store eval.token.char in is-digit.in
         call is-digit
-        if is-digit.out is equal to 1 then 
+        if is-digit.out is equal to 1 then
             store 2 in eval.token.type
             store eval.token in eval.token.number
-            return 
+            return
         end if
-            
+
         # assume variable
-        if env.types:eval.token is greater than 0 then 
+        if env.types:eval.token is greater than 0 then
             store env.types:eval.token in eval.token.type
-            if eval.token.type is equal to 1 then 
+            if eval.token.type is equal to 1 then
                 store env.tvalues:eval.token in eval.token.text
-            else if eval.token.type is equal to 2 then 
+            else if eval.token.type is equal to 2 then
                 store env.nvalues:eval.token in eval.token.number
-            else 
+            else
                 call error
             end if
-        else 
+        else
             call error
         end if
     end if
@@ -211,24 +220,58 @@ end sub-procedure
 #      line.tokens.length
 sub-procedure eval.display
     store 1 in eval.i
-    while eval.i is less than line.tokens.length do 
+    while eval.i is less than line.tokens.length do
         store line.tokens:eval.i in eval.token
         call eval.token-to-value
-        if eval.token.type is equal to 1 then 
-            store eval.token.text in text.strip-quotes.in 
+        if eval.token.type is equal to 1 then
+            store eval.token.text in text.strip-quotes.in
             call text.strip-quotes
             display text.strip-quotes.out
-        else if eval.token.type is equal to 2 then 
+        else if eval.token.type is equal to 2 then
             display eval.token.number
         else if eval.token.type is equal to 3 then
-            store eval.token.text in text.strip-quotes.in 
+            store eval.token.text in text.strip-quotes.in
             call text.strip-quotes
             display text.strip-quotes.out
         else if eval.token.type is equal to 4 then
             display eval.token.number
         end if
         add 1 and eval.i in eval.i
-    repeat     
+    repeat
+end sub-procedure
+
+# 0  1         2  3       4    5         6
+# IF $num-expr IS GREATER THAN $num-expr THEN
+#   1
+# ELSE
+#   2
+# END IF
+#  IN: line.tokens
+#      line.tokens.length
+sub-procedure eval.if
+    if line.tokens:2 is equal to "IS" then
+        if line.tokens:3 is equal to "GREATER" then
+            if line.tokens:4 is equal to "THAN" then
+                if line.tokens:6 is equal to "THEN" then
+                    store line.tokens:1 in eval.if.a
+                    store line.tokens:5 in eval.if.b
+                    if eval.if.a is greater than eval.if.b then 
+                        store reader.state.if-true in reader.state
+                    else 
+                        store reader.state.if-false in reader.state
+                    end if 
+                else
+                    call error
+                end if
+            else
+                call error
+            end if
+        else
+            call error
+        end if
+    else
+        call error
+    end if
 end sub-procedure
 
 # STORE $1 IN $3
@@ -239,13 +282,13 @@ sub-procedure eval.store
     call eval.token-to-value
     store line.tokens:3 in env.name
 
-    if eval.token.type is equal to 1 then 
+    if eval.token.type is equal to 1 then
         store eval.token.text in env.tvalues:env.name
-    else if eval.token.type is equal to 2 then 
+    else if eval.token.type is equal to 2 then
         store eval.token.number in env.nvalues:env.name
-    else 
-        call error 
-    end if 
+    else
+        call error
+    end if
 end sub-procedure
 
 # evaluate line in PROCEDURE: section
@@ -254,44 +297,46 @@ end sub-procedure
 sub-procedure eval.code-line
     if line.tokens:0 is equal to "DISPLAY" then
         call eval.display
-    else if line.tokens:0 is equal to "STORE" then 
+    else if line.tokens:0 is equal to "STORE" then
         call eval.store
+    else if line.tokens:0 is equal to "IF" then
+        call eval.if
     else
         in error.msg join "Unknown statement: " eval.line
-        call error 
+        call error
     end if
 end sub-procedure
 
 # evaluate line in DATA: section
 #  IN: line.tokens
 sub-procedure eval.data-line
-    if line.tokens:1 is equal to "IS" then 
+    if line.tokens:1 is equal to "IS" then
         store line.tokens:0 in env.name
 
         # track used variable names for reflection
         store env.name in env.names:env.names.length
         add 1 and env.names.length in env.names.length
 
-        if line.tokens:2 is equal to "TEXT" then 
-            if line.tokens:3 is equal to "VECTOR" then 
+        if line.tokens:2 is equal to "TEXT" then
+            if line.tokens:3 is equal to "VECTOR" then
                 store 3 in env.types:env.name
             else
                 store 1 in env.types:env.name
             end if
             return
         else if line.tokens:2 is equal to "NUMBER" then
-            if line.tokens:3 is equal to "VECTOR" then 
+            if line.tokens:3 is equal to "VECTOR" then
                 store 4 in env.types:env.name
             else
                 store 2 in env.types:env.name
             end if
 
             return
-        end if 
-    end if 
+        end if
+    end if
 
     in error.msg join "Unknown statement: " eval.line
-    call error 
+    call error
 end sub-procedure
 
 # evaluate single line of LDPL code
@@ -299,58 +344,60 @@ end sub-procedure
 #      line.tokens.length
 sub-procedure eval.line
     # ignore empty lines
-    if line.tokens.length is equal to 0 then 
+    if line.tokens.length is equal to 0 then
         return
-    end if 
+    end if
 
     # ignore lines that start with comments
     get character at 0 from line.tokens:0 in eval.first
-    if eval.first is equal to "#" then 
+    if eval.first is equal to "#" then
         return
-    end if 
+    end if
 
     if line.tokens:0 is equal to "DATA:" then
-        if line.tokens.length is greater than 1 then 
-            call error 
-        end if 
+        if line.tokens.length is greater than 1 then
+            call error
+        end if
         store 1 in eval.state
-    else if line.tokens:0 is equal to "PROCEDURE:" then 
-        if line.tokens.length is greater than 1 then 
-            call error 
-        end if 
-        store 2 in eval.state 
-    else if eval.state is equal to 1 then 
+    else if line.tokens:0 is equal to "PROCEDURE:" then
+        if line.tokens.length is greater than 1 then
+            call error
+        end if
+        store 2 in eval.state
+    else if eval.state is equal to 1 then
         call eval.data-line
-    else if eval.state is equal to 2 then 
+    else if eval.state is equal to 2 then
         call eval.code-line
-    else 
+    else
         in error.msg join "Unknown state: " eval.state
-        call error 
+        call error
     end if
 end sub-procedure
 
 #  IN: argv
-sub-procedure main   
+sub-procedure main
     store argv:0 in reader.name
     load file argv:0 in reader.input
     store length of reader.input in reader.input.length
-    while reader.ci is less than reader.input.length do 
+    store reader.state.normal in reader.state
+    
+    while reader.ci is less than reader.input.length do
         store reader.char in reader.prev
         get character at reader.ci from reader.input in reader.char
 
-        if reader.char is equal to "\n" then 
-            # first line is line 1 
+        if reader.char is equal to "\n" then
+            # first line is line 1
             add 1 and line.number in line.number
 
             # store current token in tokens vector
-            if reader.tok is not equal to "" then 
+            if reader.tok is not equal to "" then
                 store reader.tok in line.tokens:line.tokens.length
                 add 1 and line.tokens.length in line.tokens.length
                 store "" in reader.tok
             end if
 
             # eval line
-            store reader.line in eval.line 
+            store reader.line in eval.line
             call eval.line
 
             # reset line and tokens
@@ -365,45 +412,45 @@ sub-procedure main
             # store space in line
             join reader.line and reader.char in reader.line
 
-            if reader.text? is equal to 0 then 
+            if reader.text? is equal to 0 then
                 # store current token in tokens vector
-                if reader.tok is not equal to "" then 
+                if reader.tok is not equal to "" then
                     store reader.tok in line.tokens:line.tokens.length
                     add 1 and line.tokens.length in line.tokens.length
                     store "" in reader.tok
-                end if 
-            else 
-                # store string verbatum 
+                end if
+            else
+                # store string verbatum
                 join reader.tok and reader.char in reader.tok
             end if
-        else if reader.char is equal to "\"" then 
-            if reader.prev is not equal to "\\" then 
-                if reader.text? is equal to 0 then 
-                    # open string 
+        else if reader.char is equal to "\"" then
+            if reader.prev is not equal to "\\" then
+                if reader.text? is equal to 0 then
+                    # open string
                     store 1 in reader.text?
-                else 
+                else
                     # close string
                     store 0 in reader.text?
-                end if 
-            end if 
+                end if
+            end if
 
             join reader.tok and reader.char in reader.tok
             join reader.line and reader.char in reader.line
-        else 
+        else
             # don't upcase text
             if reader.text? is equal to 0 then
                 # upcase letter
                 store reader.char in upcase.letter
-                call upcase-letter 
-                store upcase.letter in reader.char 
+                call upcase-letter
+                store upcase.letter in reader.char
             end if
 
-            # store char in current token 
+            # store char in current token
             join reader.tok and reader.char in reader.tok
 
             # store char in current line
             join reader.line and reader.char in reader.line
-        end if 
+        end if
 
         # increment reader counter
         add 1 and reader.ci in reader.ci
@@ -412,10 +459,10 @@ end sub-procedure
 
 call main
 
-#              boing         boing         boing              
-#    e-e           . - .         . - .         . - .          
-#   (\_/)\       '       `.   ,'       `.   ,'       .        
-#    `-'\ `--.___,         . .           . .          .       
-#       '\( ,_.-'                                             
-#          \\               "             "            a:f    
+#              boing         boing         boing
+#    e-e           . - .         . - .         . - .
+#   (\_/)\       '       `.   ,'       `.   ,'       .
+#    `-'\ `--.___,         . .           . .          .
+#       '\( ,_.-'
+#          \\               "             "            a:f
 #          ^'
