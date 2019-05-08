@@ -68,20 +68,23 @@ eval.conditional?       is number # 0=f,1=t
 eval.i                  is number
 eval.first              is text   # first char, to check for comments
 eval.token.char         is text
-eval.tmp.a              is number # tmp var
-eval.tmp.b              is number # tmp var
-eval.tmp.c              is number # tmp var
 eval.cond.compare       is text   # eq,ne,lt,gt,lte,gte 
 eval.cond.not           is number # 0=false,1=true
 eval.cond.opener        is text   # DO or THEN 
+eval.tmp.a              is number # tmp var
+eval.tmp.b              is number # tmp var
+eval.tmp.c              is number # tmp var
+eval.tmp.x              is text   # tmp var
+eval.tmp.y              is text   # tmp var
+eval.tmp.z              is text   # tmp var
 # -------------------------------------------------- The Evaluator ---
 
 # --- The Environment ------------------------------------------------
 # --- ...tracks variables and their values.
 # OUT:
 env.types        is number vector # 1=n,2=t,3=nv,4=tv
-env.tvalues      is text vector   # Text variable values
 env.nvalues      is number vector # Number variable values
+env.tvalues      is text vector   # Text variable values
 env.names        is text vector   # Names of all variables
 env.names.length is number
 
@@ -130,9 +133,9 @@ sub-procedure error
         store env.types:env.name in env.type
         display "* \e[0;1m" env.name "(" env.type "): \e[0m"
         if env.types:env.name is equal to 1 then
-            display env.tvalues:env.name
-        else if env.types:env.name is equal to 2 then
             display env.nvalues:env.name
+        else if env.types:env.name is equal to 2 then
+            display env.tvalues:env.name
         end if
         display crlf
 
@@ -184,10 +187,10 @@ sub-procedure eval.token-to-value
     get character at 0 from eval.token in eval.token.char
 
     if eval.token is equal to "CRLF" then
-        store 1 in eval.token.type
+        store 2 in eval.token.type
         store "\n" in eval.token.text
     else if eval.token.char is equal to "\"" then
-        store 1 in eval.token.type
+        store 2 in eval.token.type
         # TODO: strip quotes here, not in DISPLAY
         store eval.token in eval.token.text
     else
@@ -198,7 +201,7 @@ sub-procedure eval.token-to-value
         store eval.token.char in is-digit.in
         call is-digit
         if is-digit.out is equal to 1 then
-            store 2 in eval.token.type
+            store 1 in eval.token.type
             store eval.token in eval.token.number
             return
         end if
@@ -207,15 +210,38 @@ sub-procedure eval.token-to-value
         if env.types:eval.token is greater than 0 then
             store env.types:eval.token in eval.token.type
             if eval.token.type is equal to 1 then
-                store env.tvalues:eval.token in eval.token.text
-            else if eval.token.type is equal to 2 then
                 store env.nvalues:eval.token in eval.token.number
+            else if eval.token.type is equal to 2 then
+                store env.tvalues:eval.token in eval.token.text
             else
                 call error
             end if
         else
             call error
         end if
+    end if
+end sub-procedure
+
+# ACCEPT $var
+#  IN: line.tokens
+#      line.tokens.length
+sub-procedure eval.accept
+    store env.types:eval.token in eval.token.type
+    if eval.token.type is equal to 1 then
+        store env.nvalues:eval.token in eval.token.number
+    else if eval.token.type is equal to 2 then
+        store env.tvalues:eval.token in eval.token.text
+    else
+        call error
+    end if
+    if env.types:line.tokens:1 is equal to 1 then 
+        accept eval.tmp.a 
+        store eval.tmp.a in env.nvalues:line.tokens:1
+    else if env.types:line.tokens:1 is equal to 2 then 
+        accept eval.tmp.x
+        store eval.tmp.x in env.tvalues:line.tokens:1
+    else 
+        call error
     end if
 end sub-procedure
 
@@ -228,17 +254,17 @@ sub-procedure eval.display
         store line.tokens:eval.i in eval.token
         call eval.token-to-value
         if eval.token.type is equal to 1 then
-            store eval.token.text in text.strip-quotes.in
-            call text.strip-quotes
-            display text.strip-quotes.out
+            display eval.token.number
         else if eval.token.type is equal to 2 then
-            display eval.token.number
-        else if eval.token.type is equal to 3 then
             store eval.token.text in text.strip-quotes.in
             call text.strip-quotes
             display text.strip-quotes.out
-        else if eval.token.type is equal to 4 then
+        else if eval.token.type is equal to 3 then
             display eval.token.number
+        else if eval.token.type is equal to 4 then
+            store eval.token.text in text.strip-quotes.in
+            call text.strip-quotes
+            display text.strip-quotes.out
         end if
         add 1 and eval.i in eval.i
     repeat
@@ -552,9 +578,9 @@ sub-procedure eval.store
     store line.tokens:3 in env.name
 
     if eval.token.type is equal to 1 then
-        store eval.token.text in env.tvalues:env.name
-    else if eval.token.type is equal to 2 then
         store eval.token.number in env.nvalues:env.name
+    else if eval.token.type is equal to 2 then
+        store eval.token.text in env.tvalues:env.name
     else
         call error
     end if
@@ -564,7 +590,9 @@ end sub-procedure
 #  IN: line.tokens
 #      eval.line
 sub-procedure eval.code-line
-    if line.tokens:0 is equal to "DISPLAY" then
+    if line.tokens:0 is equal to "ACCEPT" then
+        call eval.accept
+    else if line.tokens:0 is equal to "DISPLAY" then
         call eval.display
     else if line.tokens:0 is equal to "STORE" then
         call eval.store
@@ -610,16 +638,16 @@ sub-procedure eval.data-line
 
         if line.tokens:2 is equal to "TEXT" then
             if line.tokens:3 is equal to "VECTOR" then
-                store 3 in env.types:env.name
+                store 4 in env.types:env.name
             else
-                store 1 in env.types:env.name
+                store 2 in env.types:env.name
             end if
             return
         else if line.tokens:2 is equal to "NUMBER" then
             if line.tokens:3 is equal to "VECTOR" then
-                store 4 in env.types:env.name
+                store 3 in env.types:env.name
             else
-                store 2 in env.types:env.name
+                store 1 in env.types:env.name
             end if
 
             return
