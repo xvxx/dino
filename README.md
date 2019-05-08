@@ -24,39 +24,39 @@ Try it out:
     - [x] crlf
     - [x] string literal
 - [ ] 99bottles.ldpl
-  - [x] if
+  - [ ] while
+    - [ ] is greater than
+  - [ ] sub-procedure
+  - [ ] call
+  - [ ] ...everything else
+- [ ] disancount.ldpl
+    - [ ] accept number
+    - [ ] while greater than or equal to 
+- [ ] factorial.ldpl
+    - [ ] while greater than
+- [ ] fibonacci.ldpl
+    - [ ] while is greater than
+- [ ] sqrt.ldpl
+    - [ ] return
+- [ ] ldpltests
+- [ ] all of standard 
+- [x] if
     - [x] EQUAL TO
     - [x] NOT EQUAL TO
     - [x] GREATER THAN
     - [x] LESS THAN
     - [x] GREATER THAN OR EQUAL TO
     - [x] LESS THAN OR EQUAL TO
-  - [x] else
-  - [ ] while
-    - [ ] is greater than
-  - [ ] sub-procedure
-  - [x] subtract 
-  - [ ] call
-  - [ ] ...everything else
-- [ ] disancount.ldpl
-    - [x] DATA:
-    - [ ] accept number
-    - [ ] while greater than or equal to 
-    - [x] modulo 
-- [ ] factorial.ldpl
-    - [ ] while greater than
-    - [x] multiply
-- [ ] fibonacci.ldpl
-    - [ ] while is greater than
-    - [x] add 
-- [ ] sqrt.ldpl
-    - [ ] return
-    - [x] divide 
-- [ ] ldpltests
-- [ ] all of standard 
+    - [x] ELSE
 - [ ] math
+    - [x] add
+    - [x] subtract
+    - [x] multiply
+    - [x] divide
+    - [x] modulo
     - [ ] abs
     - [ ] ceil
     - [ ] floor
     - [ ] store random in
     - [ ] in - solve 
+
