@@ -14,16 +14,15 @@ Try it out:
     - [ ] readline
     - [ ] history
     - [ ] multi-lines
-- [ ] dino file.ldpl
+- [x] dino file.ldpl
     - [ ] dino -h
     - [ ] dino -v
-    - [ ] dino 
-- [ ] helloworld.ldpl
-    - [ ] # comments
-    - [ ] PROCEDURE:
-    - [ ] display
-    - [ ] crlf
-    - [ ] string literal
+- [x] helloworld.ldpl
+    - [x] # comments
+    - [x] PROCEDURE:
+    - [x] display
+    - [x] crlf
+    - [x] string literal
 - [ ] 99bottles.ldpl
   - [ ] if
     - [ ] is not equal to 
@@ -36,12 +35,12 @@ Try it out:
   - [ ] call
   - [ ] ...everything else
 - [ ] disancount.ldpl
-    - [ ] DATA:
+    - [x] DATA:
     - [ ] accept number
     - [ ] while greater than or equal to 
     - [ ] modulo 
     - [ ] if equal to 
-    - [ ] subtract
+    - [ ] psubtract
 - [ ] factorial.ldpl
     - [ ] while greater than
     - [ ] multiply
@@ -53,4 +52,5 @@ Try it out:
     - [ ] return
     - [ ] divide 
     - [ ] if not equal 
-
+- [ ] ldpltests
+- [ ] all of standard 
