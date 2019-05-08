@@ -266,8 +266,8 @@ sub-procedure eval.if
                         add 1 and eval.until-else in eval.until-else
                         display "GREATER" crlf
                     else 
-                        display "LESSER" crlf
                         add 1 and eval.jump-to-else in eval.jump-to-else
+                        display "LESSER" crlf
                     end if 
                 else
                     call error
@@ -311,7 +311,7 @@ sub-procedure eval.code-line
     else if line.tokens:0 is equal to "IF" then
         call eval.if
     else if line.tokens:0 is equal to "ELSE" then
-        if eval.until-else is equal to 1 then 
+        if eval.until-else is greater than 0 then 
             subtract 1 from eval.until-else in eval.until-else
         else
             call error 
