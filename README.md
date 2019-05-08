@@ -86,8 +86,8 @@ Try it out:
     - [ ] store quote - in
     - [ ] in - join
 - [ ] i/o
-    - [ ] display
-    - [ ] accept
+    - [x] display
+    - [x] accept
     - [ ] execute
     - [ ] execute - and store output in
     - [ ] execute - and store exit code in
