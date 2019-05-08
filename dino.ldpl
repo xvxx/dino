@@ -310,6 +310,16 @@ sub-procedure eval.code-line
         call eval.store
     else if line.tokens:0 is equal to "IF" then
         call eval.if
+    else if line.tokens:0 is equal to "ELSE" then
+        if eval.until-else is equal to 1 then 
+            subtract 1 from eval.until-else in eval.until-else
+        else
+            call error 
+        end if 
+    else if line.tokens:0 is equal to "END" then
+        if line.tokens:1 is equal to "IF" then
+            subtract 1 from eval.open-if in eval.open-if
+        end if
     else
         in error.msg join "Unknown statement: " eval.line
         call error
