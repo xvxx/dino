@@ -65,11 +65,13 @@ eval.token.variable     is text
 
 # LOCAL:    
 eval.i                  is number
-eval.first              is text # first char, to check for comments
+eval.first              is text   # first char, to check for comments
 eval.token.char         is text
 eval.if.a               is number
 eval.if.b               is number
 eval.if.c               is number
+eval.if.compare         is text   # eq,ne,lt,gt,lte,gte 
+eval.if.not             is number # 0=false,1=true
 # -------------------------------------------------- The Evaluator ---
 
 # --- The Environment ------------------------------------------------
@@ -246,54 +248,32 @@ end sub-procedure
 #  IN: line.tokens
 #      line.tokens.length
 sub-procedure eval.if
-    if line.tokens:2 is equal to "IS" then
-        if line.tokens:3 is equal to "NOT" then
-            if line.tokens:4 is equal to "EQUAL" then
-                if line.tokens:5 is equal to "TO" then
-                    if line.tokens:7 is equal to "THEN" then
-                        add 1 and eval.open-if in eval.open-if
-                        
-                        # eval $a and $b 
-                        store line.tokens:1 in eval.token
-                        call eval.token-to-value
-                        store eval.token.number in eval.if.a
-                        store line.tokens:6 in eval.token
-                        call eval.token-to-value
-                        store eval.token.number in eval.if.b
+    if line.tokens:2 is not equal to "IS" then
+        call error
+    end if
 
-                        if eval.if.a is not equal to eval.if.b then 
-                            # not equal
-                        else 
-                            store eval.open-if in eval.jump-to-else
-                        end if 
-                    else 
-                        call error
-                    end if
-                else 
-                    call error
-                end if
+    if line.tokens.length is less than 7 then 
+        call error
+    end if
+
+    if line.tokens:3 is equal to "EQUAL" then 
+        if line.tokens:4 is equal to "TO" then 
+            if line.tokens:6 is equal to "THEN" then 
+                store "eq" in eval.if.compare
+                store line.tokens:5 in eval.if.b
             else
                 call error
             end if
-        else if line.tokens:3 is equal to "GREATER" then
-            if line.tokens:4 is equal to "THAN" then
-                if line.tokens:6 is equal to "THEN" then
-                    add 1 and eval.open-if in eval.open-if
-
-                    # eval $a and $b 
-                    store line.tokens:1 in eval.token
-                    call eval.token-to-value
-                    store eval.token.number in eval.if.a
-                    store line.tokens:5 in eval.token
-                    call eval.token-to-value
-                    store eval.token.number in eval.if.b
-
-                    if eval.if.a is greater than eval.if.b then 
-                        # greater
-                    else 
-                        store eval.open-if in eval.jump-to-else
-                    end if 
-                else
+        else
+            call error
+        end if
+    else if line.tokens:3 is equal to "NOT" then 
+        if line.tokens:4 is equal to "EQUAL" then 
+            if line.tokens:5 is equal to "TO" then 
+                if line.tokens:7 is equal to "THEN" then 
+                    store "ne" in eval.if.compare
+                    store line.tokens:6 in eval.if.b
+                else 
                     call error
                 end if
             else
@@ -302,9 +282,109 @@ sub-procedure eval.if
         else
             call error
         end if
+    else if line.tokens:3 is equal to "GREATER" then 
+        if line.tokens:4 is equal to "THAN" then 
+            if line.tokens:5 is equal to "OR" then 
+                if line.tokens:6 is equal to "EQUAL" then 
+                    if line.tokens:7 is equal to "TO" then 
+                        if line.tokens:9 is equal to "THEN" then 
+                            store "gte" in eval.if.compare
+                            store line.tokens:8 in eval.if.b
+                        else 
+                            call error
+                        end if
+                    else 
+                        call error
+                    end if
+                else 
+                    call error
+                end if
+            else
+                if line.tokens:6 is equal to "THEN" then 
+                    store "gt" in eval.if.compare
+                    store line.tokens:5 in eval.if.b
+                else
+                    call error
+                end if
+            end if
+        else
+            call error
+        end if
+    else if line.tokens:3 is equal to "LESS" then 
+        if line.tokens:4 is equal to "THAN" then 
+            if line.tokens:5 is equal to "OR" then 
+                if line.tokens:6 is equal to "EQUAL" then 
+                    if line.tokens:7 is equal to "TO" then 
+                        if line.tokens:9 is equal to "THEN" then 
+                            store "lte" in eval.if.compare
+                            store line.tokens:8 in eval.if.b
+                        else 
+                            call error
+                        end if
+                    else 
+                        call error
+                    end if
+                else 
+                    call error
+                end if
+            else
+                if line.tokens:6 is equal to "THEN" then 
+                    store "lt" in eval.if.compare
+                    store line.tokens:5 in eval.if.b
+                else
+                    call error
+                end if
+            end if
+        else
+            call error
+        end if
     else
         call error
-    end if
+    end if 
+
+    # eval $a and $b 
+    store line.tokens:1 in eval.token
+    call eval.token-to-value
+    store eval.token.number in eval.if.a
+    store eval.if.b in eval.token 
+    call eval.token-to-value
+    store eval.token.number in eval.if.b
+
+    add 1 and eval.open-if in eval.open-if
+    if eval.if.compare is equal to "eq" then 
+        if eval.if.a is equal to eval.if.b then 
+        else 
+            store eval.open-if in eval.jump-to-else
+        end if
+    else if eval.if.compare is equal to "ne" then 
+        if eval.if.a is not equal to eval.if.b then 
+        else
+            store eval.open-if in eval.jump-to-else
+        end if
+    else if eval.if.compare is equal to "gt" then 
+        if eval.if.a is greater than eval.if.b then 
+        else
+            store eval.open-if in eval.jump-to-else
+        end if
+    else if eval.if.compare is equal to "lt" then 
+        if eval.if.a is less than eval.if.b then 
+        else
+            store eval.open-if in eval.jump-to-else
+        end if
+    else if eval.if.compare is equal to "gte" then 
+        if eval.if.a is greater than or equal to eval.if.b then 
+        else
+            store eval.open-if in eval.jump-to-else
+        end if
+    else if eval.if.compare is equal to "lte" then 
+        if eval.if.a is less than or equal to eval.if.b then 
+        else
+            store eval.open-if in eval.jump-to-else
+        end if
+    else
+        join "Unknown eval.if.compare value: " and eval.if.compare in error.msg
+        call error
+    end if 
 end sub-procedure
 
 # STORE $1 IN $3
