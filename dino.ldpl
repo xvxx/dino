@@ -296,6 +296,58 @@ sub-procedure eval.subtract
     subtract eval.tmp.a from eval.tmp.b in env.nvalues:line.tokens:5
 end sub-procedure
 
+# MULTIPLY $1 BY $2 IN $3
+#  IN: line.tokens
+#      line.tokens.length
+sub-procedure eval.multiply
+    if line.tokens.length is not equal to 6 then 
+        call error 
+    end if
+    if line.tokens:2 is not equal to "BY" then 
+        call error 
+    end if
+    if line.tokens:4 is not equal to "IN" then 
+        call error 
+    end if 
+
+    # eval $1 and $2
+    store line.tokens:1 in eval.token
+    call eval.token-to-value 
+    store eval.token.number in eval.tmp.a
+    store line.tokens:3 in eval.token
+    call eval.token-to-value 
+    store eval.token.number in eval.tmp.b
+
+    # math
+    multiply eval.tmp.a by eval.tmp.b in env.nvalues:line.tokens:5
+end sub-procedure
+
+# DIVIDE $1 BY $2 IN $3
+#  IN: line.tokens
+#      line.tokens.length
+sub-procedure eval.divide
+    if line.tokens.length is not equal to 6 then 
+        call error 
+    end if
+    if line.tokens:2 is not equal to "BY" then 
+        call error 
+    end if
+    if line.tokens:4 is not equal to "IN" then 
+        call error 
+    end if 
+
+    # eval $1 and $2
+    store line.tokens:1 in eval.token
+    call eval.token-to-value 
+    store eval.token.number in eval.tmp.a
+    store line.tokens:3 in eval.token
+    call eval.token-to-value 
+    store eval.token.number in eval.tmp.b
+
+    # math
+    divide eval.tmp.a by eval.tmp.b in env.nvalues:line.tokens:5
+end sub-procedure
+
 # Used by IF and WHILE. Expects line.tokens to begin with 3 items:
 #  IF/WHILE $varA IS
 #  IN: line.tokens
@@ -494,6 +546,10 @@ sub-procedure eval.code-line
         call eval.add
     else if line.tokens:0 is equal to "SUBTRACT" then 
         call eval.subtract
+    else if line.tokens:0 is equal to "MULTIPLY" then 
+        call eval.multiply
+    else if line.tokens:0 is equal to "DIVIDE" then 
+        call eval.divide
     else if line.tokens:0 is equal to "IF" then
         call eval.if
     else if line.tokens:0 is equal to "ELSE" then
