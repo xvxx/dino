@@ -15,29 +15,43 @@
 #     (*** ****/**************@#%####,  
 #   @**&   **** ****.****.****#######(  
 
+# === DESIGN =========================================================
+#     Dino operates on each line, one at a time. Other than that, it's
+#     a bit like a Lisp:
+#     1. The Reader turns a text input into a text vector of tokens.
+#     2. The Evaluator turns a text vector of tokens into a value.
+#     3. The Printer prints a value.
+# ========================================================= DESIGN ===
+
 DATA:
-source.file         is text
-source.code         is text
-source.length       is number
-source.lines        is text vector
-source.lines.length is number
+# --- The Reader -----------------------------------------------------
+# --- ...turns each line of source code into a vector of tokens.
+# IN: 
+reader.input         is text   # source code
+reader.name          is text   # filename
+ 
+# OUT: 
+line.tokens          is text vector  # this line's tokens
+line.tokens.length   is number
+line.number          is number       # current line number
 
-reader.ci    is number # current character index 
-reader.char  is text   # current character
-reader.prev  is text   # previous character
-reader.tok   is text   # current token 
-reader.line  is text   # current line 
-reader.text? is number # boolean
+# LOCALS:
+reader.input.length  is number # input length
+reader.ci            is number # current character index 
+reader.char          is text   # current character
+reader.prev          is text   # previous character
+reader.tok           is text   # current token 
+reader.line          is text   # current line 
+reader.text?         is number # boolean
+line.tokens.i        is number # for clearing the list TODO: INIT? 
+# ----------------------------------------------------- The Reader ---
 
-line.tokens        is text vector
-line.tokens.length is number
-line.tokens.i      is number
-line.number        is number 
-
-eval.state   is number # 1=data, 2=procedure
-eval.line    is text
-eval.i       is number
-eval.first   is text # first char, to check for comments
+# --- The Evaluator --------------------------------------------------
+# --- ...turns a text vector of tokens into a value.
+eval.state          is number # 1=data, 2=procedure
+eval.line           is text   
+eval.i              is number
+eval.first          is text # first char, to check for comments
 
 eval.token          is text
 eval.token.type     is number #1=n,2=t,3=var,4=?,5=crlf
@@ -45,12 +59,18 @@ eval.token.char     is text
 eval.token.number   is number 
 eval.token.text     is text
 eval.token.variable is text
+# -------------------------------------------------- The Evaluator ---
 
+# --- Text Helpers ---------------------------------------------------
+#  IN:
 text.strip-quotes.in  is text
+# OUT:
 text.strip-quotes.out is text
+# LOCAL:
 text.strip-quotes.i   is number
 text.strip-quotes.len is number
 text.strip-quotes.c   is text
+# --------------------------------------------------- Text Helpers ---
   
 variable.types        is number vector #1=n,2=t,3=nv,4=tv
 variable.type         is number 
@@ -66,7 +86,6 @@ error.i   is number
 PROCEDURE:
 # IN: error.msg is text (optional)
 sub-procedure error
-    display "\e[1;33mlines: \e[0m" source.lines.length crlf 
     display "\e[1;33mline: \e[0m" reader.line crlf 
     display "\e[1;33mline tokens: \e[0m" line.tokens.length crlf 
     display "\e[1;33mtokens: \e[0m" 
@@ -95,7 +114,7 @@ sub-procedure error
     if error.msg is equal to "" then 
         store "Malformed statement" in error.msg
     end if 
-    display "\e[1;31mLDPL Error: " error.msg " (\e[0m" source.file ":" line.number "\e[1;31m)\e[0m" crlf
+    display "\e[1;31mLDPL Error: " error.msg " (\e[0m" reader.name ":" line.number "\e[1;31m)\e[0m" crlf
     exit
 end sub-procedure
 
@@ -294,12 +313,12 @@ end sub-procedure
 
 #  IN: argv
 sub-procedure main   
-    store argv:0 in source.file
-    load file argv:0 in source.code
-    store length of source.code in source.length
-    while reader.ci is less than source.length do 
+    store argv:0 in reader.name
+    load file argv:0 in reader.input
+    store length of reader.input in reader.input.length
+    while reader.ci is less than reader.input.length do 
         store reader.char in reader.prev
-        get character at reader.ci from source.code in reader.char
+        get character at reader.ci from reader.input in reader.char
 
         if reader.char is equal to "\n" then 
             # first line is line 1 
@@ -311,10 +330,6 @@ sub-procedure main
                 add 1 and line.tokens.length in line.tokens.length
                 store "" in reader.tok
             end if
-            
-            # store line in lines vector
-            store reader.line in source.lines:source.lines.length
-            add 1 and source.lines.length in source.lines.length
 
             # eval line
             store reader.line in eval.line 
