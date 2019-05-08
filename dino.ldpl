@@ -245,6 +245,32 @@ sub-procedure eval.display
     repeat
 end sub-procedure
 
+# ADD $1 AND $2 IN $3
+#  IN: line.tokens
+#      line.tokens.length
+sub-procedure eval.add
+    if line.tokens.length is not equal to 6 then 
+        call error 
+    end if
+    if line.tokens:2 is not equal to "AND" then 
+        call error 
+    end if
+    if line.tokens:4 is not equal to "IN" then 
+        call error 
+    end if 
+
+    # eval $1 and $2
+    store line.tokens:1 in eval.token
+    call eval.token-to-value 
+    store eval.token.number in eval.tmp.a
+    store line.tokens:3 in eval.token
+    call eval.token-to-value 
+    store eval.token.number in eval.tmp.b
+
+    # math
+    add eval.tmp.a and eval.tmp.b in env.nvalues:line.tokens:5
+end sub-procedure
+
 # SUBTRACT $1 FROM $2 IN $3
 #  IN: line.tokens
 #      line.tokens.length
@@ -442,6 +468,8 @@ sub-procedure eval.code-line
         call eval.display
     else if line.tokens:0 is equal to "STORE" then
         call eval.store
+    else if line.tokens:0 is equal to "ADD" then 
+        call eval.add
     else if line.tokens:0 is equal to "SUBTRACT" then 
         call eval.subtract
     else if line.tokens:0 is equal to "IF" then
