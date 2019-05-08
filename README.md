@@ -35,7 +35,7 @@ Try it out:
   - [ ] while
     - [ ] is greater than
   - [ ] sub-procedure
-  - [ ] subtract 
+  - [x] subtract 
   - [ ] call
   - [ ] ...everything else
 - [ ] disancount.ldpl
@@ -45,12 +45,12 @@ Try it out:
     - [ ] modulo 
 - [ ] factorial.ldpl
     - [ ] while greater than
-    - [ ] multiply
+    - [x] multiply
 - [ ] fibonacci.ldpl
     - [ ] while is greater than
-    - [ ] add 
+    - [x] add 
 - [ ] sqrt.ldpl
     - [ ] return
-    - [ ] divide 
+    - [x] divide 
 - [ ] ldpltests
 - [ ] all of standard 
