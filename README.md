@@ -27,7 +27,7 @@ Try it out:
   - [ ] if
     - [x] is not equal to 
     - [x] is greater than 
-  - [ ] else
+  - [x] else
   - [ ] while
     - [ ] is greater than
   - [ ] sub-procedure
@@ -51,6 +51,5 @@ Try it out:
 - [ ] sqrt.ldpl
     - [ ] return
     - [ ] divide 
-    - [ ] if not equal 
 - [ ] ldpltests
 - [ ] all of standard 
