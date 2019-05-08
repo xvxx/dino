@@ -348,6 +348,32 @@ sub-procedure eval.divide
     divide eval.tmp.a by eval.tmp.b in env.nvalues:line.tokens:5
 end sub-procedure
 
+# MODULO $1 BY $2 IN $3
+#  IN: line.tokens
+#      line.tokens.length
+sub-procedure eval.modulo
+    if line.tokens.length is not equal to 6 then 
+        call error 
+    end if
+    if line.tokens:2 is not equal to "BY" then 
+        call error 
+    end if
+    if line.tokens:4 is not equal to "IN" then 
+        call error 
+    end if 
+
+    # eval $1 and $2
+    store line.tokens:1 in eval.token
+    call eval.token-to-value 
+    store eval.token.number in eval.tmp.a
+    store line.tokens:3 in eval.token
+    call eval.token-to-value 
+    store eval.token.number in eval.tmp.b
+
+    # math
+    modulo eval.tmp.a by eval.tmp.b in env.nvalues:line.tokens:5
+end sub-procedure
+
 # Used by IF and WHILE. Expects line.tokens to begin with 3 items:
 #  IF/WHILE $varA IS
 #  IN: line.tokens
@@ -550,6 +576,8 @@ sub-procedure eval.code-line
         call eval.multiply
     else if line.tokens:0 is equal to "DIVIDE" then 
         call eval.divide
+    else if line.tokens:0 is equal to "MODULO" then 
+        call eval.modulo
     else if line.tokens:0 is equal to "IF" then
         call eval.if
     else if line.tokens:0 is equal to "ELSE" then
