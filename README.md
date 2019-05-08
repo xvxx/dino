@@ -48,6 +48,24 @@ Try it out:
     - [x] GREATER THAN OR EQUAL TO
     - [x] LESS THAN OR EQUAL TO
     - [x] ELSE
+- [ ] while
+    - [ ] EQUAL TO
+    - [ ] NOT EQUAL TO
+    - [ ] GREATER THAN
+    - [ ] LESS THAN
+    - [ ] GREATER THAN OR EQUAL TO
+    - [ ] LESS THAN OR EQUAL TO
+    - [ ] BREAK
+    - [ ] CONTINUE
+- [ ] sub-procedure
+    - [ ] call
+    - [ ] define
+    - [ ] return
+- [ ] other
+    - [ ] wait
+    - [ ] exit
+    - [ ] goto
+    - [ ] label
 - [ ] math
     - [x] add
     - [x] subtract
@@ -59,4 +77,21 @@ Try it out:
     - [ ] floor
     - [ ] store random in
     - [ ] in - solve 
-
+- [ ] text 
+    - [ ] join - and - in 
+    - [ ] get character at - from - in
+    - [ ] store length of - in 
+    - [ ] store character - in 
+    - [ ] store character code of - in
+    - [ ] store quote - in
+    - [ ] in - join
+- [ ] i/o
+    - [ ] display
+    - [ ] accept
+    - [ ] execute
+    - [ ] execute - and store output in
+    - [ ] execute - and store exit code in
+    - [ ] accept - until eof
+    - [ ] load file - in
+    - [ ] write - to file 
+    
