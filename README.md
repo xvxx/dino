@@ -25,8 +25,8 @@ Try it out:
     - [x] string literal
 - [ ] 99bottles.ldpl
   - [ ] if
-    - [ ] is not equal to 
-    - [ ] is greater than 
+    - [x] is not equal to 
+    - [x] is greater than 
   - [ ] else
   - [ ] while
     - [ ] is greater than
