@@ -185,6 +185,9 @@ sub-procedure eval.token-to-value
         store eval.token in eval.token.text
     else
         # check for literal number
+        if eval.token.char is equal to "-" then 
+            get character at 1 from eval.token in eval.token.char
+        end if 
         store eval.token.char in is-digit.in
         call is-digit
         if is-digit.out is equal to 1 then
