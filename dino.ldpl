@@ -226,7 +226,7 @@ end sub-procedure
 #  IN: line.tokens
 #      line.tokens.length
 sub-procedure eval.accept
-    store env.types:eval.token in eval.token.type
+    store env.types:line.tokens:1 in eval.token.type
     if eval.token.type is equal to 1 then
         store env.nvalues:eval.token in eval.token.number
     else if eval.token.type is equal to 2 then
