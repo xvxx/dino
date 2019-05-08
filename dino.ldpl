@@ -30,13 +30,7 @@ DATA:
 # IN:
 reader.input           is text   # source code
 reader.name            is text   # filename
-reader.state           is number # 1=normal,2=ifyes,3=ifno
 
-# CONST:  
-reader.state.normal    is number # 1
-reader.state.if-true   is number # 2
-reader.state.if-false  is number # 3
-  
 # OUT:  
 line.tokens            is text vector  # this line's tokens
 line.tokens.length     is number
@@ -256,9 +250,7 @@ sub-procedure eval.if
                     store line.tokens:1 in eval.if.a
                     store line.tokens:5 in eval.if.b
                     if eval.if.a is greater than eval.if.b then 
-                        store reader.state.if-true in reader.state
                     else 
-                        store reader.state.if-false in reader.state
                     end if 
                 else
                     call error
@@ -379,7 +371,6 @@ sub-procedure main
     store argv:0 in reader.name
     load file argv:0 in reader.input
     store length of reader.input in reader.input.length
-    store reader.state.normal in reader.state
     
     while reader.ci is less than reader.input.length do
         store reader.char in reader.prev
