@@ -21,7 +21,7 @@
 # --- TYPES ----------------------------------------------------------
 | VAL    | NAME           | DESCRIPTION
 +--------+----------------+-------------------------------------------
-| %var   | Variable       | 
+| %var   | Variable       | ?
 | $r     | Register       | 0-15
 | #0     | Register       | 0-15
 | label  | Label          | 16-255
@@ -44,13 +44,11 @@
 | 0010 | PRINT $r       | Print content of register $r
 | 0011 | SLEEP n        | Pause for n milliseconds.
 | 0012 | ACCEPT $z      | 
-| 0013 | EXECUTE $ta    | 
+| 0013 | EXEC $ta       | 
 | 0014 | READ $ta $tz   | 
 | 0015 | WRITE $ta $tb  | 
 | 0016 | APPEND $ta $tb |
-| 0017 |                |
 | 0018 |                |
-| 0019 |                |
 | 0020 | ADD $a $b $z   | Put sum of registers $a and $b in $z
 | 0021 | SUB $a $b $z   | Subtract value of $b from $a and put in $z.
 | 0022 | MUL $a $b $z   | Multiplication
@@ -60,7 +58,7 @@
 | 0026 | CEIL $a $z     | Ceiling
 | 0027 | FLOOR $a $z    | Flooring
 | 0028 | RANDOM $z      | Put random number in $z.
-| 0029 |                |
+| 0035 |                |
 | 0040 | LEN $ta $z     | Gets length of string in $ta.
 | 0041 | JOIN $a $b $tz | Concatenates text in registers.
 | 0042 | GETC n v $tz   | Gets character at position n in string v. 
