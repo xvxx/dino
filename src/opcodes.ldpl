@@ -1,0 +1,34 @@
+# === OPCODES ========================================================
+# The vm's instructions.
+
+DATA:
+OPCODES is number vector
+OPNAMES is text vector
+
+PROCEDURE:
+store 1 in OPCODES:"JUMP"
+store "JUMP" in OPNAMES:OPCODES:"JUMP"
+
+store 2 in OPCODES:"JIF"
+store "JIF" in OPNAMES:OPCODES:"JIF"
+
+store 3 in OPCODES:"JIT"
+store "JIT" in OPNAMES:OPCODES:"JIT"
+
+store 4 in OPCODES:"CALL"
+store "CALL" in OPNAMES:OPCODES:"CALL"
+
+store 5 in OPCODES:"RETURN"
+store "RETURN" in OPNAMES:OPCODES:"RETURN"
+
+store 6 in OPCODES:"EXIT"
+store "EXIT" in OPNAMES:OPCODES:"EXIT"
+
+store 10 in OPCODES:"SET"
+store "SET" in OPNAMES:OPCODES:"SET"
+
+store 11 in OPCODES:"LOAD"
+store "LOAD" in OPNAMES:OPCODES:"LOAD"
+
+store 12 in OPCODES:"STORE"
+store "STORE" in OPNAMES:OPCODES:"STORE"
