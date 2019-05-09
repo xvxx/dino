@@ -28,6 +28,8 @@
 #   $ bytes file.ldpl -> file.dinocode
 #   $ disas file.dinocode -> file.dino
 
+PROCEDURE:
+
 # --- DISPLAY HELP ---------------------------------------------------
 # $ dino help
 sub-procedure main.help    
