@@ -34,7 +34,7 @@
 | NAME            | SYNTAX
 +-----------------+---------------------------------------------------
 | Register Name   | $z, $TA
-| Register ID     | #0, #15
+| Register ID     | #0, #15, #A
 | Direct Location | 3010, 10120
 | Variable Name   | %bufsize, %Users
 | Label           | print-fn, DISPLAY
