@@ -57,28 +57,28 @@
 |  06  | CALL label        | Push location on stack and jump to label
 |  07  | RETURN            | Pop loc off top of stack and jump to it 
 |  08  | EXIT              | Exit program
-|  09  | WAIT $r           | Pause for n milliseconds.
+|  09  | WAIT $r           | Pause for milliseconds in register.
 | ==== | ================= | MEMORY COMMANDS =========================
 |  10  | STORE %var $r     | Store value of register r in variable var.
 |  11  | STORN $r 3.14     | Store number in register r.
-| ==== | ================= | I/O COMMANDS ============================
-|  20  | PRINT $r          | Print content of register $r
-|  21  | ACCEPT $z         | 
-|  22  | EXEC $ta          | 
-|  23  | READ $ta $tz      | 
-|  24  | WRITE $ta $tb     | 
-|  25  | APPEND $ta $tb    |
 | ==== | ================= | ARITHMETIC ==============================
-|  30  | CMP $x $y $a      | Compare $a and $b, result in $z. -1 0 or 1
-|  31  | ADD $x $y $a      | Put sum of registers $a and $b in $z
-|  32  | SUB $x $y $a      | Subtract value of $b from $a and put in $z.
-|  33  | MUL $x $y $a      | Multiplication
-|  34  | DIV $x $y $a      | Division. $e will be set to 1 if $b is 0.
-|  35  | MOD $x $y $a      | Modulo
-|  36  | ABS $x $a         | Put absolute value of register $a in $z
-|  37  | CEIL $x $a        | Ceiling
-|  38  | FLOOR $x $a       | Flooring
-|  39  | RANDOM $a         | Put random number in $z.
+|  20  | CMP $x $y $a      | Compare $a and $b, put 1 in $z $gz or $lz
+|  21  | ADD $x $y $a      | Put sum of registers $x and $y in $a
+|  22  | SUB $x $y $a      | Subtract value of $y from $x and put in $a.
+|  23  | MUL $x $y $a      | Multiplication
+|  24  | DIV $x $y $a      | Division. $e will be set to 1 if $y is 0.
+|  25  | MOD $x $y $a      | Modulo
+|  26  | ABS $x $a         | Put absolute value of register $x in $a
+|  27  | CEIL $x $a        | Ceiling
+|  28  | FLOOR $x $a       | Flooring
+|  29  | RANDOM $a         | Put random number in $a.
+| ==== | ================= | I/O COMMANDS ============================
+|  30  | PRINT $r          | Print content of register $r
+|  31  | ACCEPT $a         | 
+|  32  | EXEC $ta          | 
+|  33  | READ $ta $tz      | 
+|  34  | WRITE $ta $tb     | 
+|  35  | APPEND $ta $tb    |
 | ==== | ================  | TEXT OPERATIONS ========================
 |  40  | LEN $tx $a        | Get length of string in $ta.
 |  41  | JOIN $tx $ty $ta  | Concatenate text in registers into $ta.
