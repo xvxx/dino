@@ -1,6 +1,7 @@
-# --- REGISTERS ------------------------------------------------------
+# --- MEMORY LAYOUT --------------------------------------------------
 | NUM  | NAME | TYPE | DESCRIPTION
 +------+------+------+------------------------------------------------
+| ==== | ==== | ==== | REGISTERS ====================================
 | 0000 | Z    | NUM  | Result
 | 0001 | A    | NUM  | Parameter
 | 0002 | B    | NUM  | Parameter
@@ -17,9 +18,10 @@
 | 0013 | TC   | TEXT | Parameter
 | 0014 | TD   | TEXT | Parameter
 | 0015 | TE   | TEXT | Error message
-| .... |      |      |
+| ==== | ==== | ==== | VARIABLES ====================================
 | 1000 |      | NUM  | Number variables
 | 2000 |      | TEXT | Text variables
+| ==== | ==== | ==== | CONSTANTS ====================================
 | 3000 |      | TEXT | Text literals 
 
 # --- ADDRESSING MODE ------------------------------------------------
