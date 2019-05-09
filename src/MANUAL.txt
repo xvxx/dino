@@ -7,6 +7,13 @@
                        Written in
                           LDPL
 
+# === SUMMARY ========================================================
+
+* 64 bit words
+* 0xFFFF words of memory 
+* 16 registers (A, X, Y, Z, C, E, SP, PC, TA, TX, TY, TZ, TE)
+* Registers, variables, and constants share memory space.
+
 # --- MEMORY LAYOUT --------------------------------------------------
 | NUM  | NAME | TYPE | DESCRIPTION
 +------+------+------+------------------------------------------------
@@ -39,7 +46,7 @@
 | NAME            | SYNTAX
 +-----------------+---------------------------------------------------
 | Register Name   | $z, $TA
-| Register ID     | #0, #15, #A
+| Memory Address  | #0, #15, #A
 | Variable Name   | %bufsize, %Users
 | Label           | print-fn, DISPLAY
 | Number literal  | 3010, 10120, 3.14
@@ -58,7 +65,7 @@
 |  07  | WAIT $r           | Pause for milliseconds in register.
 | ==== | ================= | MEMORY COMMANDS =========================
 |  10  | STORE %var $r     | Store value of register r in variable var.
-|  11  | STORN $r 3.14     | Store number in register r.
+|  11  | STORN $r 3.14     | Store literal number in register r.
 | ==== | ================= | ARITHMETIC ==============================
 |  20  | EQ $x $y $a       | Set $a=1 if $x == $y
 |  21  | GT $x $y $a       | Set $a=1 if $x > $y
@@ -80,7 +87,7 @@
 |  34  | WRITE $ta $tb     | 
 |  35  | APPEND $ta $tb    |
 | ==== | ================  | TEXT OPERATIONS ========================
-|  40  | LEN $tx $a        | Get length of string in $ta.
+|  40  | LEN $tx $a        | Get length of string in $tx.
 |  41  | JOIN $tx $ty $ta  | Concatenate text in registers into $ta.
 |  42  | GETC n %str $ta   | Get character at position n in %str. 
 |  43  | GETCC n %str $a   | Get character code at n in %str.
