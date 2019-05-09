@@ -7,12 +7,13 @@
                        Written in
                           LDPL
 
-# === SUMMARY ========================================================
+=== SUMMARY ==========================================================
 
 * 64 bit words
 * 0xFFFF words of memory 
 * 16 registers (A, X, Y, Z, C, E, SP, PC, TA, TX, TY, TZ, TE)
 * Registers, variables, and constants share memory space.
+* Instructions are 1-4 words: One opcode and 0-3 operands. 
 
 # --- MEMORY LAYOUT --------------------------------------------------
 | NUM  | NAME | TYPE | DESCRIPTION
@@ -22,10 +23,10 @@
 | 0001 | X    | NUM  | Parameter
 | 0002 | Y    | NUM  | Parameter
 | 0003 | Z    | NUM  | $a = 0?
-| 0004 | C    | NUM  | Carry
-| 0005 |      | NUM  | Reserved
-| 0006 |      | NUM  | Reserved
-| 0007 | E    | NUM  | Non-zero error code
+| 0004 | E    | NUM  | Non-zero error code
+| 0005 | C    | NUM  | Carry
+| 0006 |      |      | Reserved
+| 0007 |      |      | Reserved
 | 0008 | SP   | NUM  | Stack pointer
 | 0009 | PC   | NUM  | Program counter
 | 000A | TA   | TEXT | Text accumulator
@@ -33,7 +34,7 @@
 | 000C | TY   | TEXT | Parameter
 | 000D | TZ   | TEXT | Is TA empty?
 | 000E | TE   | TEXT | Error message
-| 000F |      | TEXT | Reserved
+| 000F |      |      | Reserved
 | ==== | ==== | ==== | VARIABLES ====================================
 | 1000 |      | NUM  | Number variables
 | 2000 |      | TEXT | Text variables
@@ -49,9 +50,8 @@
 | Memory Address  | #0, #15, #A
 | Variable Name   | %bufsize, %Users
 | Label           | print-fn, DISPLAY
-| Number literal  | 3010, 10120, 3.14
 
-# --- OPCODES --------------------------------------------------------
+# --- INSTRUCTIONS ---------------------------------------------------
 | CODE | NAME              | DESCRIPTION
 +------+-------------------+------------------------------------------
 |  00  | n/a               | n/a
