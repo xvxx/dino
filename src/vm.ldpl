@@ -1,0 +1,3 @@
+# === VIRTUAL MACHINE ================================================
+# The VM takes a number vector of bytecode and a text vector of 
+# constants and executes the code.

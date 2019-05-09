@@ -1,0 +1,3 @@
+# === COMPILER =======================================================
+# The compiler turns a vector of text tokens into a number vector of
+# bytecode and a text vector of constants. 

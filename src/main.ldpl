@@ -1,0 +1,15 @@
+# === DINO ===========================================================
+# The `dino` command line program, given a file of LDPL source code,
+# runs the code.
+#
+# Functions:
+#   $ help
+#   $ repl
+#   $ run file.ldpl
+#   $ asm file.ldpl -> file.dino
+#   $ bytes file.dino -> file.dinocode
+#   $ bytes file.ldpl -> file.dinocode
+#   $ disas file.dinocode -> file.dino
+
+# --- READ-EVAL-PRINT-LOOP -------------------------------------------
+# The REPL reads, evaluates, and prints LDPL source code in a loop.
