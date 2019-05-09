@@ -1,3 +1,20 @@
+#                                  .
+#                               &*****
+#     dino:                   (********@
+#      ~ an ~                 ***/
+#       ~ LDPL ~             @***
+#        ~ interpreter ~     &@
+#         ~ in ~            %**%%
+#          ~ LDPL ~         &**((
+#                        %%******
+#                (( ((&**********
+#          (@********************
+#         /**********************
+#        ***********************,.&
+#       ***********************######
+#     (*** ****/**************@#%####,
+#   @**&   **** ****.****.****#######(
+
 # === DINO ===========================================================
 # The `dino` command line program, given a file of LDPL source code,
 # runs the code.
@@ -11,5 +28,51 @@
 #   $ bytes file.ldpl -> file.dinocode
 #   $ disas file.dinocode -> file.dino
 
+# --- DISPLAY HELP ---------------------------------------------------
+# $ dino help
+sub-procedure main.help    
+end sub-procedure
+
 # --- READ-EVAL-PRINT-LOOP -------------------------------------------
+# $ dino run file.ldpl
 # The REPL reads, evaluates, and prints LDPL source code in a loop.
+sub-procedure main.repl
+end sub-procedure
+
+# --- RUN FILE -------------------------------------------------------
+# $ dino run file.ldpl
+sub-procedure main.run-file
+end sub-procedure
+
+# --- CONVERT LDPL TO ASSEMBLY ---------------------------------------
+# $ dino asm file.ldpl
+sub-procedure main.ldpl-to-asm
+end sub-procedure
+
+# --- CONVERT LDPL TO BYTECODE ---------------------------------------
+# $ dino bytes file.ldpl
+sub-procedure main.ldpl-to-bytecode
+end sub-procedure
+
+# --- CONVERT ASSEMBLY TO BYTECODE -----------------------------------
+# $ dino bytes file.dino
+sub-procedure main.asm-to-bytecode
+end sub-procedure
+
+# --- CONVERT BYTECODE TO ASSEMBLY -----------------------------------
+# $ dino disas file.dinocode
+sub-procedure main.bytecode-to-asm
+end sub-procedure
+
+# --- MAIN PROGRAM ROUTINE -------------------------------------------
+sub-procedure main
+end sub-procedure
+
+
+#              boing         boing         boing
+#    e-e           . - .         . - .         . - .
+#   (\_/)\       '       `.   ,'       `.   ,'       .
+#    `-'\ `--.___,         . .           . .          .
+#       '\( ,_.-'
+#          \\               "             "            a:f
+#          ^'
