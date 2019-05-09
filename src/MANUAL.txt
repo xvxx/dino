@@ -1,0 +1,83 @@
+            *  *__* _*  *  * _*  *__*_ *__*  *
+            * |   \(_)_ _  __\ \ / /  \/  |  *
+            * | |) | | ' \/ _ \ V /| |\/| |  *
+            * |___/|_|_||_\___/\_/ |_|  |_|  *
+            *  *  *  *  *  *  *  *  *  *  *  *
+                       An LDPL VM        
+                       Written in
+                          LDPL
+
+# --- MEMORY LAYOUT --------------------------------------------------
+| NUM  | NAME | TYPE | DESCRIPTION
++------+------+------+------------------------------------------------
+| ==== | ==== | ==== | REGISTERS =====================================
+| 0000 | A    | NUM  | Accumulator
+| 0001 | X    | NUM  | Parameter
+| 0002 | Y    | NUM  | Parameter
+| 0003 | Z    | NUM  | Is A = 0?
+| 0004 | C    | NUM  | Carry
+| 0005 | E    | NUM  | Non-zero error code
+| 0006 | F    | NUM  | Flags
+| 0007 | G    | NUM  | Flags
+| 0008 | SP   | NUM  | Stack pointer
+| 0009 | PC   | NUM  | Program counter
+| 000A | TA   | TEXT | Text accumulator
+| 000B | TX   | TEXT | Parameter
+| 000C | TY   | TEXT | Parameter
+| 000D | TZ   | TEXT | Is TA empty?
+| 000E | TE   | TEXT | Error message
+| 000F | TF   | TEXT | Text flags
+| ==== | ==== | ==== | VARIABLES ====================================
+| 1000 |      | NUM  | Number variables
+| 2000 |      | TEXT | Text variables
+| ==== | ==== | ==== | CONSTANTS ====================================
+| 3000 |      | TEXT | Text literals 
+| ...  |      |      |
+| FFFF |      |      | Max address
+
+# --- ADDRESS SYNTAX -------------------------------------------------
+| NAME            | SYNTAX
++-----------------+---------------------------------------------------
+| Register Name   | $z, $TA
+| Register ID     | #0, #15, #A
+| Number literal  | 3010, 10120, 3.14
+| Variable Name   | %bufsize, %Users
+| Label           | print-fn, DISPLAY
+
+# --- OPCODES --------------------------------------------------------
+| CODE | NAME              | DESCRIPTION
++------+-------------------+------------------------------------------
+|  00  | n/a               | n/a
+| ==== | ================= | CONTROL FLOW ============================
+|  01  | JUMP label        | Jump to location of label
+|  02  | JIF label         | Jump to label if $z is false
+|  03  | JIT label         | Jump to label if $z is true
+|  04  | CALL label        | Push location on stack and jump to label
+|  05  | RETURN            | Pop loc off top of stack and jump to it 
+|  06  | STORE %var $r     | Store value of register r in variable var.
+|  07  | EXIT              | Exit program
+|  08  | WAIT n            | Pause for n milliseconds.
+| ==== | ================= | I/O COMMANDS ============================
+|  10  | PRINT $r          | Print content of register $r
+|  11  | ACCEPT $z         | 
+|  12  | EXEC $ta          | 
+|  13  | READ $ta $tz      | 
+|  14  | WRITE $ta $tb     | 
+|  15  | APPEND $ta $tb    |
+| ==== | ================= | ARITHMETIC ==============================
+|  20  | CMP $x $y $a      | Compare $a and $b, result in $z. -1 0 or 1
+|  21  | ADD $x $y $a      | Put sum of registers $a and $b in $z
+|  22  | SUB $x $y $a      | Subtract value of $b from $a and put in $z.
+|  23  | MUL $x $y $a      | Multiplication
+|  24  | DIV $x $y $a      | Division. $e will be set to 1 if $b is 0.
+|  25  | MOD $x $y $a      | Modulo
+|  26  | ABS $x $a         | Put absolute value of register $a in $z
+|  27  | CEIL $x $a        | Ceiling
+|  28  | FLOOR $x $a       | Flooring
+|  29  | RANDOM $a         | Put random number in $z.
+| ==== | ================  | TEXT OPERATIONS ========================
+|  30  | LEN $tx $a        | Get length of string in $ta.
+|  31  | JOIN $tx $ty $ta  | Concatenate text in registers into $ta.
+|  32  | GETC n %str $ta   | Get character at position n in %str. 
+|  33  | GETCC n %str $a   | Get character code at n in %str.
+|  34  | PUTC $tr n        | Put ascii character with code n into $tr.
