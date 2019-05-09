@@ -14,10 +14,10 @@
 | 0000 | A    | NUM  | Accumulator
 | 0001 | X    | NUM  | Parameter
 | 0002 | Y    | NUM  | Parameter
-| 0003 | C    | NUM  | Carry
-| 0004 | Z    | NUM  | $a = 0?
-| 0005 | GZ   | NUM  | $a > 0?
-| 0006 | LZ   | NUM  | $a < 0?
+| 0003 | Z    | NUM  | $a = 0?
+| 0004 | C    | NUM  | Carry
+| 0005 |      | NUM  | Reserved
+| 0006 |      | NUM  | Reserved
 | 0007 | E    | NUM  | Non-zero error code
 | 0008 | SP   | NUM  | Stack pointer
 | 0009 | PC   | NUM  | Program counter
@@ -26,7 +26,7 @@
 | 000C | TY   | TEXT | Parameter
 | 000D | TZ   | TEXT | Is TA empty?
 | 000E | TE   | TEXT | Error message
-| 000F | TF   | TEXT | Unused
+| 000F |      | TEXT | Reserved
 | ==== | ==== | ==== | VARIABLES ====================================
 | 1000 |      | NUM  | Number variables
 | 2000 |      | TEXT | Text variables
@@ -52,26 +52,26 @@
 |  01  | JUMP label        | Jump to location of label
 |  02  | JIF label         | Jump to label if $a is 0 (false)
 |  03  | JIT label         | Jump to label if $a is 1 (true)
-|  04  | JGZ label         | Jump to label if $a > 0
-|  05  | JLZ label         | Jump to label if $a < 0 
-|  06  | CALL label        | Push location on stack and jump to label
-|  07  | RETURN            | Pop loc off top of stack and jump to it 
-|  08  | EXIT              | Exit program
-|  09  | WAIT $r           | Pause for milliseconds in register.
+|  04  | CALL label        | Push location on stack and jump to label
+|  05  | RETURN            | Pop loc off top of stack and jump to it 
+|  06  | EXIT              | Exit program
+|  07  | WAIT $r           | Pause for milliseconds in register.
 | ==== | ================= | MEMORY COMMANDS =========================
 |  10  | STORE %var $r     | Store value of register r in variable var.
 |  11  | STORN $r 3.14     | Store number in register r.
 | ==== | ================= | ARITHMETIC ==============================
-|  20  | CMP $x $y $a      | Compare $a and $b, put 1 in $z $gz or $lz
-|  21  | ADD $x $y $a      | Put sum of registers $x and $y in $a
-|  22  | SUB $x $y $a      | Subtract value of $y from $x and put in $a.
-|  23  | MUL $x $y $a      | Multiplication
-|  24  | DIV $x $y $a      | Division. $e will be set to 1 if $y is 0.
-|  25  | MOD $x $y $a      | Modulo
-|  26  | ABS $x $a         | Put absolute value of register $x in $a
-|  27  | CEIL $x $a        | Ceiling
-|  28  | FLOOR $x $a       | Flooring
-|  29  | RANDOM $a         | Put random number in $a.
+|  20  | EQ $x $y $a       | Set $a=1 if $x == $y
+|  21  | GT $x $y $a       | Set $a=1 if $x > $y
+|  22  | LT $x $y $a       | Set $a=1 if $x < $y
+|  23  | ADD $x $y $a      | Put sum of registers $x and $y in $a
+|  24  | SUB $x $y $a      | Subtract value of $y from $x and put in $a.
+|  25  | MUL $x $y $a      | Multiplication
+|  26  | DIV $x $y $a      | Division. $e will be set to 1 if $y is 0.
+|  27  | MOD $x $y $a      | Modulo
+|  28  | ABS $x $a         | Put absolute value of register $x in $a
+|  29  | CEIL $x $a        | Ceiling
+|  2A  | FLOOR $x $a       | Flooring
+|  2B  | RANDOM $a         | Put random number in $a.
 | ==== | ================= | I/O COMMANDS ============================
 |  30  | PRINT $r          | Print content of register $r
 |  31  | ACCEPT $a         | 
