@@ -2,43 +2,65 @@
 # The assembler converts text assembly code into dino bytecode.
 DATA:
 # IN:
-assembler.input      is text
+assembler.input         is text
 
 # OUT:
-assembler.bytecode   is number vector  # bytecode
-assembler.constants  is text vector    # text constants
-assembler.textcode   is text           # text (file) version of bytecode
+assembler.bytecode      is number vector  # bytecode
+assembler.bytecode.len  is number
+assembler.constants     is text vector    # text constants
+assembler.constants.len is number
+assembler.textcode      is text           # text (file) version of bytecod
 
 # CONSTANTS:
-assembler.newline    is text
+assembler.text-offset   is number
 
-# INTERNAL:
-assembler.lines      is text vector
-assembler.lines.len  is number
-assembler.tokens     is text vector
-assembler.tokens.len is number
+# INTERNALS:
+assembler.lines         is text vector
+assembler.lines.len     is number
+assembler.tokens        is text vector
+assembler.tokens.len    is number
 
 # LOCALS:
-assembler.line       is text
-assembler.len        is number
-assembler.i          is number
-assembler.char       is text
-assembler.prev       is text
-assembler.token      is text
-assembler.comment?   is number
-assembler.string?    is number
+assembler.line          is text
+assembler.len           is number
+assembler.i             is number
+assembler.x             is number
+assembler.char          is text
+assembler.prev          is text
+assembler.token         is text
+assembler.comment?      is number
+assembler.string?       is number
 
 PROCEDURE:
-store ":newline:" in assembler.newline
+store 12288 in assembler.text-offset # 0x3000
 
 #  IN: assembler.tokens
 #      assembler.tokens.len
+# OUT: assembler.bytecode
+#      assembler.bytecode.len
+#      assembler.constants
+#      assembler.constants.len
 sub-procedure assembler.tokens-to-bytecode
-    
+    store 0 in assembler.i
+    while assembler.i is less than assembler.tokens.len do
+        get character at 0 from assembler.tokens:assembler.i in assembler.char
+        if assembler.char is equal to "\"" then
+            add assembler.text-offset and assembler.bytecode.len in assembler.x
+            store assembler.x in assembler.bytecode:assembler.bytecode.len
+            store assembler.tokens:assembler.i in assembler.constants:assembler.constants.len
+            add 1 and assembler.constants.len in assembler.constants.len
+        else
+
+        end if
+
+        add 1 and assembler.bytecode.len in assembler.bytecode.len
+        add 1 and assembler.i in assembler.i
+    repeat
 end sub-procedure
 
-# Ignores comments and commas, strips extra whitespace, and
-# supports strings.
+# Converts a text of ASM source code to a text vector of tokens.
+# Ignores comments and commas, strips extra whitespace, and supports
+# strings.
 #  IN: assembler.input
 # OUT: assembler.lines
 #      assembler.lines.len
@@ -126,22 +148,37 @@ end sub-procedure
 
 #  IN: assembler.input
 sub-procedure assembler.compile
+    display "LINES:" crlf
     call assembler.tokenize-input
     store 0 in assembler.i
     while assembler.i is less than assembler.lines.len do
         if assembler.i is less than 10 then
             display "0"
-            end if
+        end if
         display assembler.i ": " assembler.lines:assembler.i crlf
         add 1 and assembler.i in assembler.i
     repeat
+
+    display crlf "TOKENS:" crlf
 
     store 0 in assembler.i
     while assembler.i is less than assembler.tokens.len do
         if assembler.i is less than 10 then
             display "0"
-            end if
+        end if
         display assembler.i ": " assembler.tokens:assembler.i crlf
+        add 1 and assembler.i in assembler.i
+    repeat
+
+    display crlf "BYTECODE:" crlf
+
+    call assembler.tokens-to-bytecode
+    store 0 in assembler.i
+    while assembler.i is less than assembler.bytecode.len do
+        if assembler.i is less than 10 then
+            display "0"
+        end if
+        display assembler.i ": " assembler.bytecode:assembler.i crlf
         add 1 and assembler.i in assembler.i
     repeat
 end sub-procedure
