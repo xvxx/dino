@@ -300,6 +300,10 @@ sub-procedure asm.compile
         in asm.textcode join asm.textcode asm.x " "
         add 1 and asm.pc in asm.pc
     repeat
+end sub-procedure
 
+# Must be called after asm.compile.
+#  IN: asm.textcode
+sub-procedure asm.bytecode.print
     display asm.textcode crlf
 end sub-procedure
