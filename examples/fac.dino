@@ -14,3 +14,4 @@ end_while:
     DISPLAY "Factorial: "
     DISPLAY %result
     DISPLAY "\n"
+    EXIT
