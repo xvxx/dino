@@ -168,7 +168,7 @@ end sub-procedure
 #      assembler.lines.len
 #      assembler.tokens
 #      assembler.tokens.len
-sub-procedure assembler.input.tokenize
+sub-procedure assembler.input.to-tokens
     store length of assembler.input in assembler.len
     store 0 in assembler.pc
     store 0 in assembler.comment?
@@ -258,9 +258,16 @@ sub-procedure assembler.input.tokenize
 end sub-procedure
 
 #  IN: assembler.input
-sub-procedure assembler.compile
-    call assembler.input.tokenize
+# OUT: assembler.bytecode
+#      assembler.bytecode.len
+sub-procedure assembler.input.to-bytecode
+    call assembler.input.to-tokens
     call assembler.tokens.to-bytecode
+end sub-procedure
+
+#  IN: assembler.input
+sub-procedure assembler.compile
+    call assembler.input.to-bytecode
 
     store 0 in assembler.pc
     while assembler.pc is less than assembler.tokens.len do
