@@ -15,11 +15,14 @@ assembler.textcode      is text           # text (file) version of bytecod
 assembler.text-offset   is number
 
 # INTERNALS:
+assembler.labels        is text vector
+assembler.labels.len    is number
 assembler.lines         is text vector
 assembler.lines.len     is number
 assembler.tokens        is text vector
 assembler.tokens.len    is number
 assembler.token         is text
+assembler.label         is text
 assembler.address       is number
 
 # LOCALS:
@@ -131,11 +134,6 @@ sub-procedure assembler.tokenize-input
         store assembler.char in assembler.prev
         get character at assembler.i from assembler.input in assembler.char
 
-        # treat commas as spaces
-        if assembler.char is equal to "," then
-            store " " in assembler.char
-        end if
-
         if assembler.string? is equal to 1 then
             if assembler.char is equal to "\"" then
                 if assembler.prev is equal to "\\" then
@@ -152,8 +150,18 @@ sub-procedure assembler.tokenize-input
             else
                 # not a quote, add to token
                 join assembler.token and assembler.char in assembler.token
+                join assembler.line and assembler.char in assembler.line
             end if
-        else if assembler.char is equal to "\n" then
+            add 1 and assembler.i in assembler.i
+            continue
+        end if
+
+        # treat commas as spaces
+        if assembler.char is equal to "," then
+            store " " in assembler.char
+        end if
+
+        if assembler.char is equal to "\n" then
             # save line
             if assembler.line is not equal to "" then
                 store assembler.line in assembler.lines:assembler.lines.len
@@ -215,21 +223,15 @@ sub-procedure assembler.compile
         add 1 and assembler.i in assembler.i
     repeat
 
+    call assembler.tokens-to-bytecode
     display crlf "TOKENS:" crlf
-
     store 0 in assembler.i
     while assembler.i is less than assembler.tokens.len do
-        display assembler.tokens:assembler.i " "
+        if assembler.bytecode:assembler.i is less than 10 then
+            display "0"
+        end if
+        display assembler.bytecode:assembler.i ": "
+        display assembler.tokens:assembler.i crlf
         add 1 and assembler.i in assembler.i
     repeat
-
-    display crlf crlf "BYTECODE:" crlf
-
-    call assembler.tokens-to-bytecode
-    store 0 in assembler.i
-    while assembler.i is less than assembler.bytecode.len do
-        display assembler.bytecode:assembler.i " "
-        add 1 and assembler.i in assembler.i
-    repeat
-    display crlf
 end sub-procedure
