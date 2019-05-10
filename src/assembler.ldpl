@@ -16,7 +16,7 @@ assembler.newline    is text
 assembler.lines      is text vector
 assembler.lines.len  is number
 assembler.tokens     is text vector
-assembler.tokens.len is number     
+assembler.tokens.len is number
 
 # LOCALS:
 assembler.line       is text
@@ -29,9 +29,15 @@ assembler.comment?   is number
 assembler.string?    is number
 
 PROCEDURE:
-store ":newline:" in assembler.newline 
+store ":newline:" in assembler.newline
 
-# Ignores comments and commas, strips extra whitespace, and 
+#  IN: assembler.tokens
+#      assembler.tokens.len
+sub-procedure assembler.tokens-to-bytecode
+    
+end sub-procedure
+
+# Ignores comments and commas, strips extra whitespace, and
 # supports strings.
 #  IN: assembler.input
 # OUT: assembler.lines
@@ -47,16 +53,16 @@ sub-procedure assembler.tokenize-input
     store "" in assembler.prev
     store "" in assembler.token
 
-    while assembler.i is less than assembler.len do 
+    while assembler.i is less than assembler.len do
         store assembler.char in assembler.prev
         get character at assembler.i from assembler.input in assembler.char
 
         # treat commas as spaces
-        if assembler.char is equal to "," then 
+        if assembler.char is equal to "," then
             store " " in assembler.char
-        end if 
+        end if
 
-        if assembler.string? is equal to 1 then 
+        if assembler.string? is equal to 1 then
             if assembler.char is equal to "\"" then
                 if assembler.prev is equal to "\\" then
                     # quoted string
@@ -68,12 +74,12 @@ sub-procedure assembler.tokenize-input
                     add 1 and assembler.tokens.len in assembler.tokens.len
                     store "" in assembler.token
                     store 0 in assembler.string?
-                end if 
+                end if
             else
                 # not a quote, add to token
                 join assembler.token and assembler.char in assembler.token
-            end if 
-        else if assembler.char is equal to "\n" then 
+            end if
+        else if assembler.char is equal to "\n" then
             # save line
             if assembler.line is not equal to "" then
                 store assembler.line in assembler.lines:assembler.lines.len
@@ -87,17 +93,17 @@ sub-procedure assembler.tokenize-input
                 store "" in assembler.token
             end if
             store 0 in assembler.comment?
-        else if assembler.char is equal to "\"" then 
+        else if assembler.char is equal to "\"" then
             # parse string
             store 1 in assembler.string?
             store "\"" in assembler.token
-        else if assembler.char is equal to ";" then 
+        else if assembler.char is equal to ";" then
             # ignore comments
             store 1 in assembler.comment?
-        else if assembler.char is equal to " " then 
+        else if assembler.char is equal to " " then
             # squash spaces
-            if assembler.prev is not equal to " " then 
-                if assembler.line is not equal to "" then 
+            if assembler.prev is not equal to " " then
+                if assembler.line is not equal to "" then
                     # add single space to line
                     join assembler.line and assembler.char in assembler.line
                     # save token
@@ -108,7 +114,7 @@ sub-procedure assembler.tokenize-input
                     end if
                 end if
             end if
-        else if assembler.comment? is equal to 0 then 
+        else if assembler.comment? is equal to 0 then
             # add char to token
             join assembler.token and assembler.char in assembler.token
             # add char to line
@@ -121,19 +127,19 @@ end sub-procedure
 #  IN: assembler.input
 sub-procedure assembler.compile
     call assembler.tokenize-input
-    store 0 in assembler.i 
-    while assembler.i is less than assembler.lines.len do 
-        if assembler.i is less than 10 then 
-            display "0" 
+    store 0 in assembler.i
+    while assembler.i is less than assembler.lines.len do
+        if assembler.i is less than 10 then
+            display "0"
             end if
         display assembler.i ": " assembler.lines:assembler.i crlf
         add 1 and assembler.i in assembler.i
     repeat
 
-    store 0 in assembler.i 
-    while assembler.i is less than assembler.tokens.len do 
-        if assembler.i is less than 10 then 
-            display "0" 
+    store 0 in assembler.i
+    while assembler.i is less than assembler.tokens.len do
+        if assembler.i is less than 10 then
+            display "0"
             end if
         display assembler.i ": " assembler.tokens:assembler.i crlf
         add 1 and assembler.i in assembler.i
