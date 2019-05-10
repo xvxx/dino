@@ -59,7 +59,7 @@ end sub-procedure
 # Convert tokens of ASM source code to memory address.
 #  IN: assembler.token
 # OUT: assembler.address
-sub-procedure assembler.token-to-address
+sub-procedure assembler.token.to-address
     get character at 0 from assembler.token in assembler.char
     if assembler.char is equal to "\"" then
         add assembler.text-offset and assembler.constants.len in assembler.address
@@ -85,7 +85,7 @@ end sub-procedure
 #      assembler.bytecode.len
 #      assembler.constants
 #      assembler.constants.len
-sub-procedure assembler.tokens-to-bytecode
+sub-procedure assembler.tokens.to-bytecode
     store 0 in assembler.pc
     while assembler.pc is less than assembler.tokens.len do
         store assembler.tokens:assembler.pc in assembler.token
@@ -98,7 +98,7 @@ sub-procedure assembler.tokens-to-bytecode
                 add assembler.size and assembler.pc in assembler.size
                 while assembler.pc is less than assembler.size do
                     store assembler.tokens:assembler.pc in assembler.token
-                    call assembler.token-to-address
+                    call assembler.token.to-address
                     store assembler.address in assembler.bytecode:assembler.bytecode.len
                     add 1 and assembler.bytecode.len in assembler.bytecode.len
                     add 1 and assembler.pc in assembler.pc
@@ -135,7 +135,7 @@ end sub-procedure
 #      assembler.lines.len
 #      assembler.tokens
 #      assembler.tokens.len
-sub-procedure assembler.tokenize-input
+sub-procedure assembler.input.tokenize
     store length of assembler.input in assembler.len
     store 0 in assembler.i
     store 0 in assembler.comment?
@@ -226,8 +226,8 @@ end sub-procedure
 
 #  IN: assembler.input
 sub-procedure assembler.compile
-    call assembler.tokenize-input
-    call assembler.tokens-to-bytecode
+    call assembler.input.tokenize
+    call assembler.tokens.to-bytecode
 
     store 0 in assembler.i
     while assembler.i is less than assembler.tokens.len do
