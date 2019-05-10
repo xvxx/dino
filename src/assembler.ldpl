@@ -29,7 +29,6 @@ assembler.address       is number
 assembler.line          is text
 assembler.len           is number
 assembler.i             is number
-assembler.j             is number
 assembler.x             is number
 assembler.t             is text
 assembler.size          is number
@@ -47,9 +46,7 @@ store 12288 in assembler.text-offset # 0x3000
 sub-procedure assembler.token-to-address
     get character at 0 from assembler.token in assembler.char
     if assembler.char is equal to "\"" then
-        add assembler.text-offset and assembler.bytecode.len in assembler.x
-        store assembler.x in assembler.bytecode:assembler.bytecode.len
-        add 1 and assembler.bytecode.len in assembler.bytecode.len
+        add assembler.text-offset and assembler.constants.len in assembler.address
         store assembler.token in assembler.constants:assembler.constants.len
         add 1 and assembler.constants.len in assembler.constants.len
     else if assembler.char is equal to "$" then
@@ -76,13 +73,10 @@ sub-procedure assembler.tokens-to-bytecode
     store 0 in assembler.i
     while assembler.i is less than assembler.tokens.len do
         store assembler.tokens:assembler.i in assembler.token
-        get character at 0 from assembler.token in assembler.char
-
         if opcodes:assembler.token is greater than 0 then
             store opcodes:assembler.token in assembler.bytecode:assembler.bytecode.len
             add 1 and assembler.bytecode.len in assembler.bytecode.len
             store opsizes:opcodes:assembler.token in assembler.size
-
             if assembler.size is greater than 0 then
                 add 1 and assembler.i in assembler.i
                 add assembler.size and assembler.i in assembler.size
@@ -235,7 +229,12 @@ sub-procedure assembler.compile
 
     store 0 in assembler.i
     while assembler.i is less than assembler.bytecode.len do
-        display "\t" assembler.tokens:assembler.i "  \t" assembler.bytecode:assembler.i crlf
+        display "\t"
+        if assembler.bytecode:assembler.i is less than 10 then
+            display "0"
+        end if
+        display assembler.bytecode:assembler.i "  "
+        display "\t" assembler.tokens:assembler.i crlf
         add 1 and assembler.i in assembler.i
     repeat
     display assembler.tokens.len crlf
