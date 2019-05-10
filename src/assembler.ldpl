@@ -24,6 +24,7 @@ assembler.tokens.len    is number
 assembler.token         is text
 assembler.label         is text
 assembler.address       is number
+assembler.pc            is number  # program counter
 
 # LOCALS:
 assembler.line          is text
@@ -40,6 +41,21 @@ assembler.string?       is number
 PROCEDURE:
 store 12288 in assembler.text-offset # 0x3000
 
+#  IN: assembler.token
+# OUT: assembler.token
+sub-procedure assembler.strip-trailing-colon
+    store length of assembler.token in assembler.len
+    subtract 1 from assembler.len in assembler.len
+    store 0 in assembler.x
+    store "" in assembler.t
+    while assembler.x is less than assembler.len do
+        get character at assembler.x from assembler.token in assembler.char
+        join assembler.t and assembler.char in assembler.t
+        add 1 and assembler.x in assembler.x
+    repeat
+    store assembler.t in assembler.token
+end sub-procedure
+
 # Convert tokens of ASM source code to memory address.
 #  IN: assembler.token
 # OUT: assembler.address
@@ -53,10 +69,10 @@ sub-procedure assembler.token-to-address
         store REGISTERS:assembler.token in assembler.address
     else if assembler.char is equal to "#" then
         # register ID
-        store 0 in assembler.address
+        store 69 in assembler.address
     else if assembler.char is equal to "%" then
         # variables
-        store 0 in assembler.address
+        store 69 in assembler.address
     else
         store assembler.token in assembler.address
     end if
@@ -70,22 +86,22 @@ end sub-procedure
 #      assembler.constants
 #      assembler.constants.len
 sub-procedure assembler.tokens-to-bytecode
-    store 0 in assembler.i
-    while assembler.i is less than assembler.tokens.len do
-        store assembler.tokens:assembler.i in assembler.token
+    store 0 in assembler.pc
+    while assembler.pc is less than assembler.tokens.len do
+        store assembler.tokens:assembler.pc in assembler.token
         if opcodes:assembler.token is greater than 0 then
             store opcodes:assembler.token in assembler.bytecode:assembler.bytecode.len
             add 1 and assembler.bytecode.len in assembler.bytecode.len
             store opsizes:opcodes:assembler.token in assembler.size
             if assembler.size is greater than 0 then
-                add 1 and assembler.i in assembler.i
-                add assembler.size and assembler.i in assembler.size
-                while assembler.i is less than assembler.size do
-                    store assembler.tokens:assembler.i in assembler.token
+                add 1 and assembler.pc in assembler.pc
+                add assembler.size and assembler.pc in assembler.size
+                while assembler.pc is less than assembler.size do
+                    store assembler.tokens:assembler.pc in assembler.token
                     call assembler.token-to-address
                     store assembler.address in assembler.bytecode:assembler.bytecode.len
                     add 1 and assembler.bytecode.len in assembler.bytecode.len
-                    add 1 and assembler.i in assembler.i
+                    add 1 and assembler.pc in assembler.pc
                 repeat
                 continue
             end if
@@ -96,6 +112,8 @@ sub-procedure assembler.tokens-to-bytecode
 
             if assembler.char is equal to ":" then
                 # label
+                call assembler.strip-trailing-colon
+                store assembler.pc in assembler.labels:assembler.token
                 store 69 in assembler.bytecode:assembler.bytecode.len
                 add 1 and assembler.bytecode.len in assembler.bytecode.len
             else
@@ -105,7 +123,7 @@ sub-procedure assembler.tokens-to-bytecode
             end if
         end if
 
-        add 1 and assembler.i in assembler.i
+        add 1 and assembler.pc in assembler.pc
     repeat
 end sub-procedure
 
@@ -214,7 +232,7 @@ sub-procedure assembler.compile
     store 0 in assembler.i
     while assembler.i is less than assembler.tokens.len do
         store assembler.bytecode:assembler.i in assembler.x
-        if assembler.x is greater than assembler.text-offset then
+        if assembler.x is greater than or equal to assembler.text-offset then
             subtract assembler.text-offset from assembler.x in assembler.x
         end if
         if assembler.x is less than 10 then
