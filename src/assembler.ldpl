@@ -237,6 +237,4 @@ sub-procedure assembler.compile
         display "\t" assembler.tokens:assembler.i crlf
         add 1 and assembler.i in assembler.i
     repeat
-    display assembler.tokens.len crlf
-    display assembler.bytecode.len crlf
 end sub-procedure
