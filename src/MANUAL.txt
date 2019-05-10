@@ -22,9 +22,9 @@
    * [x] strip comments
    * [x] trim line
    * [x] tokenize file
-   * [ ] support strings
-   * [ ] :newline: token 
-   * [ ] accept file from command line 
+   * [x] support strings
+   * [-] :newline: token  (don't need)
+   * [x] accept file from command line 
    * [ ] tokens -> bytecode 
    * [ ] print raw bytecode
    * [ ] save bytecode to file 
