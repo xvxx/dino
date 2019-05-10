@@ -258,8 +258,6 @@ end sub-procedure
 #      vm.bytecode
 #      vm.bytecode.len
 sub-procedure vm.bytecode.to-text
-    call asm.compile
-
      # L D P L char codes, version #
     store "76 68 80 76 01 " in asm.segment.head
 
