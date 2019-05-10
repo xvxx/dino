@@ -8,30 +8,71 @@ vm.bytecode.len     is number
 vm.bytecode.text    is text
 vm.constants        is text vector
 vm.constants.len    is number
+
+# CONSTANTS:
 vm.bytecode.version is number
+vm.text.offset      is number
 
 # PRIVATE:
 vm.pc               is number
 vm.i                is number
+vm.j                is number
+vm.x                is number
 vm.opcode           is number
 vm.operands         is number vector
 vm.operands.len     is number
 vm.error            is text
 
 PROCEDURE:
-store 01 in vm.bytecode.version
+store 01    in vm.bytecode.version
+store 12288 in vm.text.offset # 0x3000
 
 #  IN: vm.error
 #      vm.pc
 sub-procedure vm.error
+    store 5 in vm.i
+    while vm.i is less than vm.bytecode.len do
+        store vm.bytecode:vm.i in vm.opcode
+
+        if vm.opcode is equal to 0 then
+            add 1 and vm.i in vm.i
+            continue
+        end if
+
+        display "\e[36m"
+        if vm.opcode is less than 10 then
+            display 0
+        end if
+        display vm.opcode " \e[33m" opnames:vm.opcode "\t"
+        if opsizes:vm.opcode is greater than 0 then
+            display "\e[32m"
+            store opsizes:vm.opcode in vm.x
+            store 0 in vm.j
+            while vm.j is less than vm.x do
+                add 1 and vm.i in vm.i
+                display "\e[35m"
+                store vm.bytecode:vm.i in vm.opcode
+                if vm.opcode is greater than or equal to vm.text.offset then
+                    subtract vm.text.offset from vm.opcode in vm.opcode
+                    display vm.constants:vm.opcode
+                else
+                    display vm.opcode
+                end if
+                add 1 and vm.j in vm.j
+                if vm.j is less than vm.x then
+                    display "\e[0m, "
+                end if
+            repeat
+        end if
+        display crlf
+
+        add 1 and vm.i in vm.i
+    repeat
+
     if vm.error is equal to "" then
         store "vm error" in vm.error
     end if
-    display "\e[33m"
-    if vm.pc is less than 10 then
-        display 0
-    end if
-    display vm.pc " "
+
     display "\e[1;31mVM Error: \e[0m" vm.error crlf
     exit
 end sub-procedure
