@@ -26,6 +26,7 @@ assembler.char       is text
 assembler.prev       is text
 assembler.token      is text
 assembler.comment?   is number
+assembler.string?    is number
 
 PROCEDURE:
 store ":newline:" in assembler.newline 
@@ -41,9 +42,11 @@ sub-procedure assembler.tokenize-input
     store length of assembler.input in assembler.len
     store 0 in assembler.i
     store 0 in assembler.comment?
+    store 0 in assembler.string?
     store "" in assembler.char
     store "" in assembler.prev
     store "" in assembler.token
+
     while assembler.i is less than assembler.len do 
         store assembler.char in assembler.prev
         get character at assembler.i from assembler.input in assembler.char
@@ -53,7 +56,24 @@ sub-procedure assembler.tokenize-input
             store " " in assembler.char
         end if 
 
-        if assembler.char is equal to "\n" then 
+        if assembler.string? is equal to 1 then 
+            if assembler.char is equal to "\"" then
+                if assembler.prev is equal to "\\" then
+                    # quoted string
+                    join assembler.token and assembler.char in assembler.token
+                else
+                    # not quoted, end string token
+                    join assembler.token and assembler.char in assembler.token
+                    store assembler.token in assembler.tokens:assembler.tokens.len
+                    add 1 and assembler.tokens.len in assembler.tokens.len
+                    store "" in assembler.token
+                    store 0 in assembler.string?
+                end if 
+            else
+                # not a quote, add to token
+                join assembler.token and assembler.char in assembler.token
+            end if 
+        else if assembler.char is equal to "\n" then 
             # save line
             if assembler.line is not equal to "" then
                 store assembler.line in assembler.lines:assembler.lines.len
@@ -67,6 +87,10 @@ sub-procedure assembler.tokenize-input
                 store "" in assembler.token
             end if
             store 0 in assembler.comment?
+        else if assembler.char is equal to "\"" then 
+            # parse string
+            store 1 in assembler.string?
+            store "\"" in assembler.token
         else if assembler.char is equal to ";" then 
             # ignore comments
             store 1 in assembler.comment?
