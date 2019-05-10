@@ -1,0 +1,25 @@
+;; 99 bottles of beer 
+    .byte "L", "D", "P", "L", 1
+    STOREN $x, 99
+song:
+    STOREN $y, 0
+    GT $x, $y, $a
+    JIF end_song
+    DISPLAY $x
+    DISPLAY " bottles of beer"
+    DISPLAY " on the wall"
+    DISPLAY ", "
+    DISPLAY $x
+    DISPLAY " bottles of beer"
+    DISPLAY ". "
+    DISPLAY "Take one down, pass it around, "
+    STOREN $y, 1
+    SUB $x, $y, $x
+    DISPLAY $x
+    DISPLAY " bottles of beer"
+    DISPLAY " on the wall"
+    DISPLAY "!"
+    DISPLAY "\n"
+    JUMP song
+end_song:
+    EXIT
