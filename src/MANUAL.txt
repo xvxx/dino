@@ -9,11 +9,79 @@
 
 === SUMMARY ==========================================================
 
+* Bytecode VM
 * 64 bit words
 * 0xFFFF words of memory 
 * 16 registers (A, X, Y, Z, C, E, SP, PC, TA, TX, TY, TZ, TE)
 * Registers, variables, and constants share memory space.
 * Instructions are 1-4 words: One opcode and 0-3 operands. 
+
+=== TODO =============================================================
+
+* [ ] assembly -> bytecode
+   * [ ] strip comments
+   * [ ] trim line
+   * [ ] tokenize file
+   * [ ] support strings
+   * [ ] :newline: token 
+   * [ ] accept file from command line 
+   * [ ] tokens -> bytecode 
+   * [ ] print raw bytecode
+   * [ ] save bytecode to file 
+* [ ] bytecode -> assembly 
+   * [ ] load bytecode from file
+* [ ] VM
+   * [ ] load bytecode from file
+   * [ ] run bytecode
+   * [ ] Instructions:
+      * [ ] JUMP 
+      * [ ] JIF 
+      * [ ] JIT 
+      * [ ] CALL 
+      * [ ] RETURN            
+      * [ ] EXIT              
+      * [ ] WAIT 
+      * [ ] STORE 
+      * [ ] STORN 
+      * [ ] EQ 
+      * [ ] GT 
+      * [ ] LT 
+      * [ ] ADD 
+      * [ ] SUB 
+      * [ ] MUL 
+      * [ ] DIV 
+      * [ ] MOD 
+      * [ ] ABS 
+      * [ ] CEIL 
+      * [ ] FLOOR
+      * [ ] RANDOM 
+      * [ ] PRINT 
+      * [ ] ACCEPT 
+      * [ ] EXEC 
+      * [ ] READ 
+      * [ ] WRITE 
+      * [ ] APPEND
+      * [ ] LEN
+      * [ ] JOIN 
+      * [ ] GETC 
+      * [ ] GETCC
+      * [ ] PUTC 
+
+=== REFERENCE ========================================================
+
+# --- BYTECODE FORMAT ------------------------------------------------
+| BYTE | DATA | DESCRIPTION
++------+------+------------------------------------------------------
+| 0000 |  76  | First four bytes are char codes for "LDPL"
+| 0001 |  68  | 
+| 0002 |  80  | 
+| 0003 |  76  | 
+| 0004 |  01  | Bytecode version number
+| 0005 |  07  | Address of first instruction. JUMP to it.
+| 0006 |      | Text constants
+| 0007 |      | Program instructions
+| 0008 |  06  | Final EXIT 
+| 0009 |      | Sub-procedure definitions
 
 # --- MEMORY LAYOUT --------------------------------------------------
 | NUM  | NAME | TYPE | DESCRIPTION
@@ -80,7 +148,7 @@
 |  2A  | FLOOR $x $a       | Flooring
 |  2B  | RANDOM $a         | Put random number in $a.
 | ==== | ================= | I/O COMMANDS ============================
-|  30  | PRINT $r          | Print content of register $r
+|  30  | DISPLAY $r        | Print content of register $r
 |  31  | ACCEPT $a         | 
 |  32  | EXEC $ta          | 
 |  33  | READ $ta $tz      | 
