@@ -81,11 +81,11 @@
 | 0002 |  80  |
 | 0003 |  76  |
 | 0004 |  01  | Bytecode version number
-| 0005 |  07  | Address of first instruction. JUMP to it.
-| 0006 |      | Text constants
-| 0007 |      | Program instructions
-| 0008 |  06  | Final EXIT
-| 0009 |      | Sub-procedure definitions
+| 0005 |      | First instruction
+| 0006+|      | Program instructions
+| 00XX |  06  | Final EXIT
+| 00XX |      | Sub-procedure definitions
+| 00XX |      | Text constants
 
 # --- MEMORY LAYOUT --------------------------------------------------
 | NUM  | NAME | TYPE | DESCRIPTION

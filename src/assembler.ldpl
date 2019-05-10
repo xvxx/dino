@@ -9,7 +9,7 @@ asm.bytecode      is number vector  # bytecode
 asm.bytecode.len  is number
 asm.constants     is text vector    # text constants
 asm.constants.len is number
-asm.textcode      is text           # text (file) version of bytecod
+asm.text          is text           # text (file) version of bytecode
 
 # CONSTANTS:
 asm.text-offset   is number
@@ -27,6 +27,10 @@ asm.token.label?  is number
 asm.label         is text
 asm.address       is number
 asm.pc            is number  # program counter
+
+asm.segment.head is text
+asm.segment.code is text
+asm.segment.text is text
 
 # LOCALS:
 asm.line          is text
@@ -273,45 +277,41 @@ sub-procedure asm.input.to-bytecode
 end sub-procedure
 
 #  IN: asm.input
-# OUT: asm.textcode
+# OUT: asm.text
 #      asm.bytecode
 #      asm.bytecode.len
 sub-procedure asm.compile
     call asm.input.to-bytecode
 
-    # assemble string constants
-    store "" in asm.textcode
-    store 0 in asm.pc
-    while asm.pc is less than asm.constants.len do
-        in asm.textcode join asm.textcode asm.constants:asm.pc " "
-        add 1 and asm.pc in asm.pc
-    repeat
-
-    # L D P L header, version #, 1st instruction, string constants
-    add 6 and asm.pc in asm.pc
-    store asm.pc in asm.t
-    if asm.pc is less than 10 then
-        if asm.pc is greater than or equal to 0 then
-            join "0" and asm.t in asm.t
-        end if
-    end if
-    in asm.textcode join "76 68 80 76 01 " asm.t " " asm.textcode
+     # L D P L char codes, version #
+    store "76 68 80 76 01 " in asm.segment.head
 
     store 0 in asm.pc
+    store "" in asm.segment.code
     while asm.pc is less than asm.bytecode.len do
         store asm.bytecode:asm.pc in asm.x
         if asm.x is less than 10 then
             if asm.x is greater than or equal to 0 then
-                join asm.textcode and "0" in asm.textcode
+                join asm.segment.code and "0" in asm.segment.code
             end if
         end if
-        in asm.textcode join asm.textcode asm.x " "
+        in asm.segment.code join asm.segment.code asm.x " "
         add 1 and asm.pc in asm.pc
     repeat
+
+    # assemble string constants
+    store "" in asm.segment.text
+    store 0 in asm.x
+    while asm.x is less than asm.constants.len do
+        in asm.segment.text join asm.segment.text asm.constants:asm.x " "
+        add 1 and asm.x in asm.x
+    repeat
+
+    in asm.text join asm.segment.head asm.segment.code asm.segment.text
 end sub-procedure
 
 # Must be called after asm.compile.
-#  IN: asm.textcode
+#  IN: asm.text
 sub-procedure asm.bytecode.print
-    display asm.textcode crlf
+    display asm.text crlf
 end sub-procedure
