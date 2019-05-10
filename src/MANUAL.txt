@@ -115,7 +115,6 @@
 | NAME            | SYNTAX
 +-----------------+---------------------------------------------------
 | Register Name   | $z, $TA
-| Memory Address  | #0, #15, #A
 | Variable Name   | %bufsize, %Users
 | Label           | print-fn, DISPLAY
 

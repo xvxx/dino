@@ -1,5 +1,4 @@
 ;; factorial
-    .byte "L", "D", "P", "L", 1
     DISPLAY "Enter a number: "
     ACCEPT %n
     SET %result, 1   ; default
