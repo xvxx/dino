@@ -1,5 +1,4 @@
 ;; 99 bottles of beer
-    .byte "L", "D", "P", "L", 1
     SET $x, 99
 song:
     SET $y, 0                       ; y=0
