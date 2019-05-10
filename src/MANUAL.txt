@@ -10,7 +10,7 @@
 === SUMMARY ==========================================================
 
 * Bytecode VM
-* 64 bit words
+* 32 bit words
 * 0xFFFF words of memory
 * 16 registers (A, X, Y, Z, C, E, SP, PC, TA, TX, TY, TZ, TE)
 * Registers, variables, and constants share address space.
@@ -30,12 +30,12 @@
    * [ ] error checking:
       * [ ] arity
       * [ ] labels?
-   * [ ] relative jumps
+   * [x] relative jumps
    * [ ] save bytecode to file
 * [ ] bytecode -> assembly
-   * [ ] load bytecode from file
+   * [x] load bytecode from file
 * [ ] VM
-   * [ ] load bytecode from file
+   * [x] load bytecode from file
    * [ ] run bytecode
    * [ ] Instructions:
       * [ ] JUMP
