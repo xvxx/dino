@@ -6,19 +6,14 @@ song:
     GT $x, $y, $a                   ; a=x>y
     JIF end_song                    ; if(a==0) JUMP end_song
     DISPLAY $x                      
-    DISPLAY " bottles of beer"
-    DISPLAY " on the wall"
-    DISPLAY ", "
+    DISPLAY " bottles of beer on the wall,"
     DISPLAY $x
-    DISPLAY " bottles of beer"
-    DISPLAY ". "
+    DISPLAY " bottles of beer."
     DISPLAY "Take one down, pass it around, "
     STOREN $y, 1                    ; y=1
     SUB $x, $y, $x                  ; x=x-y
     DISPLAY $x
-    DISPLAY " bottles of beer"
-    DISPLAY " on the wall"
-    DISPLAY "!"
+    DISPLAY " bottles of beer on the wall!"
     DISPLAY "\n"
     JUMP song
 end_song:
