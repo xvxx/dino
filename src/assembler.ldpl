@@ -19,20 +19,47 @@ assembler.lines         is text vector
 assembler.lines.len     is number
 assembler.tokens        is text vector
 assembler.tokens.len    is number
+assembler.token         is text
+assembler.address       is number
 
 # LOCALS:
 assembler.line          is text
 assembler.len           is number
 assembler.i             is number
+assembler.j             is number
 assembler.x             is number
+assembler.t             is text
+assembler.size          is number
 assembler.char          is text
 assembler.prev          is text
-assembler.token         is text
 assembler.comment?      is number
 assembler.string?       is number
 
 PROCEDURE:
 store 12288 in assembler.text-offset # 0x3000
+
+#  IN: assembler.token
+# OUT: assembler.address
+sub-procedure assembler.token-to-address
+    get character at 0 from assembler.token in assembler.char
+    if assembler.char is equal to "\"" then
+        add assembler.text-offset and assembler.bytecode.len in assembler.x
+        store assembler.x in assembler.bytecode:assembler.bytecode.len
+        add 1 and assembler.bytecode.len in assembler.bytecode.len
+        store assembler.token in assembler.constants:assembler.constants.len
+        add 1 and assembler.constants.len in assembler.constants.len
+    else if assembler.char is equal to "$" then
+        store REGISTERS:assembler.token in assembler.address
+    else if assembler.char is equal to "#" then
+        # register ID
+        store 0 in assembler.address
+    else if assembler.char is equal to "%" then
+        # variables
+        store 0 in assembler.address
+    else
+        store assembler.token in assembler.address
+    end if
+end sub-procedure
 
 #  IN: assembler.tokens
 #      assembler.tokens.len
@@ -43,17 +70,42 @@ store 12288 in assembler.text-offset # 0x3000
 sub-procedure assembler.tokens-to-bytecode
     store 0 in assembler.i
     while assembler.i is less than assembler.tokens.len do
-        get character at 0 from assembler.tokens:assembler.i in assembler.char
-        if assembler.char is equal to "\"" then
-            add assembler.text-offset and assembler.bytecode.len in assembler.x
-            store assembler.x in assembler.bytecode:assembler.bytecode.len
-            store assembler.tokens:assembler.i in assembler.constants:assembler.constants.len
-            add 1 and assembler.constants.len in assembler.constants.len
-        else
+        store assembler.tokens:assembler.i in assembler.token
+        get character at 0 from assembler.token in assembler.char
 
+        if opcodes:assembler.token is greater than 0 then
+            store opcodes:assembler.token in assembler.bytecode:assembler.bytecode.len
+            add 1 and assembler.bytecode.len in assembler.bytecode.len
+            store opsizes:opcodes:assembler.token in assembler.size
+
+            if assembler.size is greater than 0 then
+                add 1 and assembler.i in assembler.i
+                add assembler.size and assembler.i in assembler.size
+                while assembler.i is less than assembler.size do
+                    store assembler.tokens:assembler.i in assembler.token
+                    call assembler.token-to-address
+                    store assembler.address in assembler.bytecode:assembler.bytecode.len
+                    add 1 and assembler.bytecode.len in assembler.bytecode.len
+                    add 1 and assembler.i in assembler.i
+                repeat
+                continue
+            end if
+        else
+            store length of assembler.token in assembler.x
+            subtract 1 from assembler.x in assembler.x
+            get character at assembler.x from assembler.token in assembler.char
+
+            if assembler.char is equal to ":" then
+                # label
+                store 69 in assembler.bytecode:assembler.bytecode.len
+                add 1 and assembler.bytecode.len in assembler.bytecode.len
+            else
+                # number literals
+                store assembler.token in assembler.bytecode:assembler.bytecode.len
+                add 1 and assembler.bytecode.len in assembler.bytecode.len
+            end if
         end if
 
-        add 1 and assembler.bytecode.len in assembler.bytecode.len
         add 1 and assembler.i in assembler.i
     repeat
 end sub-procedure
@@ -137,6 +189,10 @@ sub-procedure assembler.tokenize-input
                 end if
             end if
         else if assembler.comment? is equal to 0 then
+            # all tokens are UPPER case
+            store assembler.char in upcase.letter
+            call upcase-letter
+            store upcase.letter in assembler.char
             # add char to token
             join assembler.token and assembler.char in assembler.token
             # add char to line
@@ -163,22 +219,17 @@ sub-procedure assembler.compile
 
     store 0 in assembler.i
     while assembler.i is less than assembler.tokens.len do
-        if assembler.i is less than 10 then
-            display "0"
-        end if
-        display assembler.i ": " assembler.tokens:assembler.i crlf
+        display assembler.tokens:assembler.i " "
         add 1 and assembler.i in assembler.i
     repeat
 
-    display crlf "BYTECODE:" crlf
+    display crlf crlf "BYTECODE:" crlf
 
     call assembler.tokens-to-bytecode
     store 0 in assembler.i
     while assembler.i is less than assembler.bytecode.len do
-        if assembler.i is less than 10 then
-            display "0"
-        end if
-        display assembler.i ": " assembler.bytecode:assembler.i crlf
+        display assembler.bytecode:assembler.i " "
         add 1 and assembler.i in assembler.i
     repeat
+    display crlf
 end sub-procedure
