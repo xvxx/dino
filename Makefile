@@ -1,7 +1,8 @@
 .PHONY=clean
 
-dino: src/util/upcase.ldpl src/util/digit.ldpl src/registers.ldpl src/opcodes.ldpl src/main.ldpl src/assembler.ldpl src/vm.ldpl src/loader.ldpl
-	@ldpl -i=src/util/upcase.ldpl -i=src/util/digit.ldpl -i=src/registers.ldpl -i=src/opcodes.ldpl -i=src/vm.ldpl -i=src/assembler.ldpl -i=src/loader.ldpl src/main.ldpl -o=dino
+dino: src/*.ldpl src/**/*.ldpl
+	@INCLUDES=$(ls -f src/{util,compiler,vm}/*.ldpl src/{compiler,vm}.ldpl | sed -e 's/^/-i=/' | tr -s '\n' ' ')
+	@ldpl $(INCLUDES) src/main.ldpl -o=dino
 
 test: dino
 	@./dino run 99.dinocode
