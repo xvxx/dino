@@ -2,10 +2,49 @@
 # The VM takes a number vector of bytecode and a text vector of
 # constants and executes the code.
 DATA:
+# PUBLIC:
 vm.bytecode        is number vector
 vm.bytecode.len    is number
 vm.bytecode.text   is text
 vm.constants       is text vector
 vm.constants.len   is number
 
+# PRIVATE:
+vm.pc              is number
+vm.i               is number
+vm.opcode          is number
+vm.operands        is number vector
+vm.operands.len    is number
+
 PROCEDURE:
+#  IN: vm.bytecode
+#      vm.bytecode.len
+#      vm.constants
+#      vm.constants.len
+sub-procedure vm.run
+    store 0 in vm.pc
+    while vm.pc is less than vm.bytecode.len do
+        store vm.bytecode:vm.pc in vm.opcode
+
+        # bad instruction TODO: error
+        if OPNAMES:vm.opcode is equal to "" then
+            display "BAD INSTRUCTION: " vm.opcode crlf
+            display "vm.pc: " vm.pc crlf
+            exit
+        end if
+
+        store 0 in vm.i
+        while vm.i is less than opsizes:vm.opcode do
+            add 1 and vm.pc in vm.pc
+            store vm.bytecode:vm.pc in vm.operands:vm.operands.len
+            add 1 and vm.operands.len in vm.operands.len
+            add 1 and vm.i in vm.i
+        repeat
+
+        if vm.opcode is equal to OPCODES:"DISPLAY" then
+            display "gucci gucci goo" crlf
+        end if
+
+        add 1 and vm.pc in vm.pc
+    repeat
+end sub-procedure
