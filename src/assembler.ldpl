@@ -11,8 +11,6 @@ asm.text-offset   is number
 asm.labels        is number vector
 asm.variables     is number vector
 asm.variables.len is number
-asm.lines         is text vector
-asm.lines.len     is number
 asm.tokens        is text vector
 asm.tokens.len    is number
 asm.token         is text
@@ -26,7 +24,6 @@ asm.segment.code  is text
 asm.segment.text  is text
 
 # LOCALS:
-asm.line          is text
 asm.len           is number
 asm.i             is number
 asm.x             is number
@@ -168,9 +165,7 @@ end sub-procedure
 # Ignores comments and commas, upcases non-string tokens, strips
 # extra whitespace, and supports strings with escaping.
 #  IN: asm.input
-# OUT: asm.lines
-#      asm.lines.len
-#      asm.tokens
+# OUT: asm.tokens
 #      asm.tokens.len
 sub-procedure asm.input.to-tokens
     store length of asm.input in asm.len
@@ -201,7 +196,6 @@ sub-procedure asm.input.to-tokens
             else
                 # not a quote, add to token
                 join asm.token and asm.char in asm.token
-                join asm.line and asm.char in asm.line
             end if
             add 1 and asm.pc in asm.pc
             continue
@@ -213,12 +207,6 @@ sub-procedure asm.input.to-tokens
         end if
 
         if asm.char is equal to "\n" then
-            # save line
-            if asm.line is not equal to "" then
-                store asm.line in asm.lines:asm.lines.len
-                add 1 and asm.lines.len in asm.lines.len
-                store "" in asm.line
-            end if
             # save token
             if asm.token is not equal to "" then
                 store asm.token in asm.tokens:asm.tokens.len
@@ -237,8 +225,6 @@ sub-procedure asm.input.to-tokens
             # squash spaces
             if asm.prev is not equal to " " then
                 if asm.prev is not equal to "\n" then
-                    # add single space to line
-                    join asm.line and asm.char in asm.line
                     # save token
                     if asm.token is not equal to "" then
                         store asm.token in asm.tokens:asm.tokens.len
@@ -254,8 +240,6 @@ sub-procedure asm.input.to-tokens
             store upcase.letter in asm.char
             # add char to token
             join asm.token and asm.char in asm.token
-            # add char to line
-            join asm.line and asm.char in asm.line
         end if
         add 1 and asm.pc in asm.pc
     repeat
@@ -300,11 +284,12 @@ sub-procedure vm.bytecode.to-text
         add 1 and asm.x in asm.x
     repeat
 
-    in asm.text join asm.segment.head asm.segment.code asm.segment.text
+    in vm.bytecode.text join asm.segment.head asm.segment.code asm.segment.text
 end sub-procedure
 
 # Must be called after asm.compile.
 #  IN: asm.text
 sub-procedure vm.bytecode.print
+    call vm.bytecode.to-text
     display vm.bytecode.text crlf
 end sub-procedure
