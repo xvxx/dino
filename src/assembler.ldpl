@@ -1,2 +1,73 @@
 # === ASSEMBLER ======================================================
 # The assembler converts text assembly code into dino bytecode.
+DATA:
+# IN:
+assembler.input   is text
+
+# OUT:
+assembler.bytecode  is number vector  # bytecode
+assembler.constants is text vector    # text constants
+assembler.textcode  is text           # text (file) version of bytecode
+
+# CONSTANTS:
+assembler.newline is text
+
+# LOCALS:
+assembler.lines     is text vector
+assembler.lines.len is number
+assembler.line      is text
+assembler.len       is number
+assembler.i         is number
+assembler.char      is text
+assembler.prev      is text
+
+PROCEDURE:
+store ":newline:" in assembler.newline 
+
+sub-procedure assembler.strip-comments
+end sub-procedure
+
+sub-procedure assembler.trim-line
+end sub-procedure
+
+sub-procedure assembler.tokenize
+end sub-procedure
+
+#  IN: assembler.input
+# OUT: assembler.lines
+#      assembler.lines.len
+sub-procedure assembler.split-lines
+    store length of assembler.input in assembler.len
+    store 0 in assembler.i
+    store "" in assembler.char
+    store "" in assembler.prev
+    while assembler.i is less than assembler.len do 
+        store assembler.char in assembler.prev
+        get character at assembler.i from assembler.input in assembler.char
+        if assembler.char is equal to "\n" then 
+            store assembler.line in assembler.lines:assembler.lines.len
+            add 1 and assembler.lines.len in assembler.lines.len
+            store "" in assembler.line
+        else if assembler.char is equal to " " then 
+            # squash spaces
+            if assembler.prev is not equal to " " then 
+                if assembler.line is not equal to "" then 
+                    join assembler.line and assembler.char in assembler.line
+                end if
+            end if
+        else 
+            join assembler.line and assembler.char in assembler.line
+        end if
+        add 1 and assembler.i in assembler.i
+    repeat
+end sub-procedure
+
+#  IN: assembler.input
+sub-procedure assembler.compile
+    call assembler.split-lines
+    store 0 in assembler.i 
+    while assembler.i is less than assembler.lines.len do 
+        display assembler.i ": " assembler.lines:assembler.i crlf
+        add 1 and assembler.i in assembler.i
+    repeat
+end sub-procedure
