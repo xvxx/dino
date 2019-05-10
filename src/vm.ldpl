@@ -34,11 +34,6 @@ sub-procedure vm.error
     while vm.i is less than vm.bytecode.len do
         store vm.bytecode:vm.i in vm.opcode
 
-        if vm.opcode is equal to 0 then
-            add 1 and vm.i in vm.i
-            continue
-        end if
-
         display "\e[36m"
         if vm.opcode is less than 10 then
             display 0
