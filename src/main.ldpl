@@ -57,10 +57,8 @@ end sub-procedure
 # --- RUN FILE -------------------------------------------------------
 # $ dino run file.dinocode
 sub-procedure main.run.dinocode
-    store argv:1 in loader.filename
     load file argv:1 in loader.input
     call loader.input.load
-    display "len: " vm.bytecode.len crlf
 end sub-procedure
 
 # --- CONVERT LDPL TO ASSEMBLY ---------------------------------------

@@ -3,7 +3,6 @@
 
 DATA:
 # IN:
-loader.filename is text
 loader.input    is text # bytecode in .dinocode text format
 
 # LOCALS:
@@ -16,7 +15,6 @@ loader.string?  is number
 
 PROCEDURE:
 #  IN: loader.input
-#      loader.filename
 # OUT: vm.bytecode
 #      vm.bytecode.len
 #      vm.constants
