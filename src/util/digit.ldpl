@@ -1,0 +1,21 @@
+DATA:
+
+digit?.in  is text   # char
+digit?.out is number # bool
+digit?.digits is number vector
+
+PROCEDURE:
+store 1 in digit?.digits:"0"
+store 1 in digit?.digits:"1"
+store 1 in digit?.digits:"2"
+store 1 in digit?.digits:"3"
+store 1 in digit?.digits:"4"
+store 1 in digit?.digits:"5"
+store 1 in digit?.digits:"6"
+store 1 in digit?.digits:"7"
+store 1 in digit?.digits:"8"
+store 1 in digit?.digits:"9"
+
+sub-procedure digit?
+    store digit?.digits:digit?.in in digit?.out
+end sub-procedure
