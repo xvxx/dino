@@ -34,8 +34,10 @@ sub-procedure loader.input.load
             if loader.char is equal to "\"" then
                 if loader.prev is not equal to "\\" then
                     store 0 in loader.string?
-                    store loader.token in vm.bytecode:vm.bytecode.len
+                    store loader.token in vm.constants:vm.constants.len
+                    store vm.constants.len in vm.bytecode:vm.bytecode.len
                     add 1 and vm.bytecode.len in vm.bytecode.len
+                    add 1 and vm.constants.len in vm.constants.len
                     store "" in loader.token
                 end if
             end if
