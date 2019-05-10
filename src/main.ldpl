@@ -58,7 +58,12 @@ end sub-procedure
 # $ dino run file.dinocode
 sub-procedure main.run.dinocode
     load file argv:1 in loader.input
+    if ERRORCODE is greater than 0 then
+        display errortext crlf
+        exit
+    end if
     call loader.input.load
+    call vm.run
 end sub-procedure
 
 # --- CONVERT LDPL TO ASSEMBLY ---------------------------------------
@@ -75,6 +80,10 @@ end sub-procedure
 # $ dino bytes file.dino
 sub-procedure main.asm-to-bytecode
     load file argv:1 in asm.input
+    if ERRORCODE is greater than 0 then
+        display ERRORTEXT crlf
+        exit
+    end if
     call asm.compile
     call vm.bytecode.print
 end sub-procedure
