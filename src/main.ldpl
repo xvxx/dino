@@ -72,6 +72,8 @@ end sub-procedure
 # --- CONVERT ASSEMBLY TO BYTECODE -----------------------------------
 # $ dino bytes file.dino
 sub-procedure main.asm-to-bytecode
+    load file argv:1 in assembler.input
+    call assembler.compile
 end sub-procedure
 
 # --- CONVERT BYTECODE TO ASSEMBLY -----------------------------------
@@ -82,8 +84,7 @@ end sub-procedure
 # --- MAIN PROGRAM ROUTINE -------------------------------------------
 sub-procedure main
     if argv:0 is equal to "bytes" then 
-        load file argv:1 in main.input
-        display main.input crlf
+        call main.asm-to-bytecode
     else 
         call main.help
     end if 
