@@ -55,8 +55,10 @@ sub-procedure main.repl
 end sub-procedure
 
 # --- RUN FILE -------------------------------------------------------
-# $ dino run file.ldpl
-sub-procedure main.run-file
+# $ dino run file.dinocode
+sub-procedure main.run-file.dinocode
+    store argv:1 in loader.filename
+    load file argv:1 in loader.input
 end sub-procedure
 
 # --- CONVERT LDPL TO ASSEMBLY ---------------------------------------
@@ -74,7 +76,7 @@ end sub-procedure
 sub-procedure main.asm-to-bytecode
     load file argv:1 in asm.input
     call asm.compile
-    call asm.bytecode.print
+    call vm.bytecode.print
 end sub-procedure
 
 # --- CONVERT BYTECODE TO ASSEMBLY -----------------------------------
@@ -86,6 +88,8 @@ end sub-procedure
 sub-procedure main
     if argv:0 is equal to "bytes" then
         call main.asm-to-bytecode
+    else if argv:0 is equal to "run" then
+        call main.run-file.dinocode
     else
         call main.help
     end if

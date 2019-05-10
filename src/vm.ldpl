@@ -1,3 +1,10 @@
 # === VIRTUAL MACHINE ================================================
-# The VM takes a number vector of bytecode and a text vector of 
+# The VM takes a number vector of bytecode and a text vector of
 # constants and executes the code.
+DATA:
+vm.bytecode        is number vector
+vm.bytecode.len    is number
+vm.constants       is text vector
+vm.constants.len   is number
+
+PROCEDURE:

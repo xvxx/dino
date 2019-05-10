@@ -1,0 +1,21 @@
+# === LOADER =========================================================
+# The loader turns a text file of bytecode into a number vector of bytecode.
+
+DATA:
+# IN:
+loader.filename is text
+loader.input    is text
+
+# LOCALS:
+loader.i        is number
+
+PROCEDURE:
+#  IN: loader.input
+#      loader.filename
+# OUT: vm.bytecode
+#      vm.bytecode.len
+#      vm.constants
+#      vm.constants.len
+sub-procedure loader.input.load
+
+end sub-procedure

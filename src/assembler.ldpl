@@ -5,10 +5,6 @@ DATA:
 asm.input         is text
 
 # OUT:
-asm.bytecode      is number vector  # bytecode
-asm.bytecode.len  is number
-asm.constants     is text vector    # text constants
-asm.constants.len is number
 asm.text          is text           # text (file) version of bytecode
 
 # CONSTANTS:
@@ -80,9 +76,9 @@ end sub-procedure
 sub-procedure asm.token.to-address
     get character at 0 from asm.token in asm.char
     if asm.char is equal to "\"" then
-        add asm.text-offset and asm.constants.len in asm.address
-        store asm.token in asm.constants:asm.constants.len
-        add 1 and asm.constants.len in asm.constants.len
+        add asm.text-offset and vm.constants.len in asm.address
+        store asm.token in vm.constants:vm.constants.len
+        add 1 and vm.constants.len in vm.constants.len
     else if asm.char is equal to "$" then
         store REGISTERS:asm.token in asm.address
     else if asm.char is equal to "%" then
@@ -126,18 +122,18 @@ end sub-procedure
 # Converts text tokens to bytecode and text constants.
 #  IN: asm.tokens
 #      asm.tokens.len
-# OUT: asm.bytecode
-#      asm.bytecode.len
-#      asm.constants
-#      asm.constants.len
+# OUT: vm.bytecode
+#      vm.bytecode.len
+#      vm.constants
+#      vm.constants.len
 sub-procedure asm.tokens.to-bytecode
     call asm.tokens.find-labels
     store 0 in asm.pc
     while asm.pc is less than asm.tokens.len do
         store asm.tokens:asm.pc in asm.token
         if opcodes:asm.token is greater than 0 then
-            store opcodes:asm.token in asm.bytecode:asm.bytecode.len
-            add 1 and asm.bytecode.len in asm.bytecode.len
+            store opcodes:asm.token in vm.bytecode:vm.bytecode.len
+            add 1 and vm.bytecode.len in vm.bytecode.len
             store opsizes:opcodes:asm.token in asm.size
             if asm.size is greater than 0 then
                 add 1 and asm.pc in asm.pc
@@ -145,8 +141,8 @@ sub-procedure asm.tokens.to-bytecode
                 while asm.pc is less than asm.size do
                     store asm.tokens:asm.pc in asm.token
                     call asm.token.to-address
-                    store asm.address in asm.bytecode:asm.bytecode.len
-                    add 1 and asm.bytecode.len in asm.bytecode.len
+                    store asm.address in vm.bytecode:vm.bytecode.len
+                    add 1 and vm.bytecode.len in vm.bytecode.len
                     add 1 and asm.pc in asm.pc
                 repeat
                 continue
@@ -158,12 +154,12 @@ sub-procedure asm.tokens.to-bytecode
 
             if asm.char is equal to ":" then
                 # label
-                store 0 in asm.bytecode:asm.bytecode.len
-                add 1 and asm.bytecode.len in asm.bytecode.len
+                store 0 in vm.bytecode:vm.bytecode.len
+                add 1 and vm.bytecode.len in vm.bytecode.len
             else
                 # number literals
-                store asm.token in asm.bytecode:asm.bytecode.len
-                add 1 and asm.bytecode.len in asm.bytecode.len
+                store asm.token in vm.bytecode:vm.bytecode.len
+                add 1 and vm.bytecode.len in vm.bytecode.len
             end if
         end if
 
@@ -269,8 +265,8 @@ sub-procedure asm.input.to-tokens
 end sub-procedure
 
 #  IN: asm.input
-# OUT: asm.bytecode
-#      asm.bytecode.len
+# OUT: vm.bytecode
+#      vm.bytecode.len
 sub-procedure asm.input.to-bytecode
     call asm.input.to-tokens
     call asm.tokens.to-bytecode
@@ -278,8 +274,8 @@ end sub-procedure
 
 #  IN: asm.input
 # OUT: asm.text
-#      asm.bytecode
-#      asm.bytecode.len
+#      vm.bytecode
+#      vm.bytecode.len
 sub-procedure asm.compile
     call asm.input.to-bytecode
 
@@ -288,8 +284,8 @@ sub-procedure asm.compile
 
     store 0 in asm.pc
     store "" in asm.segment.code
-    while asm.pc is less than asm.bytecode.len do
-        store asm.bytecode:asm.pc in asm.x
+    while asm.pc is less than vm.bytecode.len do
+        store vm.bytecode:asm.pc in asm.x
         if asm.x is less than 10 then
             if asm.x is greater than or equal to 0 then
                 join asm.segment.code and "0" in asm.segment.code
@@ -302,8 +298,8 @@ sub-procedure asm.compile
     # assemble string constants
     store "" in asm.segment.text
     store 0 in asm.x
-    while asm.x is less than asm.constants.len do
-        in asm.segment.text join asm.segment.text asm.constants:asm.x " "
+    while asm.x is less than vm.constants.len do
+        in asm.segment.text join asm.segment.text vm.constants:asm.x " "
         add 1 and asm.x in asm.x
     repeat
 
@@ -312,6 +308,6 @@ end sub-procedure
 
 # Must be called after asm.compile.
 #  IN: asm.text
-sub-procedure asm.bytecode.print
+sub-procedure vm.bytecode.print
     display asm.text crlf
 end sub-procedure
