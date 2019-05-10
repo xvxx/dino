@@ -49,6 +49,7 @@ sub-procedure loader.input.load
             add 1 and vm.bytecode.len in vm.bytecode.len
             store "" in loader.token
         else if loader.char is equal to "\"" then
+            join loader.token and loader.char in loader.token
             store 1 in loader.string?
         else
             join loader.token and loader.char in loader.token
