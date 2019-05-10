@@ -47,7 +47,6 @@ sub-procedure assembler.token.label?
     store length of assembler.token in assembler.x
     subtract 1 from assembler.x in assembler.x
     get character at assembler.x from assembler.token in assembler.char
-
     store 0 in assembler.token.out?
     if assembler.char is equal to ":" then
         store 1 in assembler.token.out?
@@ -97,6 +96,22 @@ sub-procedure assembler.token.to-address
     end if
 end sub-procedure
 
+#  IN: assembler.tokens
+#      assembler.tokens.len
+# OUT: assembler.labels
+sub-procedure assembler.tokens.find-labels
+    store 0 in assembler.pc
+    while assembler.pc is less than assembler.tokens.len do
+        store assembler.tokens:assembler.pc in assembler.token
+        call assembler.token.label?
+        if assembler.token.out? is equal to 1 then
+            call assembler.token.strip-trailing-colon
+            store assembler.pc in assembler.labels:assembler.token
+        end if
+        add 1 and assembler.pc in assembler.pc
+    repeat
+end sub-procedure
+
 # Converts text tokens to bytecode and text constants.
 #  IN: assembler.tokens
 #      assembler.tokens.len
@@ -105,6 +120,7 @@ end sub-procedure
 #      assembler.constants
 #      assembler.constants.len
 sub-procedure assembler.tokens.to-bytecode
+    call assembler.tokens.find-labels
     store 0 in assembler.pc
     while assembler.pc is less than assembler.tokens.len do
         store assembler.tokens:assembler.pc in assembler.token
@@ -131,8 +147,6 @@ sub-procedure assembler.tokens.to-bytecode
 
             if assembler.char is equal to ":" then
                 # label
-                call assembler.token.strip-trailing-colon
-                store assembler.pc in assembler.labels:assembler.token
                 store 0 in assembler.bytecode:assembler.bytecode.len
                 add 1 and assembler.bytecode.len in assembler.bytecode.len
             else
@@ -148,13 +162,12 @@ end sub-procedure
 
 # Converts a text of ASM source code to a text vector of tokens.
 # Ignores comments and commas, upcases non-string tokens, strips
-# extra whitespace, finds labels, and supports strings with escaping.
+# extra whitespace, and supports strings with escaping.
 #  IN: assembler.input
 # OUT: assembler.lines
 #      assembler.lines.len
 #      assembler.tokens
 #      assembler.tokens.len
-#      assembler.labels
 sub-procedure assembler.input.tokenize
     store length of assembler.input in assembler.len
     store 0 in assembler.pc
@@ -206,11 +219,6 @@ sub-procedure assembler.input.tokenize
             if assembler.token is not equal to "" then
                 store assembler.token in assembler.tokens:assembler.tokens.len
                 add 1 and assembler.tokens.len in assembler.tokens.len
-                call assembler.token.label?
-                if assembler.token.out? is equal to 1 then
-                    call assembler.token.strip-trailing-colon
-                    store assembler.pc in assembler.labels:assembler.token
-                end if
                 store "" in assembler.token
             end if
             store 0 in assembler.comment?
