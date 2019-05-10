@@ -3,33 +3,77 @@
 # constants and executes the code.
 DATA:
 # PUBLIC:
-vm.bytecode        is number vector
-vm.bytecode.len    is number
-vm.bytecode.text   is text
-vm.constants       is text vector
-vm.constants.len   is number
+vm.bytecode         is number vector
+vm.bytecode.len     is number
+vm.bytecode.text    is text
+vm.constants        is text vector
+vm.constants.len    is number
+vm.bytecode.version is number
 
 # PRIVATE:
-vm.pc              is number
-vm.i               is number
-vm.opcode          is number
-vm.operands        is number vector
-vm.operands.len    is number
+vm.pc               is number
+vm.i                is number
+vm.opcode           is number
+vm.operands         is number vector
+vm.operands.len     is number
+vm.error            is text
 
 PROCEDURE:
+store 01 in vm.bytecode.version
+
+#  IN: vm.error
+#      vm.pc
+sub-procedure vm.error
+    if vm.error is equal to "" then
+        store "vm error" in vm.error
+    end if
+    display "\e[33m"
+    if vm.pc is less than 10 then
+        display 0
+    end if
+    display vm.pc " "
+    display "\e[1;31mVM Error: \e[0m" vm.error crlf
+    exit
+end sub-procedure
+
+# Check bytecode format.
+sub-procedure vm.bytecode.validate
+    store "invalid bytecode format" in vm.error
+    if vm.bytecode.len is less than 5 then
+        call vm.error
+    end if
+    if vm.bytecode:0 is not equal to 76 then # L
+        call vm.error
+    end if
+    if vm.bytecode:1 is not equal to 68 then # D
+        call vm.error
+    end if
+    if vm.bytecode:2 is not equal to 80 then # P
+        call vm.error
+    end if
+    if vm.bytecode:3 is not equal to 76 then # L
+        call vm.error
+    end if
+    if vm.bytecode:4 is not equal to vm.bytecode.version then
+        call vm.error
+    end if
+    store "" in vm.error
+    store 5 in vm.pc
+end sub-procedure
+
 #  IN: vm.bytecode
 #      vm.bytecode.len
 #      vm.constants
 #      vm.constants.len
 sub-procedure vm.run
-    store 0 in vm.pc
+    call vm.bytecode.validate
     while vm.pc is less than vm.bytecode.len do
         store vm.bytecode:vm.pc in vm.opcode
 
         # bad instruction TODO: error
         if OPNAMES:vm.opcode is equal to "" then
-            display "BAD INSTRUCTION: " vm.opcode crlf
-            display "vm.pc: " vm.pc crlf
+            in vm.error join "BAD OPCODE (" vm.pc "): " vm.opcode
+            call vm.error
             exit
         end if
 
