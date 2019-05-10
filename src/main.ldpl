@@ -36,9 +36,9 @@ PROCEDURE:
 
 # --- DISPLAY HELP ---------------------------------------------------
 # $ dino help
-sub-procedure main.help    
+sub-procedure main.help
     display "Usage: $ dino [command] [options...]" crlf
-    display crlf 
+    display crlf
     display "Commands:" crlf
     display "\t" "run  " "\t" "execute .ldpl file" crlf
     display "\t" "compile" "\t" "compile .ldpl program to .dinocode" crlf
@@ -72,8 +72,9 @@ end sub-procedure
 # --- CONVERT ASSEMBLY TO BYTECODE -----------------------------------
 # $ dino bytes file.dino
 sub-procedure main.asm-to-bytecode
-    load file argv:1 in assembler.input
-    call assembler.compile
+    load file argv:1 in asm.input
+    call asm.compile
+    call asm.bytecode.print
 end sub-procedure
 
 # --- CONVERT BYTECODE TO ASSEMBLY -----------------------------------
@@ -83,11 +84,11 @@ end sub-procedure
 
 # --- MAIN PROGRAM ROUTINE -------------------------------------------
 sub-procedure main
-    if argv:0 is equal to "bytes" then 
+    if argv:0 is equal to "bytes" then
         call main.asm-to-bytecode
-    else 
+    else
         call main.help
-    end if 
+    end if
 end sub-procedure
 
 call main

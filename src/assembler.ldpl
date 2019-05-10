@@ -2,304 +2,304 @@
 # The assembler converts text assembly code into dino bytecode.
 DATA:
 # IN:
-assembler.input         is text
+asm.input         is text
 
 # OUT:
-assembler.bytecode      is number vector  # bytecode
-assembler.bytecode.len  is number
-assembler.constants     is text vector    # text constants
-assembler.constants.len is number
-assembler.textcode      is text           # text (file) version of bytecod
+asm.bytecode      is number vector  # bytecode
+asm.bytecode.len  is number
+asm.constants     is text vector    # text constants
+asm.constants.len is number
+asm.textcode      is text           # text (file) version of bytecod
 
 # CONSTANTS:
-assembler.text-offset   is number
+asm.text-offset   is number
 
 # INTERNALS:
-assembler.labels        is number vector
-assembler.variables     is number vector
-assembler.variables.len is number
-assembler.lines         is text vector
-assembler.lines.len     is number
-assembler.tokens        is text vector
-assembler.tokens.len    is number
-assembler.token         is text
-assembler.token.label?  is number
-assembler.label         is text
-assembler.address       is number
-assembler.pc            is number  # program counter
+asm.labels        is number vector
+asm.variables     is number vector
+asm.variables.len is number
+asm.lines         is text vector
+asm.lines.len     is number
+asm.tokens        is text vector
+asm.tokens.len    is number
+asm.token         is text
+asm.token.label?  is number
+asm.label         is text
+asm.address       is number
+asm.pc            is number  # program counter
 
 # LOCALS:
-assembler.line          is text
-assembler.len           is number
-assembler.i             is number
-assembler.x             is number
-assembler.t             is text
-assembler.size          is number
-assembler.char          is text
-assembler.prev          is text
-assembler.comment?      is number
-assembler.string?       is number
+asm.line          is text
+asm.len           is number
+asm.i             is number
+asm.x             is number
+asm.t             is text
+asm.size          is number
+asm.char          is text
+asm.prev          is text
+asm.comment?      is number
+asm.string?       is number
 
 PROCEDURE:
-store 12288 in assembler.text-offset # 0x3000
+store 12288 in asm.text-offset # 0x3000
 
-#  IN: assembler.token
-# OUT: assembler.token.label?
-sub-procedure assembler.token.label?
-    store length of assembler.token in assembler.x
-    subtract 1 from assembler.x in assembler.x
-    get character at assembler.x from assembler.token in assembler.char
-    store 0 in assembler.token.label?
-    if assembler.char is equal to ":" then
-        store 1 in assembler.token.label?
+#  IN: asm.token
+# OUT: asm.token.label?
+sub-procedure asm.token.label?
+    store length of asm.token in asm.x
+    subtract 1 from asm.x in asm.x
+    get character at asm.x from asm.token in asm.char
+    store 0 in asm.token.label?
+    if asm.char is equal to ":" then
+        store 1 in asm.token.label?
     end if
 end sub-procedure
 
-#  IN: assembler.token
-# OUT: assembler.token
-sub-procedure assembler.token.strip-trailing-colon
-    store length of assembler.token in assembler.len
-    subtract 1 from assembler.len in assembler.len
-    store 0 in assembler.x
-    store "" in assembler.t
-    while assembler.x is less than assembler.len do
-        get character at assembler.x from assembler.token in assembler.char
-        join assembler.t and assembler.char in assembler.t
-        add 1 and assembler.x in assembler.x
+#  IN: asm.token
+# OUT: asm.token
+sub-procedure asm.token.strip-trailing-colon
+    store length of asm.token in asm.len
+    subtract 1 from asm.len in asm.len
+    store 0 in asm.x
+    store "" in asm.t
+    while asm.x is less than asm.len do
+        get character at asm.x from asm.token in asm.char
+        join asm.t and asm.char in asm.t
+        add 1 and asm.x in asm.x
     repeat
-    store assembler.t in assembler.token
+    store asm.t in asm.token
 end sub-procedure
 
 # Convert tokens of ASM source code to memory address.
-#  IN: assembler.token
-# OUT: assembler.address
-sub-procedure assembler.token.to-address
-    get character at 0 from assembler.token in assembler.char
-    if assembler.char is equal to "\"" then
-        add assembler.text-offset and assembler.constants.len in assembler.address
-        store assembler.token in assembler.constants:assembler.constants.len
-        add 1 and assembler.constants.len in assembler.constants.len
-    else if assembler.char is equal to "$" then
-        store REGISTERS:assembler.token in assembler.address
-    else if assembler.char is equal to "%" then
+#  IN: asm.token
+# OUT: asm.address
+sub-procedure asm.token.to-address
+    get character at 0 from asm.token in asm.char
+    if asm.char is equal to "\"" then
+        add asm.text-offset and asm.constants.len in asm.address
+        store asm.token in asm.constants:asm.constants.len
+        add 1 and asm.constants.len in asm.constants.len
+    else if asm.char is equal to "$" then
+        store REGISTERS:asm.token in asm.address
+    else if asm.char is equal to "%" then
         # variables
-        if assembler.variables:assembler.token is equal to 0 then
-            add 1 and assembler.variables.len in assembler.variables.len
-            store assembler.variables.len in assembler.variables:assembler.token
+        if asm.variables:asm.token is equal to 0 then
+            add 1 and asm.variables.len in asm.variables.len
+            store asm.variables.len in asm.variables:asm.token
         end if
-        store assembler.variables:assembler.token in assembler.address
+        store asm.variables:asm.token in asm.address
     else
-        get character at 0 from assembler.token in digit?.in
+        get character at 0 from asm.token in digit?.in
         call digit?
         if digit? is equal to 1 then
-            store assembler.token in assembler.address
+            store asm.token in asm.address
         else
-            store assembler.labels:assembler.token in assembler.address
+            store asm.labels:asm.token in asm.address
         end if
     end if
 end sub-procedure
 
-#  IN: assembler.tokens
-#      assembler.tokens.len
-# OUT: assembler.labels
-sub-procedure assembler.tokens.find-labels
-    store 0 in assembler.pc
-    while assembler.pc is less than assembler.tokens.len do
-        store assembler.tokens:assembler.pc in assembler.token
-        call assembler.token.label?
-        if assembler.token.label? is equal to 1 then
-            call assembler.token.strip-trailing-colon
-            store assembler.pc in assembler.labels:assembler.token
+#  IN: asm.tokens
+#      asm.tokens.len
+# OUT: asm.labels
+sub-procedure asm.tokens.find-labels
+    store 0 in asm.pc
+    while asm.pc is less than asm.tokens.len do
+        store asm.tokens:asm.pc in asm.token
+        call asm.token.label?
+        if asm.token.label? is equal to 1 then
+            call asm.token.strip-trailing-colon
+            store asm.pc in asm.labels:asm.token
         end if
-        add 1 and assembler.pc in assembler.pc
+        add 1 and asm.pc in asm.pc
     repeat
 end sub-procedure
 
 # Converts text tokens to bytecode and text constants.
-#  IN: assembler.tokens
-#      assembler.tokens.len
-# OUT: assembler.bytecode
-#      assembler.bytecode.len
-#      assembler.constants
-#      assembler.constants.len
-sub-procedure assembler.tokens.to-bytecode
-    call assembler.tokens.find-labels
-    store 0 in assembler.pc
-    while assembler.pc is less than assembler.tokens.len do
-        store assembler.tokens:assembler.pc in assembler.token
-        if opcodes:assembler.token is greater than 0 then
-            store opcodes:assembler.token in assembler.bytecode:assembler.bytecode.len
-            add 1 and assembler.bytecode.len in assembler.bytecode.len
-            store opsizes:opcodes:assembler.token in assembler.size
-            if assembler.size is greater than 0 then
-                add 1 and assembler.pc in assembler.pc
-                add assembler.size and assembler.pc in assembler.size
-                while assembler.pc is less than assembler.size do
-                    store assembler.tokens:assembler.pc in assembler.token
-                    call assembler.token.to-address
-                    store assembler.address in assembler.bytecode:assembler.bytecode.len
-                    add 1 and assembler.bytecode.len in assembler.bytecode.len
-                    add 1 and assembler.pc in assembler.pc
+#  IN: asm.tokens
+#      asm.tokens.len
+# OUT: asm.bytecode
+#      asm.bytecode.len
+#      asm.constants
+#      asm.constants.len
+sub-procedure asm.tokens.to-bytecode
+    call asm.tokens.find-labels
+    store 0 in asm.pc
+    while asm.pc is less than asm.tokens.len do
+        store asm.tokens:asm.pc in asm.token
+        if opcodes:asm.token is greater than 0 then
+            store opcodes:asm.token in asm.bytecode:asm.bytecode.len
+            add 1 and asm.bytecode.len in asm.bytecode.len
+            store opsizes:opcodes:asm.token in asm.size
+            if asm.size is greater than 0 then
+                add 1 and asm.pc in asm.pc
+                add asm.size and asm.pc in asm.size
+                while asm.pc is less than asm.size do
+                    store asm.tokens:asm.pc in asm.token
+                    call asm.token.to-address
+                    store asm.address in asm.bytecode:asm.bytecode.len
+                    add 1 and asm.bytecode.len in asm.bytecode.len
+                    add 1 and asm.pc in asm.pc
                 repeat
                 continue
             end if
         else
-            store length of assembler.token in assembler.x
-            subtract 1 from assembler.x in assembler.x
-            get character at assembler.x from assembler.token in assembler.char
+            store length of asm.token in asm.x
+            subtract 1 from asm.x in asm.x
+            get character at asm.x from asm.token in asm.char
 
-            if assembler.char is equal to ":" then
+            if asm.char is equal to ":" then
                 # label
-                store 0 in assembler.bytecode:assembler.bytecode.len
-                add 1 and assembler.bytecode.len in assembler.bytecode.len
+                store 0 in asm.bytecode:asm.bytecode.len
+                add 1 and asm.bytecode.len in asm.bytecode.len
             else
                 # number literals
-                store assembler.token in assembler.bytecode:assembler.bytecode.len
-                add 1 and assembler.bytecode.len in assembler.bytecode.len
+                store asm.token in asm.bytecode:asm.bytecode.len
+                add 1 and asm.bytecode.len in asm.bytecode.len
             end if
         end if
 
-        add 1 and assembler.pc in assembler.pc
+        add 1 and asm.pc in asm.pc
     repeat
 end sub-procedure
 
 # Converts a text of ASM source code to a text vector of tokens.
 # Ignores comments and commas, upcases non-string tokens, strips
 # extra whitespace, and supports strings with escaping.
-#  IN: assembler.input
-# OUT: assembler.lines
-#      assembler.lines.len
-#      assembler.tokens
-#      assembler.tokens.len
-sub-procedure assembler.input.to-tokens
-    store length of assembler.input in assembler.len
-    store 0 in assembler.pc
-    store 0 in assembler.comment?
-    store 0 in assembler.string?
-    store "" in assembler.char
-    store "" in assembler.token
-    store "" in assembler.prev
+#  IN: asm.input
+# OUT: asm.lines
+#      asm.lines.len
+#      asm.tokens
+#      asm.tokens.len
+sub-procedure asm.input.to-tokens
+    store length of asm.input in asm.len
+    store 0 in asm.pc
+    store 0 in asm.comment?
+    store 0 in asm.string?
+    store "" in asm.char
+    store "" in asm.token
+    store "" in asm.prev
 
-    while assembler.pc is less than assembler.len do
-        store assembler.char in assembler.prev
-        get character at assembler.pc from assembler.input in assembler.char
+    while asm.pc is less than asm.len do
+        store asm.char in asm.prev
+        get character at asm.pc from asm.input in asm.char
 
-        if assembler.string? is equal to 1 then
-            if assembler.char is equal to "\"" then
-                if assembler.prev is equal to "\\" then
+        if asm.string? is equal to 1 then
+            if asm.char is equal to "\"" then
+                if asm.prev is equal to "\\" then
                     # quoted string
-                    join assembler.token and assembler.char in assembler.token
+                    join asm.token and asm.char in asm.token
                 else
                     # not quoted, end string token
-                    join assembler.token and assembler.char in assembler.token
-                    store assembler.token in assembler.tokens:assembler.tokens.len
-                    add 1 and assembler.tokens.len in assembler.tokens.len
-                    store "" in assembler.token
-                    store 0 in assembler.string?
+                    join asm.token and asm.char in asm.token
+                    store asm.token in asm.tokens:asm.tokens.len
+                    add 1 and asm.tokens.len in asm.tokens.len
+                    store "" in asm.token
+                    store 0 in asm.string?
                 end if
             else
                 # not a quote, add to token
-                join assembler.token and assembler.char in assembler.token
-                join assembler.line and assembler.char in assembler.line
+                join asm.token and asm.char in asm.token
+                join asm.line and asm.char in asm.line
             end if
-            add 1 and assembler.pc in assembler.pc
+            add 1 and asm.pc in asm.pc
             continue
         end if
 
         # treat commas as spaces
-        if assembler.char is equal to "," then
-            store " " in assembler.char
+        if asm.char is equal to "," then
+            store " " in asm.char
         end if
 
-        if assembler.char is equal to "\n" then
+        if asm.char is equal to "\n" then
             # save line
-            if assembler.line is not equal to "" then
-                store assembler.line in assembler.lines:assembler.lines.len
-                add 1 and assembler.lines.len in assembler.lines.len
-                store "" in assembler.line
+            if asm.line is not equal to "" then
+                store asm.line in asm.lines:asm.lines.len
+                add 1 and asm.lines.len in asm.lines.len
+                store "" in asm.line
             end if
             # save token
-            if assembler.token is not equal to "" then
-                store assembler.token in assembler.tokens:assembler.tokens.len
-                add 1 and assembler.tokens.len in assembler.tokens.len
-                store "" in assembler.token
+            if asm.token is not equal to "" then
+                store asm.token in asm.tokens:asm.tokens.len
+                add 1 and asm.tokens.len in asm.tokens.len
+                store "" in asm.token
             end if
-            store 0 in assembler.comment?
-        else if assembler.char is equal to "\"" then
+            store 0 in asm.comment?
+        else if asm.char is equal to "\"" then
             # parse string
-            store 1 in assembler.string?
-            store "\"" in assembler.token
-        else if assembler.char is equal to ";" then
+            store 1 in asm.string?
+            store "\"" in asm.token
+        else if asm.char is equal to ";" then
             # ignore comments
-            store 1 in assembler.comment?
-        else if assembler.char is equal to " " then
+            store 1 in asm.comment?
+        else if asm.char is equal to " " then
             # squash spaces
-            if assembler.prev is not equal to " " then
-                if assembler.prev is not equal to "\n" then
+            if asm.prev is not equal to " " then
+                if asm.prev is not equal to "\n" then
                     # add single space to line
-                    join assembler.line and assembler.char in assembler.line
+                    join asm.line and asm.char in asm.line
                     # save token
-                    if assembler.token is not equal to "" then
-                        store assembler.token in assembler.tokens:assembler.tokens.len
-                        add 1 and assembler.tokens.len in assembler.tokens.len
-                        store "" in assembler.token
+                    if asm.token is not equal to "" then
+                        store asm.token in asm.tokens:asm.tokens.len
+                        add 1 and asm.tokens.len in asm.tokens.len
+                        store "" in asm.token
                     end if
                 end if
             end if
-        else if assembler.comment? is equal to 0 then
+        else if asm.comment? is equal to 0 then
             # all tokens are UPPER case
-            store assembler.char in upcase.letter
+            store asm.char in upcase.letter
             call upcase-letter
-            store upcase.letter in assembler.char
+            store upcase.letter in asm.char
             # add char to token
-            join assembler.token and assembler.char in assembler.token
+            join asm.token and asm.char in asm.token
             # add char to line
-            join assembler.line and assembler.char in assembler.line
+            join asm.line and asm.char in asm.line
         end if
-        add 1 and assembler.pc in assembler.pc
+        add 1 and asm.pc in asm.pc
     repeat
 end sub-procedure
 
-#  IN: assembler.input
-# OUT: assembler.bytecode
-#      assembler.bytecode.len
-sub-procedure assembler.input.to-bytecode
-    call assembler.input.to-tokens
-    call assembler.tokens.to-bytecode
+#  IN: asm.input
+# OUT: asm.bytecode
+#      asm.bytecode.len
+sub-procedure asm.input.to-bytecode
+    call asm.input.to-tokens
+    call asm.tokens.to-bytecode
 end sub-procedure
 
-#  IN: assembler.input
-# OUT: assembler.textcode
-#      assembler.bytecode
-#      assembler.bytecode.len
-sub-procedure assembler.compile
-    call assembler.input.to-bytecode
+#  IN: asm.input
+# OUT: asm.textcode
+#      asm.bytecode
+#      asm.bytecode.len
+sub-procedure asm.compile
+    call asm.input.to-bytecode
 
     # assemble string constants
-    store "" in assembler.textcode
-    store 0 in assembler.pc
-    while assembler.pc is less than assembler.constants.len do
-        in assembler.textcode join assembler.textcode assembler.constants:assembler.pc " "
-        add 1 and assembler.pc in assembler.pc
+    store "" in asm.textcode
+    store 0 in asm.pc
+    while asm.pc is less than asm.constants.len do
+        in asm.textcode join asm.textcode asm.constants:asm.pc " "
+        add 1 and asm.pc in asm.pc
     repeat
 
     # L D P L header, version #, 1st instruction, string constants
-    add 6 and assembler.pc in assembler.pc
-    store assembler.pc in assembler.t
-    if assembler.pc is less than 10 then
-        join "0" and assembler.t in assembler.t
+    add 6 and asm.pc in asm.pc
+    store asm.pc in asm.t
+    if asm.pc is less than 10 then
+        join "0" and asm.t in asm.t
     end if
-    in assembler.textcode join "76 68 80 76 01 " assembler.t " " assembler.textcode
+    in asm.textcode join "76 68 80 76 01 " asm.t " " asm.textcode
 
-    store 0 in assembler.pc
-    while assembler.pc is less than assembler.bytecode.len do
-        store assembler.bytecode:assembler.pc in assembler.x
-        if assembler.x is less than 10 then
-            join assembler.textcode and "0" in assembler.textcode
+    store 0 in asm.pc
+    while asm.pc is less than asm.bytecode.len do
+        store asm.bytecode:asm.pc in asm.x
+        if asm.x is less than 10 then
+            join asm.textcode and "0" in asm.textcode
         end if
-        in assembler.textcode join assembler.textcode assembler.x " "
-        add 1 and assembler.pc in assembler.pc
+        in asm.textcode join asm.textcode asm.x " "
+        add 1 and asm.pc in asm.pc
     repeat
 
-    display assembler.textcode crlf
+    display asm.textcode crlf
 end sub-procedure
