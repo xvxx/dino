@@ -1,8 +1,8 @@
 .PHONY=clean
 
+LDPL_FILES=$(shell ls -f src/{compiler,vm}.ldpl src/{util,compiler,vm}/*.ldpl | sed -e 's/^/-i=/' | tr -s '\n' ' ')
 dino: src/*.ldpl src/**/*.ldpl
-	@INCLUDES=$(ls -f src/{util,compiler,vm}/*.ldpl src/{compiler,vm}.ldpl | sed -e 's/^/-i=/' | tr -s '\n' ' ')
-	@ldpl $(INCLUDES) src/main.ldpl -o=dino
+	ldpl $(LDPL_FILES) src/main.ldpl -o=dino
 
 test: dino
 	@./dino run 99.dinocode
