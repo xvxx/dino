@@ -16,12 +16,12 @@ assembler.text-offset   is number
 
 # INTERNALS:
 assembler.labels        is text vector
-assembler.labels.len    is number
 assembler.lines         is text vector
 assembler.lines.len     is number
 assembler.tokens        is text vector
 assembler.tokens.len    is number
 assembler.token         is text
+assembler.token.out?    is number
 assembler.label         is text
 assembler.address       is number
 assembler.pc            is number  # program counter
@@ -40,6 +40,19 @@ assembler.string?       is number
 
 PROCEDURE:
 store 12288 in assembler.text-offset # 0x3000
+
+#  IN: assembler.token
+# OUT: assembler.token.out?
+sub-procedure assembler.token.label?
+    store length of assembler.token in assembler.x
+    subtract 1 from assembler.x in assembler.x
+    get character at assembler.x from assembler.token in assembler.char
+
+    store 0 in assembler.token.out?
+    if assembler.char is equal to ":" then
+        store 1 in assembler.token.out?
+    end if
+end sub-procedure
 
 #  IN: assembler.token
 # OUT: assembler.token
@@ -74,7 +87,13 @@ sub-procedure assembler.token.to-address
         # variables
         store 69 in assembler.address
     else
-        store assembler.token in assembler.address
+        get character at 0 from assembler.token in digit?.in
+        call digit?
+        if digit?.out is equal to 1 then
+            store assembler.token in assembler.address
+        else
+            store assembler.labels:assembler.token in assembler.address
+        end if
     end if
 end sub-procedure
 
@@ -129,24 +148,25 @@ end sub-procedure
 
 # Converts a text of ASM source code to a text vector of tokens.
 # Ignores comments and commas, upcases non-string tokens, strips
-# extra whitespace, and supports strings with escaping.
+# extra whitespace, finds labels, and supports strings with escaping.
 #  IN: assembler.input
 # OUT: assembler.lines
 #      assembler.lines.len
 #      assembler.tokens
 #      assembler.tokens.len
+#      assembler.labels
 sub-procedure assembler.input.tokenize
     store length of assembler.input in assembler.len
-    store 0 in assembler.i
+    store 0 in assembler.pc
     store 0 in assembler.comment?
     store 0 in assembler.string?
     store "" in assembler.char
     store "" in assembler.token
     store "" in assembler.prev
 
-    while assembler.i is less than assembler.len do
+    while assembler.pc is less than assembler.len do
         store assembler.char in assembler.prev
-        get character at assembler.i from assembler.input in assembler.char
+        get character at assembler.pc from assembler.input in assembler.char
 
         if assembler.string? is equal to 1 then
             if assembler.char is equal to "\"" then
@@ -166,7 +186,7 @@ sub-procedure assembler.input.tokenize
                 join assembler.token and assembler.char in assembler.token
                 join assembler.line and assembler.char in assembler.line
             end if
-            add 1 and assembler.i in assembler.i
+            add 1 and assembler.pc in assembler.pc
             continue
         end if
 
@@ -186,6 +206,11 @@ sub-procedure assembler.input.tokenize
             if assembler.token is not equal to "" then
                 store assembler.token in assembler.tokens:assembler.tokens.len
                 add 1 and assembler.tokens.len in assembler.tokens.len
+                call assembler.token.label?
+                if assembler.token.out? is equal to 1 then
+                    call assembler.token.strip-trailing-colon
+                    store assembler.pc in assembler.labels:assembler.token
+                end if
                 store "" in assembler.token
             end if
             store 0 in assembler.comment?
@@ -220,7 +245,7 @@ sub-procedure assembler.input.tokenize
             # add char to line
             join assembler.line and assembler.char in assembler.line
         end if
-        add 1 and assembler.i in assembler.i
+        add 1 and assembler.pc in assembler.pc
     repeat
 end sub-procedure
 
@@ -229,9 +254,9 @@ sub-procedure assembler.compile
     call assembler.input.tokenize
     call assembler.tokens.to-bytecode
 
-    store 0 in assembler.i
-    while assembler.i is less than assembler.tokens.len do
-        store assembler.bytecode:assembler.i in assembler.x
+    store 0 in assembler.pc
+    while assembler.pc is less than assembler.tokens.len do
+        store assembler.bytecode:assembler.pc in assembler.x
         if assembler.x is greater than or equal to assembler.text-offset then
             subtract assembler.text-offset from assembler.x in assembler.x
         end if
@@ -239,20 +264,20 @@ sub-procedure assembler.compile
             display "0"
         end if
         display assembler.x ": "
-        display assembler.tokens:assembler.i crlf
-        add 1 and assembler.i in assembler.i
+        display assembler.tokens:assembler.pc crlf
+        add 1 and assembler.pc in assembler.pc
     repeat
 
     display crlf "-------------------------" crlf
 
-    store 0 in assembler.i
-    while assembler.i is less than assembler.bytecode.len do
+    store 0 in assembler.pc
+    while assembler.pc is less than assembler.bytecode.len do
         display "\t"
-        if assembler.bytecode:assembler.i is less than 10 then
+        if assembler.bytecode:assembler.pc is less than 10 then
             display "0"
         end if
-        display assembler.bytecode:assembler.i "  "
-        display "\t" assembler.tokens:assembler.i crlf
-        add 1 and assembler.i in assembler.i
+        display assembler.bytecode:assembler.pc "  "
+        display "\t" assembler.tokens:assembler.pc crlf
+        add 1 and assembler.pc in assembler.pc
     repeat
 end sub-procedure
