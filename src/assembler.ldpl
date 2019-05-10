@@ -41,6 +41,7 @@ assembler.string?       is number
 PROCEDURE:
 store 12288 in assembler.text-offset # 0x3000
 
+# Convert tokens of ASM source code to memory address.
 #  IN: assembler.token
 # OUT: assembler.address
 sub-procedure assembler.token-to-address
@@ -64,6 +65,7 @@ sub-procedure assembler.token-to-address
     end if
 end sub-procedure
 
+# Converts text tokens to bytecode and text constants.
 #  IN: assembler.tokens
 #      assembler.tokens.len
 # OUT: assembler.bytecode
@@ -114,8 +116,8 @@ sub-procedure assembler.tokens-to-bytecode
 end sub-procedure
 
 # Converts a text of ASM source code to a text vector of tokens.
-# Ignores comments and commas, strips extra whitespace, and supports
-# strings.
+# Ignores comments and commas, upcases non-string tokens, strips
+# extra whitespace, and supports strings with escaping.
 #  IN: assembler.input
 # OUT: assembler.lines
 #      assembler.lines.len
@@ -127,8 +129,8 @@ sub-procedure assembler.tokenize-input
     store 0 in assembler.comment?
     store 0 in assembler.string?
     store "" in assembler.char
-    store "" in assembler.prev
     store "" in assembler.token
+    store "" in assembler.prev
 
     while assembler.i is less than assembler.len do
         store assembler.char in assembler.prev
@@ -185,7 +187,7 @@ sub-procedure assembler.tokenize-input
         else if assembler.char is equal to " " then
             # squash spaces
             if assembler.prev is not equal to " " then
-                if assembler.line is not equal to "" then
+                if assembler.prev is not equal to "\n" then
                     # add single space to line
                     join assembler.line and assembler.char in assembler.line
                     # save token
@@ -212,26 +214,30 @@ end sub-procedure
 
 #  IN: assembler.input
 sub-procedure assembler.compile
-    display "LINES:" crlf
     call assembler.tokenize-input
-    store 0 in assembler.i
-    while assembler.i is less than assembler.lines.len do
-        if assembler.i is less than 10 then
-            display "0"
-        end if
-        display assembler.i ": " assembler.lines:assembler.i crlf
-        add 1 and assembler.i in assembler.i
-    repeat
-
     call assembler.tokens-to-bytecode
-    display crlf "TOKENS:" crlf
+
     store 0 in assembler.i
     while assembler.i is less than assembler.tokens.len do
-        if assembler.bytecode:assembler.i is less than 10 then
+        store assembler.bytecode:assembler.i in assembler.x
+        if assembler.x is greater than assembler.text-offset then
+            subtract assembler.text-offset from assembler.x in assembler.x
+        end if
+        if assembler.x is less than 10 then
             display "0"
         end if
-        display assembler.bytecode:assembler.i ": "
+        display assembler.x ": "
         display assembler.tokens:assembler.i crlf
         add 1 and assembler.i in assembler.i
     repeat
+
+    display crlf "-------------------------" crlf
+
+    store 0 in assembler.i
+    while assembler.i is less than assembler.bytecode.len do
+        display "\t" assembler.tokens:assembler.i "  \t" assembler.bytecode:assembler.i crlf
+        add 1 and assembler.i in assembler.i
+    repeat
+    display assembler.tokens.len crlf
+    display assembler.bytecode.len crlf
 end sub-procedure
