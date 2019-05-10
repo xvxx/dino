@@ -2,55 +2,69 @@
 # The assembler converts text assembly code into dino bytecode.
 DATA:
 # IN:
-assembler.input   is text
+assembler.input      is text
 
 # OUT:
-assembler.bytecode  is number vector  # bytecode
-assembler.constants is text vector    # text constants
-assembler.textcode  is text           # text (file) version of bytecode
+assembler.bytecode   is number vector  # bytecode
+assembler.constants  is text vector    # text constants
+assembler.textcode   is text           # text (file) version of bytecode
 
 # CONSTANTS:
-assembler.newline is text
+assembler.newline    is text
+
+# INTERNAL:
+assembler.lines      is text vector
+assembler.lines.len  is number
+assembler.tokens     is text vector
+assembler.tokens.len is number     
 
 # LOCALS:
-assembler.lines     is text vector
-assembler.lines.len is number
-assembler.line      is text
-assembler.len       is number
-assembler.i         is number
-assembler.char      is text
-assembler.prev      is text
-assembler.comment?  is number
+assembler.line       is text
+assembler.len        is number
+assembler.i          is number
+assembler.char       is text
+assembler.prev       is text
+assembler.token      is text
+assembler.comment?   is number
 
 PROCEDURE:
 store ":newline:" in assembler.newline 
 
-sub-procedure assembler.strip-comments
-end sub-procedure
-
-sub-procedure assembler.trim-line
-end sub-procedure
-
-sub-procedure assembler.tokenize
-end sub-procedure
-
+# Ignores comments and commas, strips extra whitespace, and 
+# supports strings.
 #  IN: assembler.input
 # OUT: assembler.lines
 #      assembler.lines.len
-sub-procedure assembler.split-lines
+#      assembler.tokens
+#      assembler.tokens.len
+sub-procedure assembler.tokenize-input
     store length of assembler.input in assembler.len
     store 0 in assembler.i
     store 0 in assembler.comment?
     store "" in assembler.char
     store "" in assembler.prev
+    store "" in assembler.token
     while assembler.i is less than assembler.len do 
         store assembler.char in assembler.prev
         get character at assembler.i from assembler.input in assembler.char
+
+        # treat commas as spaces
+        if assembler.char is equal to "," then 
+            store " " in assembler.char
+        end if 
+
         if assembler.char is equal to "\n" then 
+            # save line
             if assembler.line is not equal to "" then
                 store assembler.line in assembler.lines:assembler.lines.len
                 add 1 and assembler.lines.len in assembler.lines.len
                 store "" in assembler.line
+            end if
+            # save token
+            if assembler.token is not equal to "" then
+                store assembler.token in assembler.tokens:assembler.tokens.len
+                add 1 and assembler.tokens.len in assembler.tokens.len
+                store "" in assembler.token
             end if
             store 0 in assembler.comment?
         else if assembler.char is equal to ";" then 
@@ -60,10 +74,20 @@ sub-procedure assembler.split-lines
             # squash spaces
             if assembler.prev is not equal to " " then 
                 if assembler.line is not equal to "" then 
+                    # add single space to line
                     join assembler.line and assembler.char in assembler.line
+                    # save token
+                    if assembler.token is not equal to "" then
+                        store assembler.token in assembler.tokens:assembler.tokens.len
+                        add 1 and assembler.tokens.len in assembler.tokens.len
+                        store "" in assembler.token
+                    end if
                 end if
             end if
         else if assembler.comment? is equal to 0 then 
+            # add char to token
+            join assembler.token and assembler.char in assembler.token
+            # add char to line
             join assembler.line and assembler.char in assembler.line
         end if
         add 1 and assembler.i in assembler.i
@@ -72,13 +96,22 @@ end sub-procedure
 
 #  IN: assembler.input
 sub-procedure assembler.compile
-    call assembler.split-lines
+    call assembler.tokenize-input
     store 0 in assembler.i 
     while assembler.i is less than assembler.lines.len do 
         if assembler.i is less than 10 then 
             display "0" 
             end if
         display assembler.i ": " assembler.lines:assembler.i crlf
+        add 1 and assembler.i in assembler.i
+    repeat
+
+    store 0 in assembler.i 
+    while assembler.i is less than assembler.tokens.len do 
+        if assembler.i is less than 10 then 
+            display "0" 
+            end if
+        display assembler.i ": " assembler.tokens:assembler.i crlf
         add 1 and assembler.i in assembler.i
     repeat
 end sub-procedure
