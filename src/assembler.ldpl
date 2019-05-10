@@ -23,7 +23,7 @@ assembler.lines.len     is number
 assembler.tokens        is text vector
 assembler.tokens.len    is number
 assembler.token         is text
-assembler.token.out?    is number
+assembler.token.label?  is number
 assembler.label         is text
 assembler.address       is number
 assembler.pc            is number  # program counter
@@ -44,14 +44,14 @@ PROCEDURE:
 store 12288 in assembler.text-offset # 0x3000
 
 #  IN: assembler.token
-# OUT: assembler.token.out?
+# OUT: assembler.token.label?
 sub-procedure assembler.token.label?
     store length of assembler.token in assembler.x
     subtract 1 from assembler.x in assembler.x
     get character at assembler.x from assembler.token in assembler.char
-    store 0 in assembler.token.out?
+    store 0 in assembler.token.label?
     if assembler.char is equal to ":" then
-        store 1 in assembler.token.out?
+        store 1 in assembler.token.label?
     end if
 end sub-procedure
 
@@ -91,7 +91,7 @@ sub-procedure assembler.token.to-address
     else
         get character at 0 from assembler.token in digit?.in
         call digit?
-        if digit?.out is equal to 1 then
+        if digit? is equal to 1 then
             store assembler.token in assembler.address
         else
             store assembler.labels:assembler.token in assembler.address
@@ -107,7 +107,7 @@ sub-procedure assembler.tokens.find-labels
     while assembler.pc is less than assembler.tokens.len do
         store assembler.tokens:assembler.pc in assembler.token
         call assembler.token.label?
-        if assembler.token.out? is equal to 1 then
+        if assembler.token.label? is equal to 1 then
             call assembler.token.strip-trailing-colon
             store assembler.pc in assembler.labels:assembler.token
         end if
