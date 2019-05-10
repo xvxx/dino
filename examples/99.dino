@@ -2,10 +2,10 @@
     .byte "L", "D", "P", "L", 1
     STOREN $x, 99
 song:
-    STOREN $y, 0
-    GT $x, $y, $a
-    JIF end_song
-    DISPLAY $x
+    STOREN $y, 0                    ; y=0
+    GT $x, $y, $a                   ; a=x>y
+    JIF end_song                    ; if(a==0) JUMP end_song
+    DISPLAY $x                      
     DISPLAY " bottles of beer"
     DISPLAY " on the wall"
     DISPLAY ", "
@@ -13,8 +13,8 @@ song:
     DISPLAY " bottles of beer"
     DISPLAY ". "
     DISPLAY "Take one down, pass it around, "
-    STOREN $y, 1
-    SUB $x, $y, $x
+    STOREN $y, 1                    ; y=1
+    SUB $x, $y, $x                  ; x=x-y
     DISPLAY $x
     DISPLAY " bottles of beer"
     DISPLAY " on the wall"
