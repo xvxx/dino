@@ -291,6 +291,7 @@ sub-procedure assembler.compile
     end if
     in assembler.textcode join "76 68 80 76 01 " assembler.t " " assembler.textcode
 
+    store 0 in assembler.pc
     while assembler.pc is less than assembler.bytecode.len do
         store assembler.bytecode:assembler.pc in assembler.x
         if assembler.x is less than 10 then
