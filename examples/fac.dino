@@ -1,5 +1,5 @@
 ;; factorial
-    DISPLAY "Enter a number: "
+    DISPLAY "🦕 Enter a number: "
     ACCEPT %n
     SET %result, 1   ; default
 while:
