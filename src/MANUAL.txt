@@ -12,12 +12,27 @@
 * Bytecode VM
 * 32 bit words
 * 0xFFFF words of memory
-* 16 registers (A, X, Y, Z, C, E, SP, PC, TA, TX, TY, TZ, TE)
-* Registers, variables, and constants share address space.
+* 8 numeric registers (A, X, Y, Z, C, E, SP, PC)
+* 5 text registers (TA, TX, TY, TZ, TE)
+* Registers, variables, and text constants share one address space.
 * Instructions are 1-4 words: One opcode and 0-3 operands.
+
+=== ISSUES ===========================================================
+
+This first iteration plays fast and loose with the "byte" in bytecode.
+Once LDPL supports bitwise operations we will revisit the core design
+so it's more bit-tastic.
 
 === TODO =============================================================
 
+* [ ] build each part separately
+   * [ ] lexer
+   * [ ] parser
+   * [ ] generator
+   * [ ] assembler
+   * [ ] loader
+   * [ ] memory
+   * [ ] cpu
 * [x] assembly -> bytecode $ dino bytes examples/99.dino
    * [x] strip comments
    * [x] trim line
