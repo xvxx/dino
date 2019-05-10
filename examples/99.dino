@@ -2,7 +2,7 @@
     .byte "L", "D", "P", "L", 1
     SET $x, 99
 song:
-    SET $y, 0                    ; y=0
+    SET $y, 0                       ; y=0
     GT $x, $y, $a                   ; a=x>y
     JIF end_song                    ; if(a==0) JUMP end_song
     DISPLAY $x
@@ -10,7 +10,7 @@ song:
     DISPLAY $x
     DISPLAY " bottles of beer."
     DISPLAY "Take one down, pass it around, "
-    SET $y, 1                    ; y=1
+    SET $y, 1                       ; y=1
     SUB $x, $y, $x                  ; x=x-y
     DISPLAY $x
     DISPLAY " bottles of beer on the wall!"
