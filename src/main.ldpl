@@ -81,8 +81,9 @@ end sub-procedure
 
 # --- MAIN PROGRAM ROUTINE -------------------------------------------
 sub-procedure main
-    if argv:1 is equal to "bytes" then 
-        load file argv:2 in main.input
+    if argv:0 is equal to "bytes" then 
+        load file argv:1 in main.input
+        display main.input crlf
     else 
         call main.help
     end if 
