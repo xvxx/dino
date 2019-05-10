@@ -4,6 +4,7 @@
 DATA:
 vm.bytecode        is number vector
 vm.bytecode.len    is number
+vm.bytecode.text   is text
 vm.constants       is text vector
 vm.constants.len   is number
 

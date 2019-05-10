@@ -4,9 +4,6 @@ DATA:
 # IN:
 asm.input         is text
 
-# OUT:
-asm.text          is text           # text (file) version of bytecode
-
 # CONSTANTS:
 asm.text-offset   is number
 
@@ -24,9 +21,9 @@ asm.label         is text
 asm.address       is number
 asm.pc            is number  # program counter
 
-asm.segment.head is text
-asm.segment.code is text
-asm.segment.text is text
+asm.segment.head  is text
+asm.segment.code  is text
+asm.segment.text  is text
 
 # LOCALS:
 asm.line          is text
@@ -267,7 +264,7 @@ end sub-procedure
 #  IN: asm.input
 # OUT: vm.bytecode
 #      vm.bytecode.len
-sub-procedure asm.input.to-bytecode
+sub-procedure asm.compile
     call asm.input.to-tokens
     call asm.tokens.to-bytecode
 end sub-procedure
@@ -276,8 +273,8 @@ end sub-procedure
 # OUT: asm.text
 #      vm.bytecode
 #      vm.bytecode.len
-sub-procedure asm.compile
-    call asm.input.to-bytecode
+sub-procedure vm.bytecode.to-text
+    call asm.compile
 
      # L D P L char codes, version #
     store "76 68 80 76 01 " in asm.segment.head
@@ -309,5 +306,5 @@ end sub-procedure
 # Must be called after asm.compile.
 #  IN: asm.text
 sub-procedure vm.bytecode.print
-    display asm.text crlf
+    display vm.bytecode.text crlf
 end sub-procedure

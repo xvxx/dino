@@ -8,6 +8,7 @@ loader.input    is text
 
 # LOCALS:
 loader.i        is number
+loader.char     is number
 
 PROCEDURE:
 #  IN: loader.input
