@@ -269,19 +269,36 @@ sub-procedure assembler.input.to-bytecode
 end sub-procedure
 
 #  IN: assembler.input
+# OUT: assembler.textcode
+#      assembler.bytecode
+#      assembler.bytecode.len
 sub-procedure assembler.compile
     call assembler.input.to-bytecode
 
+    # assemble string constants
+    store "" in assembler.textcode
     store 0 in assembler.pc
-    while assembler.pc is less than assembler.bytecode.len do
-        store assembler.bytecode:assembler.pc in assembler.x
-        if assembler.x is greater than or equal to assembler.text-offset then
-            subtract assembler.text-offset from assembler.x in assembler.x
-        end if
-        if assembler.x is less than 10 then
-            display "0"
-        end if
-        display assembler.x " "
+    while assembler.pc is less than assembler.constants.len do
+        in assembler.textcode join assembler.textcode assembler.constants:assembler.pc " "
         add 1 and assembler.pc in assembler.pc
     repeat
+
+    # L D P L header, version #, 1st instruction, string constants
+    add 6 and assembler.pc in assembler.pc
+    store assembler.pc in assembler.t
+    if assembler.pc is less than 10 then
+        join "0" and assembler.t in assembler.t
+    end if
+    in assembler.textcode join "76 68 80 76 01 " assembler.t " " assembler.textcode
+
+    while assembler.pc is less than assembler.bytecode.len do
+        store assembler.bytecode:assembler.pc in assembler.x
+        if assembler.x is less than 10 then
+            join assembler.textcode and "0" in assembler.textcode
+        end if
+        in assembler.textcode join assembler.textcode assembler.x " "
+        add 1 and assembler.pc in assembler.pc
+    repeat
+
+    display assembler.textcode crlf
 end sub-procedure
