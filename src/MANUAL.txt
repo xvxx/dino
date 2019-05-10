@@ -18,7 +18,7 @@
 
 === TODO =============================================================
 
-* [ ] assembly -> bytecode
+* [ ] assembly -> bytecode $ dino bytes examples/99.dino
    * [ ] strip comments
    * [ ] trim line
    * [ ] tokenize file

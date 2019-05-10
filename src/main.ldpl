@@ -28,11 +28,24 @@
 #   $ bytes file.ldpl -> file.dinocode
 #   $ disas file.dinocode -> file.dino
 
+DATA:
+
+main.input is text
+
 PROCEDURE:
 
 # --- DISPLAY HELP ---------------------------------------------------
 # $ dino help
 sub-procedure main.help    
+    display "Usage: $ dino [command] [options...]" crlf
+    display crlf 
+    display "Commands:" crlf
+    display "\t" "run  " "\t" "execute .ldpl file" crlf
+    display "\t" "compile" "\t" "compile .ldpl program to .dinocode" crlf
+    display "\t" "asm  " "\t" "compile .ldpl file to .dino assembly" crlf
+    display "\t" "bytes" "\t" "compile .dino file to .dinocode bytecode" crlf
+    display "\t" "disas" "\t" "decompile .dinocode file to .dino assembly" crlf
+    display "\t" "help " "\t" "print help screen" crlf
 end sub-procedure
 
 # --- READ-EVAL-PRINT-LOOP -------------------------------------------
@@ -68,8 +81,14 @@ end sub-procedure
 
 # --- MAIN PROGRAM ROUTINE -------------------------------------------
 sub-procedure main
+    if argv:1 is equal to "bytes" then 
+        load file argv:2 in main.input
+    else 
+        call main.help
+    end if 
 end sub-procedure
 
+call main
 
 #              boing         boing         boing
 #    e-e           . - .         . - .         . - .
