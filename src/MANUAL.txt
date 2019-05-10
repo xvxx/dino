@@ -3,7 +3,7 @@
             * | |) | | ' \/ _ \ V /| |\/| |  *
             * |___/|_|_||_\___/\_/ |_|  |_|  *
             *  *  *  *  *  *  *  *  *  *  *  *
-                       An LDPL VM        
+                       An LDPL VM
                        Written in
                           LDPL
 
@@ -11,10 +11,10 @@
 
 * Bytecode VM
 * 64 bit words
-* 0xFFFF words of memory 
+* 0xFFFF words of memory
 * 16 registers (A, X, Y, Z, C, E, SP, PC, TA, TX, TY, TZ, TE)
 * Registers, variables, and constants share memory space.
-* Instructions are 1-4 words: One opcode and 0-3 operands. 
+* Instructions are 1-4 words: One opcode and 0-3 operands.
 
 === TODO =============================================================
 
@@ -24,48 +24,48 @@
    * [x] tokenize file
    * [x] support strings
    * [-] :newline: token  (don't need)
-   * [x] accept file from command line 
-   * [ ] tokens -> bytecode 
+   * [x] accept file from command line
+   * [ ] tokens -> bytecode
    * [ ] print raw bytecode
-   * [ ] save bytecode to file 
-* [ ] bytecode -> assembly 
+   * [ ] save bytecode to file
+* [ ] bytecode -> assembly
    * [ ] load bytecode from file
 * [ ] VM
    * [ ] load bytecode from file
    * [ ] run bytecode
    * [ ] Instructions:
-      * [ ] JUMP 
-      * [ ] JIF 
-      * [ ] JIT 
-      * [ ] CALL 
-      * [ ] RETURN            
-      * [ ] EXIT              
-      * [ ] WAIT 
-      * [ ] STORE 
-      * [ ] STORN 
-      * [ ] EQ 
-      * [ ] GT 
-      * [ ] LT 
-      * [ ] ADD 
-      * [ ] SUB 
-      * [ ] MUL 
-      * [ ] DIV 
-      * [ ] MOD 
-      * [ ] ABS 
-      * [ ] CEIL 
+      * [ ] JUMP
+      * [ ] JIF
+      * [ ] JIT
+      * [ ] CALL
+      * [ ] RETURN
+      * [ ] EXIT
+      * [ ] WAIT
+      * [ ] STORE
+      * [ ] STORN
+      * [ ] EQ
+      * [ ] GT
+      * [ ] LT
+      * [ ] ADD
+      * [ ] SUB
+      * [ ] MUL
+      * [ ] DIV
+      * [ ] MOD
+      * [ ] ABS
+      * [ ] CEIL
       * [ ] FLOOR
-      * [ ] RANDOM 
-      * [ ] PRINT 
-      * [ ] ACCEPT 
-      * [ ] EXEC 
-      * [ ] READ 
-      * [ ] WRITE 
+      * [ ] RANDOM
+      * [ ] PRINT
+      * [ ] ACCEPT
+      * [ ] EXEC
+      * [ ] READ
+      * [ ] WRITE
       * [ ] APPEND
       * [ ] LEN
-      * [ ] JOIN 
-      * [ ] GETC 
+      * [ ] JOIN
+      * [ ] GETC
       * [ ] GETCC
-      * [ ] PUTC 
+      * [ ] PUTC
 
 === REFERENCE ========================================================
 
@@ -73,14 +73,14 @@
 | BYTE | DATA | DESCRIPTION
 +------+------+------------------------------------------------------
 | 0000 |  76  | First four bytes are char codes for "LDPL"
-| 0001 |  68  | 
-| 0002 |  80  | 
-| 0003 |  76  | 
+| 0001 |  68  |
+| 0002 |  80  |
+| 0003 |  76  |
 | 0004 |  01  | Bytecode version number
 | 0005 |  07  | Address of first instruction. JUMP to it.
 | 0006 |      | Text constants
 | 0007 |      | Program instructions
-| 0008 |  06  | Final EXIT 
+| 0008 |  06  | Final EXIT
 | 0009 |      | Sub-procedure definitions
 
 # --- MEMORY LAYOUT --------------------------------------------------
@@ -107,7 +107,7 @@
 | 1000 |      | NUM  | Number variables
 | 2000 |      | TEXT | Text variables
 | ==== | ==== | ==== | CONSTANTS ====================================
-| 3000 |      | TEXT | Text literals 
+| 3000 |      | TEXT | Text literals
 | ...  |      |      |
 | FFFF |      |      | Max address
 
@@ -128,12 +128,12 @@
 |  02  | JIF label         | Jump to label if $a is 0 (false)
 |  03  | JIT label         | Jump to label if $a is 1 (true)
 |  04  | CALL label        | Push location on stack and jump to label
-|  05  | RETURN            | Pop loc off top of stack and jump to it 
+|  05  | RETURN            | Pop loc off top of stack and jump to it
 |  06  | EXIT              | Exit program
 |  07  | WAIT $r           | Pause for milliseconds in register.
 | ==== | ================= | MEMORY COMMANDS =========================
 |  10  | STORE %var $r     | Store value of register r in variable var.
-|  11  | STORN $r 3.14     | Store literal number in register r.
+|  11  | SET $r 3.14       | Set $r to literal number value.
 | ==== | ================= | ARITHMETIC ==============================
 |  20  | EQ $x $y $a       | Set $a=1 if $x == $y
 |  21  | GT $x $y $a       | Set $a=1 if $x > $y
@@ -149,14 +149,14 @@
 |  2B  | RANDOM $a         | Put random number in $a.
 | ==== | ================= | I/O COMMANDS ============================
 |  30  | DISPLAY $r        | Print content of register $r
-|  31  | ACCEPT $a         | 
-|  32  | EXEC $ta          | 
-|  33  | READ $ta $tz      | 
-|  34  | WRITE $ta $tb     | 
+|  31  | ACCEPT $a         |
+|  32  | EXEC $ta          |
+|  33  | READ $ta $tz      |
+|  34  | WRITE $ta $tb     |
 |  35  | APPEND $ta $tb    |
 | ==== | ================  | TEXT OPERATIONS ========================
 |  40  | LEN $tx $a        | Get length of string in $tx.
 |  41  | JOIN $tx $ty $ta  | Concatenate text in registers into $ta.
-|  42  | GETC n %str $ta   | Get character at position n in %str. 
+|  42  | GETC n %str $ta   | Get character at position n in %str.
 |  43  | GETCC n %str $a   | Get character code at n in %str.
 |  44  | PUTC $tr n        | Put ascii character with code n into $tr.

@@ -2,16 +2,16 @@
     .byte "L", "D", "P", "L", 1
     DISPLAY "Enter a number: "
     ACCEPT %n
-    STOREN %result, 1   ; default
+    SET %result, 1   ; default
 while:
-    STOREN $y, 0
+    SET $y, 0
     GT %n, $y, $a
-    JIF end_while 
-    MUL %n, %result, %result 
-    STOREN $y, 1
+    JIF end_while
+    MUL %n, %result, %result
+    SET $y, 1
     SUB %n, $y, %n
     JUMP while
 end_while:
-    DISPLAY "Factorial: " 
-    DISPLAY %result 
+    DISPLAY "Factorial: "
+    DISPLAY %result
     DISPLAY "\n"
