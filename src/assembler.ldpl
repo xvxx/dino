@@ -20,6 +20,7 @@ assembler.len       is number
 assembler.i         is number
 assembler.char      is text
 assembler.prev      is text
+assembler.comment?  is number
 
 PROCEDURE:
 store ":newline:" in assembler.newline 
@@ -39,15 +40,22 @@ end sub-procedure
 sub-procedure assembler.split-lines
     store length of assembler.input in assembler.len
     store 0 in assembler.i
+    store 0 in assembler.comment?
     store "" in assembler.char
     store "" in assembler.prev
     while assembler.i is less than assembler.len do 
         store assembler.char in assembler.prev
         get character at assembler.i from assembler.input in assembler.char
         if assembler.char is equal to "\n" then 
-            store assembler.line in assembler.lines:assembler.lines.len
-            add 1 and assembler.lines.len in assembler.lines.len
-            store "" in assembler.line
+            if assembler.line is not equal to "" then
+                store assembler.line in assembler.lines:assembler.lines.len
+                add 1 and assembler.lines.len in assembler.lines.len
+                store "" in assembler.line
+            end if
+            store 0 in assembler.comment?
+        else if assembler.char is equal to ";" then 
+            # ignore comments
+            store 1 in assembler.comment?
         else if assembler.char is equal to " " then 
             # squash spaces
             if assembler.prev is not equal to " " then 
@@ -55,7 +63,7 @@ sub-procedure assembler.split-lines
                     join assembler.line and assembler.char in assembler.line
                 end if
             end if
-        else 
+        else if assembler.comment? is equal to 0 then 
             join assembler.line and assembler.char in assembler.line
         end if
         add 1 and assembler.i in assembler.i
@@ -67,6 +75,9 @@ sub-procedure assembler.compile
     call assembler.split-lines
     store 0 in assembler.i 
     while assembler.i is less than assembler.lines.len do 
+        if assembler.i is less than 10 then 
+            display "0" 
+            end if
         display assembler.i ": " assembler.lines:assembler.i crlf
         add 1 and assembler.i in assembler.i
     repeat
