@@ -273,7 +273,7 @@ sub-procedure assembler.compile
     call assembler.input.to-bytecode
 
     store 0 in assembler.pc
-    while assembler.pc is less than assembler.tokens.len do
+    while assembler.pc is less than assembler.bytecode.len do
         store assembler.bytecode:assembler.pc in assembler.x
         if assembler.x is greater than or equal to assembler.text-offset then
             subtract assembler.text-offset from assembler.x in assembler.x
@@ -281,21 +281,7 @@ sub-procedure assembler.compile
         if assembler.x is less than 10 then
             display "0"
         end if
-        display assembler.x ": "
-        display assembler.tokens:assembler.pc crlf
-        add 1 and assembler.pc in assembler.pc
-    repeat
-
-    display crlf "-------------------------" crlf
-
-    store 0 in assembler.pc
-    while assembler.pc is less than assembler.bytecode.len do
-        display "\t"
-        if assembler.bytecode:assembler.pc is less than 10 then
-            display "0"
-        end if
-        display assembler.bytecode:assembler.pc "  "
-        display "\t" assembler.tokens:assembler.pc crlf
+        display assembler.x " "
         add 1 and assembler.pc in assembler.pc
     repeat
 end sub-procedure
