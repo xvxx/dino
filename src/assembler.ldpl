@@ -89,12 +89,16 @@ sub-procedure asm.token.to-address
         end if
         store asm.variables:asm.token in asm.address
     else
-        get character at 0 from asm.token in digit?.in
+        if asm.char is equal to "-" then
+            get character at 1 from asm.token in asm.char
+        end if
+        store asm.char in digit?.in
         call digit?
         if digit? is equal to 1 then
             store asm.token in asm.address
         else
             store asm.labels:asm.token in asm.address
+            subtract asm.pc from asm.address in asm.address
         end if
     end if
 end sub-procedure
@@ -287,7 +291,9 @@ sub-procedure asm.compile
     add 6 and asm.pc in asm.pc
     store asm.pc in asm.t
     if asm.pc is less than 10 then
-        join "0" and asm.t in asm.t
+        if asm.pc is greater than or equal to 0 then
+            join "0" and asm.t in asm.t
+        end if
     end if
     in asm.textcode join "76 68 80 76 01 " asm.t " " asm.textcode
 
@@ -295,7 +301,9 @@ sub-procedure asm.compile
     while asm.pc is less than asm.bytecode.len do
         store asm.bytecode:asm.pc in asm.x
         if asm.x is less than 10 then
-            join asm.textcode and "0" in asm.textcode
+            if asm.x is greater than or equal to 0 then
+                join asm.textcode and "0" in asm.textcode
+            end if
         end if
         in asm.textcode join asm.textcode asm.x " "
         add 1 and asm.pc in asm.pc
