@@ -43,7 +43,7 @@ store 12288 in assembler.text-offset # 0x3000
 
 #  IN: assembler.token
 # OUT: assembler.token
-sub-procedure assembler.strip-trailing-colon
+sub-procedure assembler.token.strip-trailing-colon
     store length of assembler.token in assembler.len
     subtract 1 from assembler.len in assembler.len
     store 0 in assembler.x
@@ -112,9 +112,9 @@ sub-procedure assembler.tokens-to-bytecode
 
             if assembler.char is equal to ":" then
                 # label
-                call assembler.strip-trailing-colon
+                call assembler.token.strip-trailing-colon
                 store assembler.pc in assembler.labels:assembler.token
-                store 69 in assembler.bytecode:assembler.bytecode.len
+                store 0 in assembler.bytecode:assembler.bytecode.len
                 add 1 and assembler.bytecode.len in assembler.bytecode.len
             else
                 # number literals
