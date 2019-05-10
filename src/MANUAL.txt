@@ -13,7 +13,7 @@
 * 64 bit words
 * 0xFFFF words of memory
 * 16 registers (A, X, Y, Z, C, E, SP, PC, TA, TX, TY, TZ, TE)
-* Registers, variables, and constants share memory space.
+* Registers, variables, and constants share address space.
 * Instructions are 1-4 words: One opcode and 0-3 operands.
 
 === TODO =============================================================
@@ -27,6 +27,10 @@
    * [x] accept file from command line
    * [x] tokens -> bytecode
    * [x] print raw bytecode
+   * [ ] error checking:
+      * [ ] arity
+      * [ ] labels?
+   * [ ] relative jumps
    * [ ] save bytecode to file
 * [ ] bytecode -> assembly
    * [ ] load bytecode from file
