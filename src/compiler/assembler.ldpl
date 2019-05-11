@@ -1,11 +1,8 @@
 # === ASSEMBLER ======================================================
 # The assembler converts text assembly code into dino bytecode.
 DATA:
-# IN:
-asm.input         is text
-
-# CONSTANTS:
-asm.text-offset   is number
+# OUT:
+asm.dinocode      is text
 
 # INTERNALS:
 asm.labels        is number vector
@@ -18,6 +15,7 @@ asm.token.label?  is number
 asm.label         is text
 asm.address       is number
 asm.pc            is number  # program counter
+asm.addresses     is number vector
 
 asm.segment.head  is text
 asm.segment.code  is text
@@ -35,7 +33,14 @@ asm.comment?      is number
 asm.string?       is number
 
 PROCEDURE:
-store 12288 in asm.text-offset # 0x3000
+store 0 in asm.addresses:"$A"
+store 1 in asm.addresses:"$X"
+store 2 in asm.addresses:"$Y"
+store 3 in asm.addresses:"$Z"
+store 4 in asm.addresses:"$C"
+store 5 in asm.addresses:"$E"
+store 6 in asm.addresses:"$SP"
+store 7 in asm.addresses:"$PC"
 
 #  IN: asm.token
 # OUT: asm.token.label?
@@ -70,11 +75,11 @@ end sub-procedure
 sub-procedure asm.token.to-address
     get character at 0 from asm.token in asm.char
     if asm.char is equal to "\"" then
-        add asm.text-offset and vm.constants.len in asm.address
-        store asm.token in vm.constants:vm.constants.len
-        add 1 and vm.constants.len in vm.constants.len
+        add $OFFSET.TEXT and c.text.len in asm.address
+        store asm.token in c.text:c.text.len
+        add 1 and c.text.len in c.text.len
     else if asm.char is equal to "$" then
-        store REGISTERS:asm.token in asm.address
+        store asm.addresses:asm.token in asm.address
     else if asm.char is equal to "%" then
         # variables
         if asm.variables:asm.token is equal to 0 then
@@ -113,30 +118,30 @@ sub-procedure asm.tokens.find-labels
     repeat
 end sub-procedure
 
-# Converts text tokens to bytecode and text constants.
+# Converts text tokens to bytecode and text.
 #  IN: asm.tokens
 #      asm.tokens.len
-# OUT: vm.bytecode
-#      vm.bytecode.len
-#      vm.constants
-#      vm.constants.len
+# OUT: c.bytes
+#      c.bytes.len
+#      c.text
+#      c.text.len
 sub-procedure asm.tokens.to-bytecode
     call asm.tokens.find-labels
     store 0 in asm.pc
     while asm.pc is less than asm.tokens.len do
         store asm.tokens:asm.pc in asm.token
-        if opcodes:asm.token is greater than 0 then
-            store opcodes:asm.token in vm.bytecode:vm.bytecode.len
-            add 1 and vm.bytecode.len in vm.bytecode.len
-            store opsizes:opcodes:asm.token in asm.size
+        if $CODES:asm.token is greater than 0 then
+            store $CODES:asm.token in c.bytes:c.bytes.len
+            add 1 and c.bytes.len in c.bytes.len
+            store $SIZES:$CODES:asm.token in asm.size
             if asm.size is greater than 0 then
                 add 1 and asm.pc in asm.pc
                 add asm.size and asm.pc in asm.size
                 while asm.pc is less than asm.size do
                     store asm.tokens:asm.pc in asm.token
                     call asm.token.to-address
-                    store asm.address in vm.bytecode:vm.bytecode.len
-                    add 1 and vm.bytecode.len in vm.bytecode.len
+                    store asm.address in c.bytes:c.bytes.len
+                    add 1 and c.bytes.len in c.bytes.len
                     add 1 and asm.pc in asm.pc
                 repeat
                 continue
@@ -148,12 +153,12 @@ sub-procedure asm.tokens.to-bytecode
 
             if asm.char is equal to ":" then
                 # label
-                store 0 in vm.bytecode:vm.bytecode.len
-                add 1 and vm.bytecode.len in vm.bytecode.len
+                store 0 in c.bytes:c.bytes.len
+                add 1 and c.bytes.len in c.bytes.len
             else
                 # number literals
-                store asm.token in vm.bytecode:vm.bytecode.len
-                add 1 and vm.bytecode.len in vm.bytecode.len
+                store asm.token in c.bytes:c.bytes.len
+                add 1 and c.bytes.len in c.bytes.len
             end if
         end if
 
@@ -164,11 +169,11 @@ end sub-procedure
 # Converts a text of ASM source code to a text vector of tokens.
 # Ignores comments and commas, upcases non-string tokens, strips
 # extra whitespace, and supports strings with escaping.
-#  IN: asm.input
+#  IN: c.asm
 # OUT: asm.tokens
 #      asm.tokens.len
-sub-procedure asm.input.to-tokens
-    store length of asm.input in asm.len
+sub-procedure c.input.to-tokens
+    store length of c.asm in asm.len
     store 0 in asm.pc
     store 0 in asm.comment?
     store 0 in asm.string?
@@ -178,7 +183,7 @@ sub-procedure asm.input.to-tokens
 
     while asm.pc is less than asm.len do
         store asm.char in asm.prev
-        get character at asm.pc from asm.input in asm.char
+        get character at asm.pc from c.asm in asm.char
 
         if asm.string? is equal to 1 then
             if asm.char is equal to "\"" then
@@ -245,26 +250,24 @@ sub-procedure asm.input.to-tokens
     repeat
 end sub-procedure
 
-#  IN: asm.input
-# OUT: vm.bytecode
-#      vm.bytecode.len
+#  IN: c.asm
+# OUT: c.bytes
+#      c.bytes.len
 sub-procedure asm.compile
-    call asm.input.to-tokens
+    call c.input.to-tokens
     call asm.tokens.to-bytecode
 end sub-procedure
 
-#  IN: asm.input
-# OUT: asm.text
-#      vm.bytecode
-#      vm.bytecode.len
-sub-procedure vm.bytecode.to-text
+#  IN: c.asm
+# OUT: asm.dinocode
+sub-procedure c.bytes.to-dinocode
      # L D P L char codes, version #
     store "76 68 80 76 01 " in asm.segment.head
 
     store 0 in asm.pc
     store "" in asm.segment.code
-    while asm.pc is less than vm.bytecode.len do
-        store vm.bytecode:asm.pc in asm.x
+    while asm.pc is less than c.bytes.len do
+        store c.bytes:asm.pc in asm.x
         if asm.x is less than 10 then
             if asm.x is greater than or equal to 0 then
                 join asm.segment.code and "0" in asm.segment.code
@@ -274,20 +277,20 @@ sub-procedure vm.bytecode.to-text
         add 1 and asm.pc in asm.pc
     repeat
 
-    # assemble string constants
+    # assemble text
     store "" in asm.segment.text
     store 0 in asm.x
-    while asm.x is less than vm.constants.len do
-        in asm.segment.text join asm.segment.text vm.constants:asm.x " "
+    while asm.x is less than c.text.len do
+        in asm.segment.text join asm.segment.text c.text:asm.x " "
         add 1 and asm.x in asm.x
     repeat
 
-    in vm.bytecode.text join asm.segment.head asm.segment.code asm.segment.text
+    in asm.dinocode join asm.segment.head asm.segment.code asm.segment.text
 end sub-procedure
 
 # Must be called after asm.compile.
-#  IN: asm.text
-sub-procedure vm.bytecode.print
-    call vm.bytecode.to-text
-    display vm.bytecode.text crlf
+#  IN: c.text
+sub-procedure c.bytes.print
+    call c.bytes.to-dinocode
+    display asm.dinocode crlf
 end sub-procedure

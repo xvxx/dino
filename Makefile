@@ -1,6 +1,6 @@
 .PHONY=clean
 
-LDPL_FILES=$(shell ls -f src/{compiler,vm}.ldpl src/{util,compiler,vm}/*.ldpl | sed -e 's/^/-i=/' | tr -s '\n' ' ')
+LDPL_FILES=$(shell ls -f src/{bytecode,compiler,vm}.ldpl src/{util,compiler,vm}/*.ldpl | sed -e 's/^/-i=/' | tr -s '\n' ' ')
 dino: src/*.ldpl src/**/*.ldpl
 	ldpl $(LDPL_FILES) src/main.ldpl -o=dino
 

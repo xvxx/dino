@@ -9,19 +9,38 @@
 
 === SUMMARY ==========================================================
 
-* Bytecode VM
+* Bytecode VM (& Compiler)
 * 32 bit words
 * 0xFFFF words of memory
 * 8 numeric registers (A, X, Y, Z, C, E, SP, PC)
 * 5 text registers (TA, TX, TY, TZ, TE)
-* Registers, variables, and text constants share one address space.
+* Registers, variables, and text share a logical address space.
 * Instructions are 1-4 words: One opcode and 0-3 operands.
 
 === ISSUES ===========================================================
 
-This first iteration plays fast and loose with the "byte" in bytecode.
-Once LDPL supports bitwise operations we will revisit the core design
-so it's more bit-tastic.
+1. This first iteration plays fast and loose with the "byte" in
+   bytecode. Once LDPL supports bitwise operations we will revisit the
+   core design so it's more bit-tastic.
+
+2. We are not considering performance at this time, but rather seeking
+   to educate ourselves by creating this friendly dino vm.
+
+=== DESIGN ===========================================================
+
+Each component is a black box, wired together by the three "meta"
+components of compiler, vm, and dino. Each component utilizes a set of
+IN variables, a set of OUT variables, and a RUN sub-procedure.
+
+- dino
+  - compiler
+    - lexer
+    - parser
+    - generator
+    - assembler
+  - vm
+    - memory
+    - cpu
 
 === TODO =============================================================
 

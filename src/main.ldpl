@@ -79,13 +79,13 @@ end sub-procedure
 # --- CONVERT ASSEMBLY TO BYTECODE -----------------------------------
 # $ dino bytes file.dino
 sub-procedure main.asm-to-bytecode
-    load file argv:1 in asm.input
+    load file argv:1 in c.asm
     if ERRORCODE is greater than 0 then
         display ERRORTEXT crlf
         exit
     end if
     call asm.compile
-    call vm.bytecode.print
+    call c.bytes.print
 end sub-procedure
 
 # --- CONVERT BYTECODE TO ASSEMBLY -----------------------------------

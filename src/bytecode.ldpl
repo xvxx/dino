@@ -1,0 +1,237 @@
+# === BYTECODE SPECIFICATION =========================================
+# Used by the compiler and VM.
+
+DATA:
+$VERSION       is number
+
+$HEADER        is number vector
+$HEADER.len    is number
+
+# offsets
+$OFFSET.NVAR   is number
+$OFFSET.TVAR   is number
+$OFFSET.TEXT   is number
+
+# cpu instructions
+$CODES         is number vector
+$NAMES         is text vector
+$SIZES         is number vector
+
+# 8 numeric registers
+$A             is number
+$X             is number
+$Y             is number
+$Z             is number
+$C             is number
+$E             is number
+$SP            is number
+$PC            is number
+
+# 5 text registers
+$TA            is number
+$TX            is number
+$TY            is number
+$TZ            is number
+$TE            is number
+
+# private
+$opname        is text
+
+PROCEDURE:
+# bytecode format version
+store 1 in $VERSION
+
+# memory offsets
+store  4096 in $OFFSET.NVAR # 0x1000
+store  8192 in $OFFSET.TVAR # 0x2000
+store 12288 in $OFFSET.TEXT # 0x3000
+
+# bytecode header
+store character code of "L" in $HEADER:0
+store character code of "D" in $HEADER:1
+store character code of "P" in $HEADER:2
+store character code of "L" in $HEADER:3
+store $VERSION in $HEADER:4
+store 5 in $HEADER.len
+
+# num registers
+store 0 in $A
+store 1 in $X
+store 2 in $Y
+store 3 in $Z
+store 4 in $C
+store 5 in $E
+store 6 in $SP
+store 7 in $PC
+
+# text registers
+store 10 in $TA
+store 11 in $TX
+store 12 in $TY
+store 13 in $TZ
+store 14 in $TE
+
+# === CONTROL FLOW ===================================================
+store "JUMP" in $opname
+store 1 in $CODES:$opname
+store 1 in $SIZES:$CODES:$opname
+store "JMP" in $NAMES:$CODES:$opname
+
+store "JIF" in $opname
+store 2 in $CODES:$opname
+store 1 in $SIZES:$CODES:$opname
+store $opname in $NAMES:$CODES:$opname
+
+store "JIT" in $opname
+store 3 in $CODES:$opname
+store 1 in $SIZES:$CODES:$opname
+store $opname in $NAMES:$CODES:$opname
+
+store "CALL" in $opname
+store 4 in $CODES:$opname
+store 1 in $SIZES:$CODES:$opname
+store "CLL" in $NAMES:$CODES:$opname
+
+store "RETURN" in $opname
+store 5 in $CODES:$opname
+store 0 in $SIZES:$CODES:$opname
+store "RET" in $NAMES:$CODES:$opname
+
+store "EXIT" in $opname
+store 6 in $CODES:$opname
+store 0 in $SIZES:$CODES:$opname
+store "EXT" in $NAMES:$CODES:$opname
+
+store "WAIT" in $opname
+store 7 in $CODES:$opname
+store 1 in $SIZES:$CODES:$opname
+store $opname in $NAMES:$CODES:$opname
+
+# === MEMORY COMMANDS ===============================================
+store "STORE" in $opname
+store 16 in $CODES:$opname
+store 2 in $SIZES:$CODES:$opname
+store $opname in $NAMES:$CODES:$opname
+
+store "SET" in $opname
+store 17 in $CODES:$opname
+store 2 in $SIZES:$CODES:$opname
+store $opname in $NAMES:$CODES:$opname
+
+# === ARITHMETIC =====================================================
+store "EQ" in $opname
+store 32 in $CODES:$opname
+store 3 in $SIZES:$CODES:$opname
+store $opname in $NAMES:$CODES:$opname
+
+store "GT" in $opname
+store 33 in $CODES:$opname
+store 3 in $SIZES:$CODES:$opname
+store $opname in $NAMES:$CODES:$opname
+
+store "LT" in $opname
+store 34 in $CODES:$opname
+store 3 in $SIZES:$CODES:$opname
+store $opname in $NAMES:$CODES:$opname
+
+store "ADD" in $opname
+store 35 in $CODES:$opname
+store 3 in $SIZES:$CODES:$opname
+store $opname in $NAMES:$CODES:$opname
+
+store "SUB" in $opname
+store 36 in $CODES:$opname
+store 3 in $SIZES:$CODES:$opname
+store $opname in $NAMES:$CODES:$opname
+
+store "MUL" in $opname
+store 37 in $CODES:$opname
+store 3 in $SIZES:$CODES:$opname
+store $opname in $NAMES:$CODES:$opname
+
+store "DIV" in $opname
+store 38 in $CODES:$opname
+store 3 in $SIZES:$CODES:$opname
+store $opname in $NAMES:$CODES:$opname
+
+store "MOD" in $opname
+store 39 in $CODES:$opname
+store 3 in $SIZES:$CODES:$opname
+store $opname in $NAMES:$CODES:$opname
+
+store "ABS" in $opname
+store 40 in $CODES:$opname
+store 2 in $SIZES:$CODES:$opname
+store $opname in $NAMES:$CODES:$opname
+
+store "CEIL" in $opname
+store 41 in $CODES:$opname
+store 2 in $SIZES:$CODES:$opname
+store $opname in $NAMES:$CODES:$opname
+
+store "FLOOR" in $opname
+store 42 in $CODES:$opname
+store 2 in $SIZES:$CODES:$opname
+store $opname in $NAMES:$CODES:$opname
+
+store "RANDOM" in $opname
+store 43 in $CODES:$opname
+store 1 in $SIZES:$CODES:$opname
+store $opname in $NAMES:$CODES:$opname
+
+# === I/O COMMANDS ==================================================
+store "DISPLAY" in $opname
+store 48 in $CODES:$opname
+store 1 in $SIZES:$CODES:$opname
+store "PRN" in $NAMES:$CODES:$opname
+
+store "ACCEPT" in $opname
+store 49 in $CODES:$opname
+store 1 in $SIZES:$CODES:$opname
+store $opname in $NAMES:$CODES:$opname
+
+store "EXEC" in $opname
+store 50 in $CODES:$opname
+store 1 in $SIZES:$CODES:$opname
+store $opname in $NAMES:$CODES:$opname
+
+store "READ" in $opname
+store 51 in $CODES:$opname
+store 2 in $SIZES:$CODES:$opname
+store $opname in $NAMES:$CODES:$opname
+
+store "WRITE" in $opname
+store 52 in $CODES:$opname
+store 2 in $SIZES:$CODES:$opname
+store $opname in $NAMES:$CODES:$opname
+
+store "APPEND" in $opname
+store 53 in $CODES:$opname
+store 2 in $SIZES:$CODES:$opname
+store $opname in $NAMES:$CODES:$opname
+
+# === TEXT OPERATIONS ===============================================
+store "LEN" in $opname
+store 64 in $CODES:$opname
+store 2 in $SIZES:$CODES:$opname
+store $opname in $NAMES:$CODES:$opname
+
+store "JOIN" in $opname
+store 65 in $CODES:$opname
+store 2 in $SIZES:$CODES:$opname
+store $opname in $NAMES:$CODES:$opname
+
+store "GETC" in $opname
+store 66 in $CODES:$opname
+store 3 in $SIZES:$CODES:$opname
+store $opname in $NAMES:$CODES:$opname
+
+store "GETCC" in $opname
+store 67 in $CODES:$opname
+store 3 in $SIZES:$CODES:$opname
+store $opname in $NAMES:$CODES:$opname
+
+store "PUTC" in $opname
+store 68 in $CODES:$opname
+store 2 in $SIZES:$CODES:$opname
+store $opname in $NAMES:$CODES:$opname
