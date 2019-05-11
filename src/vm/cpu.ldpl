@@ -101,17 +101,18 @@ sub-procedure cpu.run
             store vm.code:cpu.pc in cpu.x
             add 1 and cpu.pc in cpu.pc
             store vm.code:cpu.pc in cpu.y
+
             if cpu.x is greater than or equal to $OFFSET.TEXT then
                 if cpu.y is greater than or equal to $OFFSET.TEXT then
-                    store vm.text:vm.code:cpu.x in vm.text:vm.code:cpu.y
+                    store vm.text:cpu.y in vm.text:cpu.x
                 else
-                    store vm.text:vm.code:cpu.x in vm.reg:vm.code:cpu.y
+                    store vm.reg:cpu.y in vm.text:cpu.x
                 end if
             else
                 if cpu.y is greater than or equal to $OFFSET.TEXT then
-                    store vm.reg:vm.code:cpu.x in vm.text:vm.code:cpu.y
+                    store vm.text:cpu.y in vm.reg:cpu.x
                 else
-                    store vm.reg:vm.code:cpu.x in vm.reg:vm.code:cpu.y
+                    store vm.reg:cpu.y in vm.reg:cpu.x
                 end if
             end if
         else if $CODES:"SET" is equal to cpu.code then
