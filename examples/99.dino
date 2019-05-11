@@ -1,16 +1,16 @@
 ;; 99 bottles of beer
-    SET %beer, 99
+    SET $x, 99
 song:
     SET $y, 0                       ; y=0
-    GT %beer, $y, $a                   ; a=x>y
+    GT $x, $y, $a                   ; a=x>y
     JIF end_song                    ; if(a==0) JUMP end_song
     CALL print_bottles
-    DISPLAY " on the wall,"
+    DISPLAY " on the wall, "
     CALL print_bottles
-    DISPLAY "."
+    DISPLAY ". "
     DISPLAY "Take one down, pass it around, "
     SET $y, 1                       ; y=1
-    SUB $x, $y, %beer               ; x=x-y
+    SUB $x, $y, $x                  ; x=x-y
     CALL print_bottles
     DISPLAY " on the wall!"
     DISPLAY "\n"
