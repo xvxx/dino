@@ -139,6 +139,10 @@ IN variables, a set of OUT variables, and a RUN sub-procedure.
 | 00XX |      | Sub-procedure definitions
 | 00XX |      | Text constants
 
+ * TODO: Below is outdated. New memory layout:
+ anything < $OFFSET.TEXT is a number stored in vm.mem
+ anything > $OFFSET.TEXT is a number stored in vm.text
+
 # --- MEMORY LAYOUT --------------------------------------------------
 | NUM  | NAME | TYPE | DESCRIPTION
 +------+------+------+------------------------------------------------
