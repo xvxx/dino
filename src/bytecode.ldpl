@@ -183,7 +183,7 @@ store $opname in $NAMES:$CODES:$opname
 store "DISPLAY" in $opname
 store 48 in $CODES:$opname
 store 1 in $SIZES:$CODES:$opname
-store "PRN" in $NAMES:$CODES:$opname
+store "DIS" in $NAMES:$CODES:$opname
 
 store "ACCEPT" in $opname
 store 49 in $CODES:$opname
