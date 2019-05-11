@@ -1,21 +1,95 @@
-            *  *__* _*  *  * _*  *__*_ *__*  *
-            * |   \(_)_ _  __\ \ / /  \/  |  *
-            * | |) | | ' \/ _ \ V /| |\/| |  *
-            * |___/|_|_||_\___/\_/ |_|  |_|  *
-            *  *  *  *  *  *  *  *  *  *  *  *
-                       An LDPL VM
-                       Written in
-                          LDPL
+                *  *__* _*  *  * _*  *__*_ *__*  *
+                * |   \(_)_ _  __\ \ / /  \/  |  *
+                * | |) | | ' \/ _ \ V /| |\/| |  *
+                * |___/|_|_||_\___/\_/ |_|  |_|  *
+                *  *  *  *  *  *  *  *  *  *  *  *
 
-=== SUMMARY ==========================================================
+                           An LDPL VM
+                           Written in
+                              LDPL
 
-* Bytecode VM (& Compiler)
+=== INTRODUCTION =====================================================
+
+Dino is an interpreter for the LDPL programming language, written in
+LDPL. Because LDPL is a compiled language, Dino's goal is to provide a
+lightweight, scriptable version of the language runtime that can be
+used to quickly prototype ideas, perform system tasks, or compose
+programs in an interactive fashion using a REPL.
+
+Dino is organized into three parts: compiler, virtual machine, and
+tooling, with the `dino` command line program serving as the primary
+means of interacting with the suite.
+
+The compiler translates LDPL source code to DinoASM, Dino's simple
+assembly language, then to Dinocode, Dino's bytecode format. The
+virtual machine loads bytecode into its memory then performs each
+instruction, just like your old Nintendo. Tooling includes the `dino`
+command line program for running LDPL programs and using the compiler
+suite, the REPL, and `dino dis` for displaying / disassembling
+dinocode.
+
+The classic bytecode/VM architecture means Dino could support
+languages other than LDPL in the future, but for now it's focused on
+supporting the full LDPL 3.0.5 specification on Linux, MacOS,
+Windows, WebAssembly, and Raspberry Pi.
+
+=== ISSUES ===========================================================
+
+1. This first iteration plays fast and loose with the "byte" in
+   bytecode. Once LDPL supports bitwise operations we will revisit the
+   core design so it's more bit-tastic.
+
+2. We are not considering performance at this time, but rather seeking
+   to educate ourselves by creating this friendly dino vm.
+
+=== COMPILER =========================================================
+
+--- LEXER ------------------------------------------------------------
+
+--- PARSER -----------------------------------------------------------
+
+--- CODE GENERATOR ---------------------------------------------------
+
+--- ASSEMBLER --------------------------------------------------------
+
+=== VIRTUAL MACHINE ==================================================
+
+--- MEMORY -----------------------------------------------------------
+
 * 32 bit words
 * 0xFFFF words of memory
-* 8 numeric registers (A, X, Y, Z, C, E, SP, PC)
-* Text variables
-* Registers, variables, and constants share a logical address space.
+* 10 numeric registers (A, X, Y, Z, E, C, I, J, SP, PC)
+* Registers, variables, and constants share a logical address space:
+* Two types: numeric and text. Address determines type.
+
+# ----- MEMORY ADDRESSES ----------------------------------------------
+| BEGN | END  | TYPE | DESCRIPTION
++------+------+---------------------------------------------------
+| 0000 | 000F | NUM  | Registers
+| 0010 | 2FFF | NUM  | Variables
+| 3000 | FFFF | TEXT | Variables
+
+# --- REGISTERS ------------------------------------------------------
+| NUM  | NAME | DESCRIPTION
++------+------+------------------------------------------------
+| 0000 | $A   | Accumulator
+| 0001 | $X   | Parameter
+| 0002 | $Y   | Parameter
+| 0003 | $Z   | $a = 0?
+| 0004 | $E   | Non-zero error code
+| 0005 | $C   | Carry
+| 0006 | $I   | Incrementor
+| 0007 | $T   | Temporary value
+| 0008 | $SP  | Stack pointer
+| 0009 | $PC  | Program counter
+| .... |      | Reserved
+| 000F |      | Reserved
+
+--- CENTRAL PROCESSING UNIT ------------------------------------------
+
 * Instructions are 1-4 words: One opcode and 0-3 operands.
+
+=== TOOLING ==========================================================
 
 === PROJECT STATUS ===================================================
 
@@ -29,37 +103,12 @@
 | X | Assembler | Mostly Working
 |   | ========= | VIRTUAL MACHINE =====================================
 | > | CPU       | In progress!
-|   | Memory    | Design
+| > | Memory    | In progress!
 | = | ========= | TOOLING =============================================
 |   | REPL      | Planning
 |   | Debugger  | Planning
 |   | CLI       | Basics
-| X | Disass    | Working, basic version
-
-=== ISSUES ===========================================================
-
-1. This first iteration plays fast and loose with the "byte" in
-   bytecode. Once LDPL supports bitwise operations we will revisit the
-   core design so it's more bit-tastic.
-
-2. We are not considering performance at this time, but rather seeking
-   to educate ourselves by creating this friendly dino vm.
-
-=== DESIGN ===========================================================
-
-Each component is a black box, wired together by the three "meta"
-components of compiler, vm, and dino. Each component utilizes a set of
-IN variables, a set of OUT variables, and a RUN sub-procedure.
-
-- dino
-  - compiler
-    - lexer
-    - parser
-    - generator
-    - assembler
-  - vm
-    - memory
-    - cpu
+| X | dis       | Working, basic version
 
 === TODO =============================================================
 
@@ -85,7 +134,7 @@ IN variables, a set of OUT variables, and a RUN sub-procedure.
       * [ ] labels?
    * [x] relative jumps
    * [ ] save bytecode to file
-* [ ] bytecode -> assembly
+* [x] bytecode -> assembly $ dino dis file.dinocode
    * [x] load bytecode from file
 * [ ] VM
    * [x] load bytecode from file
@@ -139,33 +188,6 @@ IN variables, a set of OUT variables, and a RUN sub-procedure.
 | 00XX |  06  | Final EXIT
 | 00XX |      | Sub-procedure definitions
 | 00XX |      | Text constants
-
-# --- MEMORY LAYOUT --------------------------------------------------
-| NUM  | NAME | TYPE | DESCRIPTION
-+------+------+------+------------------------------------------------
-| ==== | ==== | ==== | REGISTERS =====================================
-| 0000 | A    | NUM  | Accumulator
-| 0001 | X    | NUM  | Parameter
-| 0002 | Y    | NUM  | Parameter
-| 0003 | Z    | NUM  | $a = 0?
-| 0004 | E    | NUM  | Non-zero error code
-| 0005 | C    | NUM  | Carry
-| 0006 | I    | NUM  | Incrementor
-| 0007 | J    | NUM  | Incrementor
-| 0008 | SP   | NUM  | Stack pointer
-| 0009 | PC   | NUM  | Program counter
-| .... |      | NUM  | Reserved
-| 000F |      | NUM  | Reserved
-| ==== | ==== | ==== | VARIABLES ====================================
-| 0010 |      | NUM  | Number variables
-| ...  |      |      |
-| 3000 | TA   | TEXT | Text accumulator
-| 3001 | TX   | TEXT | Parameter
-| 3002 | TY   | TEXT | Parameter
-| 3003 | TE   | TEXT | Error message
-| 3004 |      | TEXT | Text variables
-| ...  |      |      |
-| FFFF |      |      | Max address
 
 # --- ADDRESS SYNTAX -------------------------------------------------
 | NAME            | SYNTAX
