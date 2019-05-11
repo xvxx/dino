@@ -33,6 +33,7 @@
 DATA:
 
 main.i    is number
+main.l    is number
 main.char is text
 main.ext  is text
 
@@ -67,8 +68,16 @@ end sub-procedure
 
 # $ dino run file.dino
 sub-procedure main.run.dino
-    display "\e[1;31mNOT IMPLEMENTED\e[0m" crlf
-    exit
+    load file argv:1 in c.asm
+    if ERRORCODE is greater than 0 then
+        display ERRORTEXT crlf
+        exit
+    end if
+    call asm.compile
+    call asm.to-dinocode
+    store asm.dinocode in loader.input
+    call loader.run
+    call cpu.run
 end sub-procedure
 
 # $ dino run file.dinocode
