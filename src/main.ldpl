@@ -44,7 +44,7 @@ sub-procedure main.help
     display "\t" "compile" "\t" "compile .ldpl program to .dinocode" crlf
     display "\t" "asm  " "\t" "compile .ldpl file to .dino assembly" crlf
     display "\t" "bytes" "\t" "compile .dino file to .dinocode bytecode" crlf
-    display "\t" "disas" "\t" "decompile .dinocode file to .dino assembly" crlf
+    display "\t" "dis  " "\t" "decompile .dinocode file to .dino assembly" crlf
     display "\t" "help " "\t" "print help screen" crlf
 end sub-procedure
 
