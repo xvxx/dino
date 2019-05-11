@@ -1,59 +1,77 @@
-DATA: 
+DATA:
 upcase.letter is text
+upcase.word   is text
+
+# internal
+upcase.i   is number
+upcase.tmp is text
 
 PROCEDURE:
 sub-procedure upcase-letter
-    if upcase.letter is equal to "a" then 
-        store "A" in upcase.letter 
-    else if upcase.letter is equal to "b" then 
-        store "B" in upcase.letter 
-    else if upcase.letter is equal to "c" then 
+    if upcase.letter is equal to "a" then
+        store "A" in upcase.letter
+    else if upcase.letter is equal to "b" then
+        store "B" in upcase.letter
+    else if upcase.letter is equal to "c" then
         store "C" in upcase.letter
-    else if upcase.letter is equal to "d" then 
-        store "D" in upcase.letter 
-    else if upcase.letter is equal to "e" then 
-        store "E" in upcase.letter 
-    else if upcase.letter is equal to "f" then 
-        store "F" in upcase.letter 
-    else if upcase.letter is equal to "g" then 
-        store "G" in upcase.letter 
-    else if upcase.letter is equal to "h" then 
-        store "H" in upcase.letter 
-    else if upcase.letter is equal to "i" then 
-        store "I" in upcase.letter 
-    else if upcase.letter is equal to "j" then 
-        store "J" in upcase.letter 
-    else if upcase.letter is equal to "k" then 
-        store "K" in upcase.letter 
-    else if upcase.letter is equal to "l" then 
-        store "L" in upcase.letter 
-    else if upcase.letter is equal to "m" then 
-        store "M" in upcase.letter 
-    else if upcase.letter is equal to "n" then 
-        store "N" in upcase.letter 
-    else if upcase.letter is equal to "o" then 
-        store "O" in upcase.letter 
-    else if upcase.letter is equal to "p" then 
-        store "P" in upcase.letter 
-    else if upcase.letter is equal to "q" then 
-        store "Q" in upcase.letter 
-    else if upcase.letter is equal to "r" then 
-        store "R" in upcase.letter 
-    else if upcase.letter is equal to "s" then 
-        store "S" in upcase.letter 
-    else if upcase.letter is equal to "t" then 
-        store "T" in upcase.letter 
-    else if upcase.letter is equal to "u" then 
-        store "U" in upcase.letter 
-    else if upcase.letter is equal to "v" then 
-        store "V" in upcase.letter 
-    else if upcase.letter is equal to "w" then 
-        store "W" in upcase.letter 
-    else if upcase.letter is equal to "x" then 
-        store "X" in upcase.letter 
-    else if upcase.letter is equal to "y" then 
-        store "Y" in upcase.letter 
-    else if upcase.letter is equal to "z" then 
-        store "Z" in upcase.letter  
-    end if                                                                                                                                                                                               
+    else if upcase.letter is equal to "d" then
+        store "D" in upcase.letter
+    else if upcase.letter is equal to "e" then
+        store "E" in upcase.letter
+    else if upcase.letter is equal to "f" then
+        store "F" in upcase.letter
+    else if upcase.letter is equal to "g" then
+        store "G" in upcase.letter
+    else if upcase.letter is equal to "h" then
+        store "H" in upcase.letter
+    else if upcase.letter is equal to "i" then
+        store "I" in upcase.letter
+    else if upcase.letter is equal to "j" then
+        store "J" in upcase.letter
+    else if upcase.letter is equal to "k" then
+        store "K" in upcase.letter
+    else if upcase.letter is equal to "l" then
+        store "L" in upcase.letter
+    else if upcase.letter is equal to "m" then
+        store "M" in upcase.letter
+    else if upcase.letter is equal to "n" then
+        store "N" in upcase.letter
+    else if upcase.letter is equal to "o" then
+        store "O" in upcase.letter
+    else if upcase.letter is equal to "p" then
+        store "P" in upcase.letter
+    else if upcase.letter is equal to "q" then
+        store "Q" in upcase.letter
+    else if upcase.letter is equal to "r" then
+        store "R" in upcase.letter
+    else if upcase.letter is equal to "s" then
+        store "S" in upcase.letter
+    else if upcase.letter is equal to "t" then
+        store "T" in upcase.letter
+    else if upcase.letter is equal to "u" then
+        store "U" in upcase.letter
+    else if upcase.letter is equal to "v" then
+        store "V" in upcase.letter
+    else if upcase.letter is equal to "w" then
+        store "W" in upcase.letter
+    else if upcase.letter is equal to "x" then
+        store "X" in upcase.letter
+    else if upcase.letter is equal to "y" then
+        store "Y" in upcase.letter
+    else if upcase.letter is equal to "z" then
+        store "Z" in upcase.letter
+    end if
+end sub-procedure
+
+sub-procedure upcase-word
+    store 0 in upcase.i
+    store "" in upcase.tmp
+    get character at 0 from upcase.word in upcase.letter
+    while upcase.letter is not equal to "" do
+        call upcase-letter
+        join upcase.tmp and upcase.letter in upcase.tmp
+        add 1 and upcase.i in upcase.i
+        get character at upcase.i from upcase.word in upcase.letter
+    repeat
+    store upcase.tmp in upcase.word
 end sub-procedure
