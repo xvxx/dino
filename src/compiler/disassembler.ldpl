@@ -1,4 +1,45 @@
 # === DISASSEMBLER ===================================================
 # The disassembler converts dino bytecode into text assembly code.
 DATA:
+dis.i      is number
+dis.j      is number
+dis.x      is number
+dis.opcode is number
+
 PROCEDURE:
+
+sub-procedure dis.print
+    store $OFFSET.CODE in dis.i
+    while dis.i is less than vm.code.len do
+        store vm.code:dis.i in dis.opcode
+
+        display "\e[36m"
+        if dis.opcode is less than 10 then
+            display 0
+        end if
+        display dis.opcode " \e[33m" $NAMES:dis.opcode "\t"
+        if $SIZES:dis.opcode is greater than 0 then
+            display "\e[32m"
+            store $SIZES:dis.opcode in dis.x
+            store 0 in dis.j
+            while dis.j is less than dis.x do
+                add 1 and dis.i in dis.i
+                display "\e[35m"
+                store vm.code:dis.i in dis.opcode
+                if dis.opcode is greater than or equal to $OFFSET.TEXT then
+                    subtract $OFFSET.TEXT from dis.opcode in dis.opcode
+                    display vm.text:dis.opcode
+                else
+                    display dis.opcode
+                end if
+                add 1 and dis.j in dis.j
+                if dis.j is less than dis.x then
+                    display "\e[0m, "
+                end if
+            repeat
+        end if
+        display crlf
+
+        add 1 and dis.i in dis.i
+    repeat
+end sub-procedure

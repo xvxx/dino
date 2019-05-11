@@ -8,6 +8,7 @@ $HEADER        is number vector
 $HEADER.len    is number
 
 # offsets
+$OFFSET.CODE   is number
 $OFFSET.NVAR   is number
 $OFFSET.TVAR   is number
 $OFFSET.TEXT   is number
@@ -42,6 +43,7 @@ PROCEDURE:
 store 1 in $VERSION
 
 # memory offsets
+store     5 in $OFFSET.CODE # First instruction
 store  4096 in $OFFSET.NVAR # 0x1000
 store  8192 in $OFFSET.TVAR # 0x2000
 store 12288 in $OFFSET.TEXT # 0x3000
