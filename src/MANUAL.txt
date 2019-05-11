@@ -139,10 +139,6 @@ IN variables, a set of OUT variables, and a RUN sub-procedure.
 | 00XX |      | Sub-procedure definitions
 | 00XX |      | Text constants
 
- * TODO: Below is outdated. New memory layout:
- anything < $OFFSET.TEXT is a number stored in vm.mem
- anything > $OFFSET.TEXT is a number stored in vm.text
-
 # --- MEMORY LAYOUT --------------------------------------------------
 | NUM  | NAME | TYPE | DESCRIPTION
 +------+------+------+------------------------------------------------
@@ -154,20 +150,19 @@ IN variables, a set of OUT variables, and a RUN sub-procedure.
 | 0004 | E    | NUM  | Non-zero error code
 | 0005 | C    | NUM  | Carry
 | 0006 | I    | NUM  | Incrementor
-| 0007 |      |      | Reserved
+| 0007 | J    | NUM  | Incrementor
 | 0008 | SP   | NUM  | Stack pointer
 | 0009 | PC   | NUM  | Program counter
-| 000A | TA   | TEXT | Text accumulator
-| 000B | TX   | TEXT | Parameter
-| 000C | TY   | TEXT | Parameter
-| 000D | TZ   | TEXT | Is TA empty?
-| 000E | TE   | TEXT | Error message
-| 000F | TF   | NUM  | Text flag. 0=A is used,1=TA is used
+| .... |      | NUM  | Reserved
+| 000F |      | NUM  | Reserved
 | ==== | ==== | ==== | VARIABLES ====================================
-| 1000 |      | NUM  | Number variables
-| 2000 |      | TEXT | Text variables
-| ==== | ==== | ==== | CONSTANTS ====================================
-| 3000 |      | TEXT | Text literals
+| 0010 |      | NUM  | Number variables
+| ...  |      |      |
+| 3000 | TA   | TEXT | Text accumulator
+| 3001 | TX   | TEXT | Parameter
+| 3002 | TY   | TEXT | Parameter
+| 3003 | TE   | TEXT | Error message
+| 3004 |      | TEXT | Text variables
 | ...  |      |      |
 | FFFF |      |      | Max address
 

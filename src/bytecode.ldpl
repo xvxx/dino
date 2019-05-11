@@ -9,8 +9,7 @@ $HEADER.len    is number
 
 # offsets
 $OFFSET.CODE   is number
-$OFFSET.NVAR   is number
-$OFFSET.TVAR   is number
+$OFFSET.VARS   is number
 $OFFSET.TEXT   is number
 
 # cpu instructions
@@ -40,12 +39,11 @@ $opname        is text
 
 PROCEDURE:
 # bytecode format version
-store 1 in $VERSION
+store 2 in $VERSION
 
 # memory offsets
 store     5 in $OFFSET.CODE # First instruction
-store  4096 in $OFFSET.NVAR # 0x1000
-store  8192 in $OFFSET.TVAR # 0x2000
+store    16 in $OFFSET.VARS # 0x0010
 store 12288 in $OFFSET.TEXT # 0x3000
 
 # bytecode header
