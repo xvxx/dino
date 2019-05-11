@@ -22,18 +22,19 @@
 +---+-----------+-----------------------------------------------------
 | ? | NAME      | STATUS
 +---+-----------+-----------------------------------------------------
-| = | ========= | COMPILER ===========================================
+|   | ========= | COMPILER ===========================================
 |   | Lexer     | Planning
 |   | Parser    | Planning
 |   | Generator | Planning
-|   | Assembler | Working. Need to fix %variables.
-| = | ========= | VIRTUAL MACHINE =====================================
-|   | CPU       | Design
+| X | Assembler | Mostly Working
+|   | ========= | VIRTUAL MACHINE =====================================
+| > | CPU       | In progress!
 |   | Memory    | Design
 | = | ========= | TOOLING =============================================
 |   | REPL      | Planning
 |   | Debugger  | Planning
 |   | CLI       | Basics
+| X | Disass    | Working, basic version
 
 === ISSUES ===========================================================
 
