@@ -17,6 +17,24 @@
 * Registers, variables, and text share a logical address space.
 * Instructions are 1-4 words: One opcode and 0-3 operands.
 
+=== PROJECT STATUS ===================================================
+
++---+-----------+-----------------------------------------------------
+| ? | NAME      | STATUS
++---+-----------+-----------------------------------------------------
+| = | ========= | COMPILER ===========================================
+|   | Lexer     | Planning
+|   | Parser    | Planning
+|   | Generator | Planning
+|   | Assembler | Working. Need to fix %variables.
+| = | ========= | VIRTUAL MACHINE =====================================
+|   | CPU       | Design
+|   | Memory    | Design
+| = | ========= | TOOLING =============================================
+|   | REPL      | Planning
+|   | Debugger  | Planning
+|   | CLI       | Basics
+
 === ISSUES ===========================================================
 
 1. This first iteration plays fast and loose with the "byte" in
