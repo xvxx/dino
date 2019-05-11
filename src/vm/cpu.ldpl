@@ -1,33 +1,23 @@
 # === CENTRAL PROCESSING UNIT ========================================
 # The CPU executes bytecode.
 DATA:
-cpu.error is text
+cpu.error        is text
+cpu.code         is number
+cpu.address      is number
 
-cpu.operands     is number vector
-cpu.operands.len is number
-cpu.code is number
-cpu.address is number
+cpu.stack        is number vector
+cpu.sp           is number
+cpu.pc is number
 
-cpu.stack is number vector
-cpu.sp    is number
-
-# --- REGISTERS ------------------------------------------------------
+# Temp vars - not actual registers. That's vm.reg
 cpu.a  is number
 cpu.x  is number
 cpu.y  is number
-cpu.z  is number
-cpu.e  is number
-cpu.c  is number
 cpu.i  is number
-cpu.pc is number
-cpu.ta is text
-cpu.tx is text
-cpu.ty is text
-cpu.tz is text
-cpu.te is text
-cpu.tf is number
 
 PROCEDURE:
+# Print an error and crashes.
+#  IN: cpu.error
 sub-procedure cpu.error
     display "\e[1;36m"
     if cpu.pc is less than 10 then
@@ -37,7 +27,8 @@ sub-procedure cpu.error
     exit
 end sub-procedure
 
-# Check bytecode format.
+# Check bytecode format. Crashes if invalid.
+#  IN: vm.code
 sub-procedure cpu.validate
     store "INVALID BYTECODE FORMAT" in cpu.error
     store 0 in cpu.i
@@ -50,6 +41,9 @@ sub-procedure cpu.validate
     store "" in cpu.error
 end sub-procedure
 
+# Execute bytecode.
+#  IN: vm.code(.len)
+#      vm.text(.len)
 sub-procedure cpu.run
     call cpu.validate
     store $OFFSET.CODE in cpu.pc
@@ -68,7 +62,7 @@ sub-procedure cpu.run
             call cpu.error
         end if
 
-# === CONTROL FLOW ===================================================
+        # --- CONTROL FLOW -------------------------------------------
         if $CODES:"JUMP" is equal to cpu.code then
             add 1 and cpu.pc in cpu.pc
             add vm.code:cpu.pc and cpu.pc in cpu.pc
@@ -96,7 +90,7 @@ sub-procedure cpu.run
             add 1 and cpu.pc in cpu.pc
             wait vm.reg:vm.code:cpu.pc milliseconds
 
-# === MEMORY COMMANDS ================================================
+        # --- MEMORY COMMANDS ----------------------------------------
         else if $CODES:"STORE" is equal to cpu.code then
             add 1 and cpu.pc in cpu.pc
             store vm.code:cpu.pc in cpu.x
@@ -125,7 +119,8 @@ sub-procedure cpu.run
             else
                 store vm.code:cpu.pc in vm.reg:cpu.i
             end if
-# === ARITHMETIC =====================================================
+
+        # --- ARITHMETIC ---------------------------------------------
         else if $CODES:"EQ" is equal to cpu.code then
             add 1 and cpu.pc in cpu.pc
             store vm.reg:vm.code:cpu.pc in cpu.x
@@ -210,10 +205,10 @@ sub-procedure cpu.run
             add 1 and cpu.pc in cpu.pc
             floor vm.reg:vm.code:cpu.pc
         else if $CODES:"RANDOM" is equal to cpu.code then
-            in cpu.error join "unimplemented:" "RANDOM"
-            call cpu.error
+            add 1 and cpu.pc in cpu.pc
+            store random in vm.reg:vm.code:cpu.pc
 
-# === I/O COMMANDS ==================================================
+        # --- I/O COMMANDS -------------------------------------------
         else if $CODES:"DISPLAY" is equal to cpu.code then
             store 0 in cpu.i
             while cpu.i is less than $SIZES:cpu.code do
@@ -245,7 +240,7 @@ sub-procedure cpu.run
             in cpu.error join "unimplemented:" "APPEND"
             call cpu.error
 
-# === TEXT OPERATIONS ===============================================
+        # --- TEXT OPERATIONS ----------------------------------------
         else if $CODES:"LEN" is equal to cpu.code then
             in cpu.error join "unimplemented:" "LEN"
             call cpu.error
