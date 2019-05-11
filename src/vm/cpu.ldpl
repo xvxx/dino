@@ -123,6 +123,64 @@ sub-procedure cpu.run
             else
                 store vm.code:cpu.pc in vm.reg:cpu.i
             end if
+        else if $CODES:"GT" is equal to cpu.code then
+            add 1 and cpu.pc in cpu.pc
+            store vm.reg:vm.code:cpu.pc in cpu.x
+            add 1 and cpu.pc in cpu.pc
+            store vm.reg:vm.code:cpu.pc in cpu.y
+            if cpu.x is greater than cpu.y then
+                store 1 in vm.reg:vm.code:cpu.pc
+                store 0 in vm.reg:$z
+            else
+                store 0 in vm.reg:vm.code:cpu.pc
+                store 1 in vm.reg:$z
+            end if
+            add 1 and cpu.pc in cpu.pc
+        else if $CODES:"GTE" is equal to cpu.code then
+            add 1 and cpu.pc in cpu.pc
+            store vm.reg:vm.code:cpu.pc in cpu.x
+            add 1 and cpu.pc in cpu.pc
+            store vm.reg:vm.code:cpu.pc in cpu.y
+            if cpu.x is greater than or equal to cpu.y then
+                store 1 in vm.reg:vm.code:cpu.pc
+                store 0 in vm.reg:$z
+            else
+                store 0 in vm.reg:vm.code:cpu.pc
+                store 1 in vm.reg:$z
+            end if
+            add 1 and cpu.pc in cpu.pc
+        else if $CODES:"LT" is equal to cpu.code then
+            add 1 and cpu.pc in cpu.pc
+            store vm.reg:vm.code:cpu.pc in cpu.x
+            add 1 and cpu.pc in cpu.pc
+            store vm.reg:vm.code:cpu.pc in cpu.y
+            if cpu.x is less than cpu.y then
+                store 1 in vm.reg:vm.code:cpu.pc
+                store 0 in vm.reg:$z
+            else
+                store 0 in vm.reg:vm.code:cpu.pc
+                store 1 in vm.reg:$z
+            end if
+            add 1 and cpu.pc in cpu.pc
+        else if $CODES:"LTE" is equal to cpu.code then
+            add 1 and cpu.pc in cpu.pc
+            store vm.reg:vm.code:cpu.pc in cpu.x
+            add 1 and cpu.pc in cpu.pc
+            store vm.reg:vm.code:cpu.pc in cpu.y
+            if cpu.x is less than or equal to cpu.y then
+                store 1 in vm.reg:vm.code:cpu.pc
+                store 0 in vm.reg:$z
+            else
+                store 0 in vm.reg:vm.code:cpu.pc
+                store 1 in vm.reg:$z
+            end if
+            add 1 and cpu.pc in cpu.pc
+        else if $CODES:"JIF" is equal to cpu.code then
+            add 1 and cpu.pc in cpu.pc
+            store vm.code:cpu.pc in cpu.x
+            if vm.reg:$z is equal to 1 then
+                add cpu.x and cpu.pc in cpu.pc
+            end if
         else
             join "UNIMPLEMENTED: " and cpu.code in cpu.error
             in cpu.error join cpu.error " (" $NAMES:cpu.code ") "
