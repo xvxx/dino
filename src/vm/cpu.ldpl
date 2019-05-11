@@ -6,8 +6,24 @@ cpu.error is text
 cpu.operands     is number vector
 cpu.operands.len is number
 cpu.code is number
-cpu.pc   is number
-cpu.i    is number
+cpu.address is number
+
+# --- REGISTERS ------------------------------------------------------
+cpu.a  is number
+cpu.x  is number
+cpu.y  is number
+cpu.z  is number
+cpu.e  is number
+cpu.c  is number
+cpu.i  is number
+cpu.sp is number
+cpu.pc is number
+cpu.ta is text
+cpu.tx is text
+cpu.ty is text
+cpu.tz is text
+cpu.te is text
+cpu.tf is number
 
 PROCEDURE:
 sub-procedure cpu.error
@@ -19,38 +35,96 @@ sub-procedure cpu.error
     exit
 end sub-procedure
 
+# Loads value at address pc into $a or $ta. Sets $tf.
+sub-procedure cpu.load
+    display "code: " cpu.code crlf
+    if cpu.code is equal to 17 then
+        display "DIE" crlf
+        exit
+    end if
+
+    store vm.code:cpu.pc in cpu.address
+    if cpu.address is greater than $OFFSET.TEXT then
+        # string
+        subtract $OFFSET.TEXT from cpu.address in cpu.address
+        store vm.text:cpu.address in cpu.ta
+        store 1 in cpu.tf
+    else if cpu.address is greater than $OFFSET.TVAR then
+        # string again
+        subtract $OFFSET.TVAR from cpu.address in cpu.address
+        store vm.text:cpu.address in cpu.ta
+        store 1 in cpu.tf
+    else if cpu.address is greater than $OFFSET.NVAR then
+        # number var
+        subtract $OFFSET.NVAR from cpu.address in cpu.address
+        store vm.text:cpu.address in cpu.a
+        store 0 in cpu.tf
+    else if cpu.address is greater than or equal to $TA then
+        # text register
+        store vm.text:cpu.address in cpu.ta
+        store 1 in cpu.tf
+    else
+        # num register
+        store vm.text:cpu.address in cpu.a
+        store 0 in cpu.tf
+    end if
+end sub-procedure
+
 # Check bytecode format.
 sub-procedure cpu.validate
-    store "invalid bytecode format" in cpu.error
+    store "INVALID BYTECODE FORMAT" in cpu.error
     store 0 in cpu.i
     while cpu.i is less than $OFFSET.CODE do
         if vm.code:cpu.i is not equal to $HEADER:cpu.i then
             call cpu.error
         end if
+        add 1 and cpu.i in cpu.i
     repeat
     store "" in cpu.error
 end sub-procedure
 
 sub-procedure cpu.run
     call cpu.validate
+    store $OFFSET.CODE in cpu.pc
     while cpu.pc is less than vm.code.len do
         store vm.code:cpu.pc in cpu.code
 
+        # skip 0 opcode
+        if cpu.code is equal to 0 then
+            add 1 and cpu.pc in cpu.pc
+            continue
+        end if
+
+        # make sure we know about the opcode
         if $NAMES:cpu.code is equal to "" then
             join "BAD OPCODE: " and cpu.code in cpu.error
             call cpu.error
         end if
 
-        store 0 in cpu.i
-        while cpu.i is less than $SIZES:cpu.code do
+        if $CODES:"DISPLAY" is equal to cpu.code then
+            store 0 in cpu.i
+            while cpu.i is less than $SIZES:cpu.code do
+                add 1 and cpu.pc in cpu.pc
+                call cpu.load
+                if cpu.tf is equal to 1 then
+                    display cpu.ta
+                else
+                    display cpu.a
+                end if
+                add 1 and cpu.i in cpu.i
+            repeat
+        else if $CODES:"SET" is equal to cpu.code then
             add 1 and cpu.pc in cpu.pc
-            store vm.code:cpu.pc in cpu.operands:cpu.operands.len
-            add 1 and cpu.operands.len in cpu.operands.len
-            add 1 and cpu.i in cpu.i
-        repeat
-
-        if cpu.code is equal to $CODES:"DISPLAY" then
-            display "gucci gucci goo" crlf
+            store vm.code:cpu.pc in cpu.i
+            add 1 and cpu.pc in cpu.pc
+            if cpu.i is greater than or equal to $OFFSET.TEXT then
+                subtract $OFFSET.TEXT from cpu.i in cpu.i
+                store vm.code:cpu.pc in vm.text:cpu.i
+            else
+                store vm.code:cpu.pc in vm.reg:cpu.i
+            end if
+        else
+            display cpu.code " " cpu.operands.len crlf
         end if
 
         add 1 and cpu.pc in cpu.pc

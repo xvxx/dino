@@ -149,7 +149,7 @@ IN variables, a set of OUT variables, and a RUN sub-procedure.
 | 0003 | Z    | NUM  | $a = 0?
 | 0004 | E    | NUM  | Non-zero error code
 | 0005 | C    | NUM  | Carry
-| 0006 |      |      | Reserved
+| 0006 | I    | NUM  | Incrementor
 | 0007 |      |      | Reserved
 | 0008 | SP   | NUM  | Stack pointer
 | 0009 | PC   | NUM  | Program counter
@@ -158,7 +158,7 @@ IN variables, a set of OUT variables, and a RUN sub-procedure.
 | 000C | TY   | TEXT | Parameter
 | 000D | TZ   | TEXT | Is TA empty?
 | 000E | TE   | TEXT | Error message
-| 000F |      |      | Reserved
+| 000F | TF   | NUM  | Text flag. 0=A is used,1=TA is used
 | ==== | ==== | ==== | VARIABLES ====================================
 | 1000 |      | NUM  | Number variables
 | 2000 |      | TEXT | Text variables
