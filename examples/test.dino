@@ -32,5 +32,18 @@
     SET %age, 100
     DISPLAY "Oh wait... you're "
     DISPLAY %age
-    DISPLAY " ?!?!"
+    DISPLAY " ?!?!\n"
+    DISPLAY "I thought you were "
+    RANDOM %age
+    SET %ten, 100
+    MUL %age, %ten, %age
+    CEIL %age
+    DISPLAY %age
+    DISPLAY "\n"
+
+    SET %file, "./examples/test.dino"
+    READ %file %file
+    DISPLAY %file
+    DISPLAY "\n"
+
     EXIT
