@@ -33,6 +33,21 @@ sub-procedure loader.run
 
         if loader.string? is equal to 1 then
             add 1 and loader.i in loader.i
+            if loader.char is equal to "\\" then
+                get character at loader.i from loader.input in loader.char
+                if loader.char is equal to "n" then
+                    join loader.token and "\n" in loader.token
+                else if loader.char is equal to "t" then
+                    join loader.token and "\t" in loader.token
+                else if loader.char is equal to "e" then
+                    join loader.token and "\e" in loader.token
+                else if loader.char is equal to "r" then
+                    join loader.token and "\r" in loader.token
+                end if
+                add 1 and loader.i in loader.i
+                continue
+            end if
+
             if loader.char is equal to "\"" then
                 if loader.prev is not equal to "\\" then
                     store 0 in loader.string?
