@@ -93,6 +93,7 @@ sub-procedure cpu.run
         else if $CODES:"EXIT" is equal to cpu.code then
             exit
         else if $CODES:"WAIT" is equal to cpu.code then
+            add 1 and cpu.pc in cpu.pc
             wait vm.reg:vm.code:cpu.pc milliseconds
 
 # === MEMORY COMMANDS ================================================
@@ -192,16 +193,22 @@ sub-procedure cpu.run
             store vm.reg:vm.code:cpu.pc in cpu.y
             add 1 and cpu.pc in cpu.pc
             divide cpu.x by cpu.y in vm.reg:vm.code:cpu.pc
-
+        else if $CODES:"MOD" is equal to cpu.code then
+            add 1 and cpu.pc in cpu.pc
+            store vm.reg:vm.code:cpu.pc in cpu.x
+            add 1 and cpu.pc in cpu.pc
+            store vm.reg:vm.code:cpu.pc in cpu.y
+            add 1 and cpu.pc in cpu.pc
+            modulo cpu.x by cpu.y in vm.reg:vm.code:cpu.pc
         else if $CODES:"ABS" is equal to cpu.code then
-            in cpu.error join "unimplemented:" "ABS"
-            call cpu.error
+            add 1 and cpu.pc in cpu.pc
+            abs vm.reg:vm.code:cpu.pc
         else if $CODES:"CEIL" is equal to cpu.code then
-            in cpu.error join "unimplemented:" "CEIL"
-            call cpu.error
+            add 1 and cpu.pc in cpu.pc
+            ceil vm.reg:vm.code:cpu.pc
         else if $CODES:"FLOOR" is equal to cpu.code then
-            in cpu.error join "unimplemented:" "FLOOR"
-            call cpu.error
+            add 1 and cpu.pc in cpu.pc
+            floor vm.reg:vm.code:cpu.pc
         else if $CODES:"RANDOM" is equal to cpu.code then
             in cpu.error join "unimplemented:" "RANDOM"
             call cpu.error
