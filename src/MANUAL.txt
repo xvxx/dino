@@ -88,20 +88,20 @@ IN variables, a set of OUT variables, and a RUN sub-procedure.
    * [x] load bytecode from file
 * [ ] VM
    * [x] load bytecode from file
-   * [ ] run bytecode
+   * [x] run bytecode
    * [ ] Instructions:
-      * [ ] JUMP
-      * [ ] JIF
-      * [ ] JIT
+      * [x] JUMP
+      * [x] JIF
+      * [x] JIT
       * [ ] CALL
       * [ ] RETURN
       * [ ] EXIT
       * [ ] WAIT
       * [ ] STORE
-      * [ ] STORN
+      * [x] SET
       * [ ] EQ
-      * [ ] GT
-      * [ ] LT
+      * [x] GT
+      * [x] LT
       * [ ] ADD
       * [ ] SUB
       * [ ] MUL
