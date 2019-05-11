@@ -124,7 +124,9 @@ sub-procedure cpu.run
                 store vm.code:cpu.pc in vm.reg:cpu.i
             end if
         else
-            display cpu.code " " cpu.operands.len crlf
+            join "UNIMPLEMENTED: " and cpu.code in cpu.error
+            in cpu.error join cpu.error " (" $NAMES:cpu.code ") "
+            call cpu.error
         end if
 
         add 1 and cpu.pc in cpu.pc
