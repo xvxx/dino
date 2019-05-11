@@ -23,6 +23,8 @@
 #   $ help
 #   $ repl
 #   $ run file.ldpl
+#   $ run file.dino
+#   $ run file.dinocode
 #   $ asm file.ldpl -> file.dino
 #   $ bytes file.dino -> file.dinocode
 #   $ bytes file.ldpl -> file.dinocode
@@ -30,7 +32,9 @@
 
 DATA:
 
-main.input is text
+main.i    is number
+main.char is text
+main.ext  is text
 
 PROCEDURE:
 
@@ -40,7 +44,7 @@ sub-procedure main.help
     display "Usage: $ dino [command] [options...]" crlf
     display crlf
     display "Commands:" crlf
-    display "\t" "run  " "\t" "execute .ldpl file" crlf
+    display "\t" "run  " "\t" "execute .ldpl, .dino, or .dinocode file" crlf
     display "\t" "compile" "\t" "compile .ldpl program to .dinocode" crlf
     display "\t" "asm  " "\t" "compile .ldpl file to .dino assembly" crlf
     display "\t" "bytes" "\t" "compile .dino file to .dinocode bytecode" crlf
@@ -55,6 +59,18 @@ sub-procedure main.repl
 end sub-procedure
 
 # --- RUN FILE -------------------------------------------------------
+# $ dino run file.ldpl
+sub-procedure main.run.ldpl
+    display "\e[1;31mNOT IMPLEMENTED\e[0m" crlf
+    exit
+end sub-procedure
+
+# $ dino run file.dino
+sub-procedure main.run.dino
+    display "\e[1;31mNOT IMPLEMENTED\e[0m" crlf
+    exit
+end sub-procedure
+
 # $ dino run file.dinocode
 sub-procedure main.run.dinocode
     load file argv:1 in loader.input
@@ -64,6 +80,38 @@ sub-procedure main.run.dinocode
     end if
     call loader.run
     call cpu.run
+end sub-procedure
+
+sub-procedure main.run
+    store 0 in main.i
+    store "" in main.ext
+    store length of argv:1 in main.l
+
+    while main.i is less than main.l do
+        get character at main.i from argv:1 in main.char
+        if main.char is equal to "." then
+            add 1 and main.i in main.i
+            get character at main.i from argv:1 in main.ext
+        else if main.ext is not equal to "" then
+            join main.ext and main.char in main.ext
+        end if
+        add 1 and main.i in main.i
+    repeat
+
+    store main.ext in upcase.word
+    call upcase-word
+    store upcase.word in main.ext
+
+    if main.ext is equal to "LDPL" then
+        call main.run.ldpl
+    else if main.ext is equal to "DINO" then
+        call main.run.dino
+    else if main.ext is equal to "DINOCODE" then
+        call main.run.dinocode
+    else
+        display "\e[1;31mBad file extension: \e[0m" main.ext crlf
+        exit
+    end if
 end sub-procedure
 
 # --- CONVERT LDPL TO ASSEMBLY ---------------------------------------
@@ -101,7 +149,7 @@ sub-procedure main
     if argv:0 is equal to "bytes" then
         call main.asm-to-bytecode
     else if argv:0 is equal to "run" then
-        call main.run.dinocode
+        call main.run
     else if argv:0 is equal to "dis" then
         call main.bytecode-to-asm
     else

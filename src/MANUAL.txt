@@ -146,7 +146,7 @@ Windows, WebAssembly, and Raspberry Pi.
       * [x] CALL
       * [x] RETURN
       * [x] EXIT
-      * [ ] WAIT
+      * [x] WAIT
       * [ ] STORE
       * [x] SET
       * [x] EQ
