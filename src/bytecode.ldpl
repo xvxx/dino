@@ -39,7 +39,7 @@ $opname        is text
 
 PROCEDURE:
 # bytecode format version
-store 2 in $VERSION
+store 1 in $VERSION
 
 # memory offsets
 store     5 in $OFFSET.CODE # First instruction
