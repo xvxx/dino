@@ -1,23 +1,23 @@
 # === VIRTUAL MACHINE ================================================
 DATA:
-    # instruction set version
-    vm.version     is number
+# instruction set version
+vm.version     is number
 
-    # text bytecode input for the loader
-    vm.input       is text
+# text bytecode input for the loader
+vm.input       is text
 
-    # 8 numeric registers
-    vm.reg         is number vector
+# 8 numeric registers
+vm.reg         is number vector
 
-    # instructions
-    vm.code        is number vector
-    vm.code.len    is number
+# instructions
+vm.code        is number vector
+vm.code.len    is number
 
-    # text registers, constants, and variables share space
-    vm.text        is text vector
-    vm.text.len    is number
+# text registers, constants, and variables share space
+vm.text        is text vector
+vm.text.len    is number
 
 PROCEDURE:
-    # hack so text register ID matches with index in vm.text vector
-    # ex: vm.text:$TE is vm.text:15
-    store 15 in vm.text.len
+# hack so text register ID matches with index in vm.text vector
+# ex: vm.text:$TE is vm.text:15
+store 15 in vm.text.len

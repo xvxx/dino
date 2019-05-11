@@ -1,21 +1,21 @@
 # === COMPILER =======================================================
 DATA:
-    # Input -> {Lexer}
-    c.input        is text
+# Input -> {Lexer}
+c.input        is text
 
-    # Input -> {Lexer} -> Tokens
-    c.tokens       is text vector
-    c.tokens.len   is number
+# Input -> {Lexer} -> Tokens
+c.tokens       is text vector
+c.tokens.len   is number
 
-    # Tokens -> {Parser} -> Nodes
-    c.nodes        is text vector
-    c.nodes.len    is number
+# Tokens -> {Parser} -> Nodes
+c.nodes        is text vector
+c.nodes.len    is number
 
-    # Nodes -> {Generator} -> Assembly
-    c.asm          is text
+# Nodes -> {Generator} -> Assembly
+c.asm          is text
 
-    # Asm -> {Assembler} -> Bytecode
-    c.bytes        is number vector
-    c.bytes.len    is number
-    c.text         is text vector
-    c.text.len     is number
+# Asm -> {Assembler} -> Bytecode
+c.bytes        is number vector
+c.bytes.len    is number
+c.text         is text vector
+c.text.len     is number

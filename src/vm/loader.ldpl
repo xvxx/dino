@@ -1,5 +1,6 @@
 # === LOADER =========================================================
-# The loader turns a text file of bytecode into a number vector of bytecode.
+# The loader turns a text file of bytecode into a number vector
+# of bytecode.
 
 DATA:
 # IN:
