@@ -68,26 +68,8 @@ sub-procedure cpu.run
             call cpu.error
         end if
 
-        if $CODES:"DISPLAY" is equal to cpu.code then
-            store 0 in cpu.i
-            while cpu.i is less than $SIZES:cpu.code do
-                add 1 and cpu.pc in cpu.pc
-                if vm.code:cpu.pc is greater than or equal to $OFFSET.TEXT then
-                    display vm.text:vm.code:cpu.pc
-                else
-                    display vm.reg:vm.code:cpu.pc
-                end if
-                add 1 and cpu.i in cpu.i
-            repeat
-        else if $CODES:"CALL" is equal to cpu.code then
-            add 1 and cpu.pc in cpu.pc
-            add 1 and cpu.pc in cpu.stack:cpu.sp
-            add 1 and cpu.sp in cpu.sp
-            add vm.code:cpu.pc and cpu.pc in cpu.pc
-        else if $CODES:"RETURN" is equal to cpu.code then
-            subtract 1 from cpu.sp in cpu.sp
-            subtract 1 from cpu.stack:cpu.sp in cpu.pc
-        else if $CODES:"JUMP" is equal to cpu.code then
+# === CONTROL FLOW ===================================================
+        if $CODES:"JUMP" is equal to cpu.code then
             add 1 and cpu.pc in cpu.pc
             add vm.code:cpu.pc and cpu.pc in cpu.pc
         else if $CODES:"JIF" is equal to cpu.code then
@@ -100,15 +82,20 @@ sub-procedure cpu.run
             if vm.reg:$a is equal to 1 then
                 add vm.code:cpu.pc and cpu.pc in cpu.pc
             end if
+        else if $CODES:"CALL" is equal to cpu.code then
+            add 1 and cpu.pc in cpu.pc
+            add 1 and cpu.pc in cpu.stack:cpu.sp
+            add 1 and cpu.sp in cpu.sp
+            add vm.code:cpu.pc and cpu.pc in cpu.pc
+        else if $CODES:"RETURN" is equal to cpu.code then
+            subtract 1 from cpu.sp in cpu.sp
+            subtract 1 from cpu.stack:cpu.sp in cpu.pc
         else if $CODES:"EXIT" is equal to cpu.code then
             exit
-        else if $CODES:"ACCEPT" is equal to cpu.code then
-            add 1 and cpu.pc in cpu.pc
-            if vm.code:cpu.pc is greater than or equal to $OFFSET.TEXT then
-                accept vm.text:vm.code:cpu.pc
-            else
-                accept vm.reg:vm.code:cpu.pc
-            end if
+        else if $CODES:"WAIT" is equal to cpu.code then
+            wait vm.reg:vm.code:cpu.pc milliseconds
+
+# === MEMORY COMMANDS ================================================
         else if $CODES:"STORE" is equal to cpu.code then
             add 1 and cpu.pc in cpu.pc
             store vm.code:cpu.pc in cpu.x
@@ -136,6 +123,7 @@ sub-procedure cpu.run
             else
                 store vm.code:cpu.pc in vm.reg:cpu.i
             end if
+# === ARITHMETIC =====================================================
         else if $CODES:"EQ" is equal to cpu.code then
             add 1 and cpu.pc in cpu.pc
             store vm.reg:vm.code:cpu.pc in cpu.x
@@ -203,6 +191,69 @@ sub-procedure cpu.run
             store vm.reg:vm.code:cpu.pc in cpu.y
             add 1 and cpu.pc in cpu.pc
             divide cpu.x by cpu.y in vm.reg:vm.code:cpu.pc
+
+        else if $CODES:"ABS" is equal to cpu.code then
+            in cpu.error join "unimplemented:" "ABS"
+            call cpu.error
+        else if $CODES:"CEIL" is equal to cpu.code then
+            in cpu.error join "unimplemented:" "CEIL"
+            call cpu.error
+        else if $CODES:"FLOOR" is equal to cpu.code then
+            in cpu.error join "unimplemented:" "FLOOR"
+            call cpu.error
+        else if $CODES:"RANDOM" is equal to cpu.code then
+            in cpu.error join "unimplemented:" "RANDOM"
+            call cpu.error
+
+# === I/O COMMANDS ==================================================
+        else if $CODES:"DISPLAY" is equal to cpu.code then
+            store 0 in cpu.i
+            while cpu.i is less than $SIZES:cpu.code do
+                add 1 and cpu.pc in cpu.pc
+                if vm.code:cpu.pc is greater than or equal to $OFFSET.TEXT then
+                    display vm.text:vm.code:cpu.pc
+                else
+                    display vm.reg:vm.code:cpu.pc
+                end if
+                add 1 and cpu.i in cpu.i
+            repeat
+        else if $CODES:"ACCEPT" is equal to cpu.code then
+            add 1 and cpu.pc in cpu.pc
+            if vm.code:cpu.pc is greater than or equal to $OFFSET.TEXT then
+                accept vm.text:vm.code:cpu.pc
+            else
+                accept vm.reg:vm.code:cpu.pc
+            end if
+        else if $CODES:"EXEC" is equal to cpu.code then
+            in cpu.error join "unimplemented:" "EXEC"
+            call cpu.error
+        else if $CODES:"READ" is equal to cpu.code then
+            in cpu.error join "unimplemented:" "READ"
+            call cpu.error
+        else if $CODES:"WRITE" is equal to cpu.code then
+            in cpu.error join "unimplemented:" "WRITE"
+            call cpu.error
+        else if $CODES:"APPEND" is equal to cpu.code then
+            in cpu.error join "unimplemented:" "APPEND"
+            call cpu.error
+
+# === TEXT OPERATIONS ===============================================
+        else if $CODES:"LEN" is equal to cpu.code then
+            in cpu.error join "unimplemented:" "LEN"
+            call cpu.error
+        else if $CODES:"JOIN" is equal to cpu.code then
+            in cpu.error join "unimplemented:" "JOIN"
+            call cpu.error
+        else if $CODES:"GETC" is equal to cpu.code then
+            in cpu.error join "unimplemented:" "GETC"
+            call cpu.error
+        else if $CODES:"GETCC" is equal to cpu.code then
+            in cpu.error join "unimplemented:" "GETCC"
+            call cpu.error
+        else if $CODES:"PUTC" is equal to cpu.code then
+            in cpu.error join "unimplemented:" "PUTC"
+            call cpu.error
+
         else
             join "UNIMPLEMENTED: " and cpu.code in cpu.error
             in cpu.error join cpu.error " (" $NAMES:cpu.code ") "
