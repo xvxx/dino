@@ -1,0 +1,36 @@
+;; testing dino features
+    SET %name, 69
+    SET %neg, -100
+    DISPLAY %neg
+    DISPLAY "\n"
+    ABS %neg
+    DISPLAY %neg
+    DISPLAY "\n"
+
+    SET %Pi, 3.14
+    CEIL %Pi
+    DISPLAY "3.14? I prefer "
+    DISPLAY %Pi
+    DISPLAY ". Or even "
+    SET %Pi, 3.14
+    FLOOR %Pi
+    DISPLAY %Pi
+    DISPLAY ".\n"
+
+    DISPLAY %name
+    DISPLAY "\n"
+    STORE %age, %name
+    DISPLAY "You're how old? "
+    DISPLAY %age
+    DISPLAY "\n"
+    SET %thousand 1000
+    ADD %thousand, %age, %age
+    DISPLAY "Or are you "
+    DISPLAY %age
+    DISPLAY "?\n"
+    SET %beer, 99
+    SET %age, 100
+    DISPLAY "Oh wait... you're "
+    DISPLAY %age
+    DISPLAY " ?!?!"
+    EXIT
