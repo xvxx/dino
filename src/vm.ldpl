@@ -18,6 +18,3 @@ vm.text        is text vector
 vm.text.len    is number
 
 PROCEDURE:
-# hack so text register ID matches with index in vm.text vector
-# ex: vm.text:$TE is vm.text:15
-store 15 in vm.text.len

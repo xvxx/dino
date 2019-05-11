@@ -175,11 +175,18 @@ sub-procedure cpu.run
                 store 1 in vm.reg:$z
             end if
             add 1 and cpu.pc in cpu.pc
+        else if $CODES:"JUMP" is equal to cpu.code then
+            add 1 and cpu.pc in cpu.pc
+            add vm.code:cpu.pc and cpu.pc in cpu.pc
         else if $CODES:"JIF" is equal to cpu.code then
             add 1 and cpu.pc in cpu.pc
-            store vm.code:cpu.pc in cpu.x
             if vm.reg:$z is equal to 1 then
-                add cpu.x and cpu.pc in cpu.pc
+                add vm.code:cpu.pc and cpu.pc in cpu.pc
+            end if
+        else if $CODES:"JIT" is equal to cpu.code then
+            add 1 and cpu.pc in cpu.pc
+            if vm.reg:$a is equal to 1 then
+                add vm.code:cpu.pc and cpu.pc in cpu.pc
             end if
         else
             join "UNIMPLEMENTED: " and cpu.code in cpu.error
