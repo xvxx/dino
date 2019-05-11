@@ -170,7 +170,7 @@ IN variables, a set of OUT variables, and a RUN sub-procedure.
 | NAME            | SYNTAX
 +-----------------+---------------------------------------------------
 | Register Name   | $z, $TA
-| Variable Name   | %bufsize, %Users
+| Num Variable    | %bufsize, %Users
 | Label           | print-fn, DISPLAY
 
 # --- INSTRUCTIONS ---------------------------------------------------

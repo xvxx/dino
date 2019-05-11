@@ -42,6 +42,8 @@ store 5 in asm.addresses:"$E"
 store 6 in asm.addresses:"$SP"
 store 7 in asm.addresses:"$PC"
 
+store $OFFSET.VARS in asm.variables.len
+
 #  IN: asm.token
 # OUT: asm.token.label?
 sub-procedure asm.token.label?
