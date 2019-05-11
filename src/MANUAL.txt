@@ -147,7 +147,7 @@ Windows, WebAssembly, and Raspberry Pi.
       * [x] RETURN
       * [x] EXIT
       * [x] WAIT
-      * [ ] STORE
+      * [x] STORE
       * [x] SET
       * [x] EQ
       * [x] GT
@@ -156,10 +156,10 @@ Windows, WebAssembly, and Raspberry Pi.
       * [x] SUB
       * [x] MUL
       * [x] DIV
-      * [ ] MOD
-      * [ ] ABS
-      * [ ] CEIL
-      * [ ] FLOOR
+      * [x] MOD
+      * [x] ABS
+      * [x] CEIL
+      * [x] FLOOR
       * [ ] RANDOM
       * [x] PRINT
       * [x] ACCEPT
