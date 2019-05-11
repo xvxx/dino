@@ -35,41 +35,6 @@ sub-procedure cpu.error
     exit
 end sub-procedure
 
-# Loads value at address pc into $a or $ta. Sets $tf.
-sub-procedure cpu.load
-    display "code: " cpu.code crlf
-    if cpu.code is equal to 17 then
-        display "DIE" crlf
-        exit
-    end if
-
-    store vm.code:cpu.pc in cpu.address
-    if cpu.address is greater than $OFFSET.TEXT then
-        # string
-        subtract $OFFSET.TEXT from cpu.address in cpu.address
-        store vm.text:cpu.address in cpu.ta
-        store 1 in cpu.tf
-    else if cpu.address is greater than $OFFSET.TVAR then
-        # string again
-        subtract $OFFSET.TVAR from cpu.address in cpu.address
-        store vm.text:cpu.address in cpu.ta
-        store 1 in cpu.tf
-    else if cpu.address is greater than $OFFSET.NVAR then
-        # number var
-        subtract $OFFSET.NVAR from cpu.address in cpu.address
-        store vm.text:cpu.address in cpu.a
-        store 0 in cpu.tf
-    else if cpu.address is greater than or equal to $TA then
-        # text register
-        store vm.text:cpu.address in cpu.ta
-        store 1 in cpu.tf
-    else
-        # num register
-        store vm.text:cpu.address in cpu.a
-        store 0 in cpu.tf
-    end if
-end sub-procedure
-
 # Check bytecode format.
 sub-procedure cpu.validate
     store "INVALID BYTECODE FORMAT" in cpu.error
@@ -105,11 +70,10 @@ sub-procedure cpu.run
             store 0 in cpu.i
             while cpu.i is less than $SIZES:cpu.code do
                 add 1 and cpu.pc in cpu.pc
-                call cpu.load
-                if cpu.tf is equal to 1 then
-                    display cpu.ta
+                if vm.code:cpu.pc is greater than or equal to $OFFSET.TEXT then
+                    display vm.text:vm.code:cpu.pc
                 else
-                    display cpu.a
+                    display vm.reg:vm.code:cpu.pc
                 end if
                 add 1 and cpu.i in cpu.i
             repeat
@@ -175,6 +139,13 @@ sub-procedure cpu.run
                 store 1 in vm.reg:$z
             end if
             add 1 and cpu.pc in cpu.pc
+        else if $CODES:"ADD" is equal to cpu.code then
+            add 1 and cpu.pc in cpu.pc
+            store vm.code:cpu.pc in cpu.x
+            add 1 and cpu.pc in cpu.pc
+            store vm.code:cpu.pc in cpu.y
+            add 1 and cpu.pc in cpu.pc
+            add cpu.x and cpu.y in vm.reg:vm.code:cpu.pc
         else if $CODES:"JUMP" is equal to cpu.code then
             add 1 and cpu.pc in cpu.pc
             add vm.code:cpu.pc and cpu.pc in cpu.pc

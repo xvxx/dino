@@ -27,8 +27,7 @@ sub-procedure dis.print
                 display "\e[35m"
                 store vm.code:dis.i in dis.opcode
                 if dis.opcode is greater than or equal to $OFFSET.TEXT then
-                    subtract $OFFSET.TEXT from dis.opcode in dis.opcode
-                    display vm.text:dis.opcode
+                    display "\"" vm.text:dis.opcode "\""
                 else
                     display dis.opcode
                 end if

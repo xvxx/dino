@@ -24,13 +24,14 @@ sub-procedure loader.run
     store length of loader.input in loader.len
     store 0 in loader.i
     store 0 in loader.string?
+    store 0 in vm.code.len
+    store $OFFSET.TEXT in vm.text.len
     store "" in loader.token
     while loader.i is less than loader.len do
         store loader.char in loader.prev
         get character at loader.i from loader.input in loader.char
 
         if loader.string? is equal to 1 then
-            join loader.token and loader.char in loader.token
             add 1 and loader.i in loader.i
             if loader.char is equal to "\"" then
                 if loader.prev is not equal to "\\" then
@@ -38,8 +39,10 @@ sub-procedure loader.run
                     store loader.token in vm.text:vm.text.len
                     add 1 and vm.text.len in vm.text.len
                     store "" in loader.token
+                    continue
                 end if
             end if
+            join loader.token and loader.char in loader.token
             continue
         end if
 
@@ -50,7 +53,6 @@ sub-procedure loader.run
                 store "" in loader.token
             end if
         else if loader.char is equal to "\"" then
-            join loader.token and loader.char in loader.token
             store 1 in loader.string?
         else
             join loader.token and loader.char in loader.token
