@@ -102,6 +102,13 @@ sub-procedure cpu.run
             end if
         else if $CODES:"EXIT" is equal to cpu.code then
             exit
+        else if $CODES:"ACCEPT" is equal to cpu.code then
+            add 1 and cpu.pc in cpu.pc
+            if vm.code:cpu.pc is greater than or equal to $OFFSET.TEXT then
+                accept vm.text:vm.code:cpu.pc
+            else
+                accept vm.reg:vm.code:cpu.pc
+            end if
         else if $CODES:"SET" is equal to cpu.code then
             add 1 and cpu.pc in cpu.pc
             store vm.code:cpu.pc in cpu.i
