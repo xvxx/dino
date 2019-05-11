@@ -85,7 +85,7 @@ sub-procedure main.asm-to-bytecode
         exit
     end if
     call asm.compile
-    call c.bytes.print
+    call asm.print
 end sub-procedure
 
 # --- CONVERT BYTECODE TO ASSEMBLY -----------------------------------

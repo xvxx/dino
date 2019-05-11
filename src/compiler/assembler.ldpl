@@ -260,7 +260,7 @@ end sub-procedure
 
 #  IN: c.asm
 # OUT: asm.dinocode
-sub-procedure c.bytes.to-dinocode
+sub-procedure asm.to-dinocode
      # L D P L char codes, version #
     store "76 68 80 76 01 " in asm.segment.head
 
@@ -290,7 +290,7 @@ end sub-procedure
 
 # Must be called after asm.compile.
 #  IN: c.text
-sub-procedure c.bytes.print
-    call c.bytes.to-dinocode
+sub-procedure asm.print
+    call asm.to-dinocode
     display asm.dinocode crlf
 end sub-procedure
