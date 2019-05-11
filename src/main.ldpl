@@ -62,8 +62,8 @@ sub-procedure main.run.dinocode
         display errortext crlf
         exit
     end if
-    call loader.input.load
-    call vm.run
+    call loader.run
+    call cpu.run
 end sub-procedure
 
 # --- CONVERT LDPL TO ASSEMBLY ---------------------------------------
@@ -92,7 +92,7 @@ end sub-procedure
 # $ dino dis file.dinocode
 sub-procedure main.bytecode-to-asm
     load file argv:1 in loader.input
-    call loader.input.load
+    call loader.run
     call dis.print
 end sub-procedure
 

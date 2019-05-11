@@ -1,65 +1,58 @@
 # === CENTRAL PROCESSING UNIT ========================================
 # The CPU executes bytecode.
 DATA:
+cpu.error is text
+
+cpu.operands     is number vector
+cpu.operands.len is number
+cpu.code is number
+cpu.pc   is number
+cpu.i    is number
 
 PROCEDURE:
-
 sub-procedure cpu.error
+    display "\e[1;36m"
+    if cpu.pc is less than 10 then
+        display 0
+    end if
+    display cpu.pc " \e[1;31mCPU FAULT: \e[0;1m" cpu.error crlf
+    exit
 end sub-procedure
 
 # Check bytecode format.
-sub-procedure vm.bytecode.validate
-    store "invalid bytecode format" in vm.error
-    if vm.bytecode.len is less than 5 then
-        call vm.error
-    end if
-    if vm.bytecode:0 is not equal to 76 then # L
-        call vm.error
-    end if
-    if vm.bytecode:1 is not equal to 68 then # D
-        call vm.error
-    end if
-    if vm.bytecode:2 is not equal to 80 then # P
-        call vm.error
-    end if
-    if vm.bytecode:3 is not equal to 76 then # L
-        call vm.error
-    end if
-    if vm.bytecode:4 is not equal to vm.bytecode.version then
-        call vm.error
-    end if
-    store "" in vm.error
-    store 5 in vm.pc
+sub-procedure cpu.validate
+    store "invalid bytecode format" in cpu.error
+    store 0 in cpu.i
+    while cpu.i is less than $OFFSET.CODE do
+        if vm.code:cpu.i is not equal to $HEADER:cpu.i then
+            call cpu.error
+        end if
+    repeat
+    store "" in cpu.error
 end sub-procedure
 
-#  IN: vm.bytecode
-#      vm.bytecode.len
-#      vm.constants
-#      vm.constants.len
-sub-procedure vm.run
-    call vm.bytecode.validate
-    while vm.pc is less than vm.bytecode.len do
-        store vm.bytecode:vm.pc in vm.opcode
+sub-procedure cpu.run
+    call cpu.validate
+    while cpu.pc is less than vm.code.len do
+        store vm.code:cpu.pc in cpu.code
 
-        # bad instruction TODO: error
-        if $NAMES:vm.opcode is equal to "" then
-            in vm.error join "BAD OPCODE (" vm.pc "): " vm.opcode
-            call vm.error
-            exit
+        if $NAMES:cpu.code is equal to "" then
+            join "BAD OPCODE: " and cpu.code in cpu.error
+            call cpu.error
         end if
 
-        store 0 in vm.i
-        while vm.i is less than $SIZES:vm.opcode do
-            add 1 and vm.pc in vm.pc
-            store vm.bytecode:vm.pc in vm.operands:vm.operands.len
-            add 1 and vm.operands.len in vm.operands.len
-            add 1 and vm.i in vm.i
+        store 0 in cpu.i
+        while cpu.i is less than $SIZES:cpu.code do
+            add 1 and cpu.pc in cpu.pc
+            store vm.code:cpu.pc in cpu.operands:cpu.operands.len
+            add 1 and cpu.operands.len in cpu.operands.len
+            add 1 and cpu.i in cpu.i
         repeat
 
-        if vm.opcode is equal to $CODES:"DISPLAY" then
+        if cpu.code is equal to $CODES:"DISPLAY" then
             display "gucci gucci goo" crlf
         end if
 
-        add 1 and vm.pc in vm.pc
+        add 1 and cpu.pc in cpu.pc
     repeat
 end sub-procedure
