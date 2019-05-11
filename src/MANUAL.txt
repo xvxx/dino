@@ -220,9 +220,9 @@ Windows, WebAssembly, and Raspberry Pi.
 |  25  | MUL $x $y $a      | Multiplication
 |  26  | DIV $x $y $a      | Division. $e will be set to 1 if $y is 0.
 |  27  | MOD $x $y $a      | Modulo
-|  28  | ABS $x $a         | Put absolute value of register $x in $a
-|  29  | CEIL $x $a        | Ceiling
-|  2A  | FLOOR $x $a       | Flooring
+|  28  | ABS $x            | Convert $x to its absolute value.
+|  29  | CEIL $x           | Round $x to next whole number.
+|  2A  | FLOOR $x          | Round $x to previous whole number.
 |  2B  | RANDOM $a         | Put random number in $a.
 | ==== | ================= | I/O COMMANDS ============================
 |  30  | DISPLAY $r        | Print content of register $r
