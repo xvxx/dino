@@ -37,7 +37,7 @@ sub-procedure dis.print
                 end if
             repeat
         end if
-        display crlf
+        display "\e[0m" crlf
 
         add 1 and dis.i in dis.i
     repeat
