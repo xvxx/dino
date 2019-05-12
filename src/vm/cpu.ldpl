@@ -10,11 +10,13 @@ cpu.sp           is number
 cpu.pc is number
 
 # Temp vars - not actual registers. That's vm.reg
-cpu.a  is number
-cpu.x  is number
-cpu.y  is number
-cpu.i  is number
-cpu.t  is text
+cpu.a   is number
+cpu.x   is number
+cpu.y   is number
+cpu.i   is number
+cpu.t   is text
+cpu.tx  is text
+cpu.ty  is text
 
 PROCEDURE:
 # Print an error and crashes.
