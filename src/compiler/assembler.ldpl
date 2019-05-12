@@ -5,6 +5,7 @@ DATA:
 asm.dinocode      is text
 
 # INTERNALS:
+asm.error         is text
 asm.labels        is number vector
 asm.tokens        is text vector
 asm.tokens.len    is number
@@ -48,6 +49,13 @@ store 7 in asm.addresses:"$PC"
 store $OFFSET.VARS in asm.vars.len
 store $OFFSET.TVAR in asm.tvars.next
 store $OFFSET.TLIT in c.text.len
+
+#  IN: asm.error
+sub-procedure asm.error
+    display "\e[1;31mASM ERROR: \e[0m"
+    display asm.error crlf
+    exit
+end sub-procedure
 
 #  IN: asm.token
 # OUT: asm.token.label?
@@ -176,8 +184,15 @@ sub-procedure asm.tokens.to-bytecode
                 add 1 and c.bytes.len in c.bytes.len
             else
                 # number literals
-                store asm.token in c.bytes:c.bytes.len
-                add 1 and c.bytes.len in c.bytes.len
+                store asm.token in digit?.in
+                call digit?
+                if digit? is equal to 1 then
+                    store asm.token in c.bytes:c.bytes.len
+                    add 1 and c.bytes.len in c.bytes.len
+                else
+                    join "bad token: " and asm.token in asm.error
+                    call asm.error
+                end if
             end if
         end if
 
