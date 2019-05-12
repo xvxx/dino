@@ -252,12 +252,24 @@ sub-procedure cpu.run
             add 1 and cpu.pc in cpu.pc
             store vm.text:vm.code:cpu.pc in cpu.t
             add 1 and cpu.pc in cpu.pc
-            write vm.text:vm.code:cpu.pc to file cpu.t
+            if vm.code:cpu.pc is greater than or equal to $OFFSET.TEXT then
+                write vm.text:vm.code:cpu.pc to file cpu.t
+            else
+                write vm.reg:vm.code:cpu.pc to file cpu.t
+            end if
             store ERRORCODE in vm.reg:$E
             store ERRORTEXT in vm.text:@E
         else if $CODES:"APPEND" is equal to cpu.code then
-            in cpu.error join "unimplemented:" "APPEND"
-            call cpu.error
+            add 1 and cpu.pc in cpu.pc
+            store vm.text:vm.code:cpu.pc in cpu.t
+            add 1 and cpu.pc in cpu.pc
+            if vm.code:cpu.pc is greater than or equal to $OFFSET.TEXT then
+                append vm.text:vm.code:cpu.pc to file cpu.t
+            else
+                append vm.reg:vm.code:cpu.pc to file cpu.t
+            end if
+            store ERRORCODE in vm.reg:$E
+            store ERRORTEXT in vm.text:@E
 
         # --- TEXT OPERATIONS ----------------------------------------
         else if $CODES:"LEN" is equal to cpu.code then
