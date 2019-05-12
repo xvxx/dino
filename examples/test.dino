@@ -41,9 +41,9 @@
     DISPLAY %age
     DISPLAY "\n"
 
-    SET %file, "./examples/test.dino"
-    READ %file %file
-    DISPLAY %file
+    SET @file, "./examples/test.dino"
+    READ @file @file
+    DISPLAY @file
     DISPLAY "\n"
 
     EXIT

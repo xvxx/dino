@@ -6,8 +6,6 @@ asm.dinocode      is text
 
 # INTERNALS:
 asm.labels        is number vector
-asm.variables     is number vector
-asm.variables.len is number
 asm.tokens        is text vector
 asm.tokens.len    is number
 asm.token         is text
@@ -16,6 +14,11 @@ asm.label         is text
 asm.address       is number
 asm.pc            is number  # program counter
 asm.addresses     is number vector
+
+asm.vars          is number vector
+asm.vars.len      is number
+asm.tvars         is number vector
+asm.tvars.len     is number
 
 asm.segment.head  is text
 asm.segment.code  is text
@@ -42,7 +45,7 @@ store 5 in asm.addresses:"$E"
 store 6 in asm.addresses:"$SP"
 store 7 in asm.addresses:"$PC"
 
-store $OFFSET.VARS in asm.variables.len
+store $OFFSET.VARS in asm.vars.len
 
 #  IN: asm.token
 # OUT: asm.token.label?
@@ -77,22 +80,34 @@ end sub-procedure
 sub-procedure asm.token.to-address
     get character at 0 from asm.token in asm.char
     if asm.char is equal to "\"" then
+        # text literal
         add $OFFSET.TVAR and c.text.len in asm.address
         store asm.token in c.text:c.text.len
         add 1 and c.text.len in c.text.len
     else if asm.char is equal to "$" then
+        # register
         store asm.addresses:asm.token in asm.address
-    else if asm.char is equal to "%" then
-        # variables
-        if asm.variables:asm.token is equal to 0 then
-            add 1 and asm.variables.len in asm.variables.len
-            store asm.variables.len in asm.variables:asm.token
+    else if asm.char is equal to "@" then
+        # text variable
+        if asm.tvars:asm.token is equal to 0 then
+            add 1 and asm.tvars.len in asm.tvars.len
+            store asm.tvars.len in asm.tvars:asm.token
         end if
-        store asm.variables:asm.token in asm.address
+        store asm.tvars:asm.token in asm.address
+    else if asm.char is equal to "%" then
+        # number variable
+        if asm.vars:asm.token is equal to 0 then
+            add 1 and asm.vars.len in asm.vars.len
+            store asm.vars.len in asm.vars:asm.token
+        end if
+        store asm.vars:asm.token in asm.address
     else
+        # number or label
+        # check for negative number
         if asm.char is equal to "-" then
             get character at 1 from asm.token in asm.char
         end if
+        # number vs label
         store asm.char in digit?.in
         call digit?
         if digit? is equal to 1 then
