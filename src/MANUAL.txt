@@ -142,13 +142,13 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
       * [x] ACCEPT
       * [ ] EXEC
       * [x] READ
-      * [ ] WRITE
-      * [ ] APPEND
-      * [ ] LEN
-      * [ ] JOIN
-      * [ ] GETC
-      * [ ] GETCC
-      * [ ] PUTC
+      * [x] WRITE
+      * [x] APPEND
+      * [x] LEN
+      * [x] JOIN
+      * [x] GETC
+      * [x] GETCC
+      * [x] PUTC
 
 === REFERENCE ========================================================
 
@@ -249,6 +249,6 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 | ==== | ================  | TEXT OPERATIONS ========================
 |  40  | LEN @x $a         | Get length of string in @x.
 |  41  | JOIN @x @y @a     | Concatenate text in registers into @a.
-|  42  | GETC n @str @a    | Get character at position n in @str.
-|  43  | GETCC n @str $a   | Get character code at n in @str.
-|  44  | PUTC @a n         | Put ascii character with code n into @a.
+|  42  | GETC n @str @a    | Get character in @str at n and put into @a.
+|  43  | GETCC @str $a     | Get character code of @str and put into @a.
+|  44  | PUTCC n @a        | Put ascii character with code n into @a.
