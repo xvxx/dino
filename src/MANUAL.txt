@@ -177,13 +177,14 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 | 0010 |      | Number variables
 | .... |      |
 | 3000 | @A   | Text accumulator
-| 3001 | @X   | Text variable
-| 3002 | @Y   | Text variable
-| 3003 | @T   | Text variable
+| 3001 | @X   | Text register
+| 3002 | @Y   | Text register
+| 3003 | @T   | Text register
 | 3004 | @E   | Error message
 | .... |      | Reserved
 | 300F |      | Reserved
 | 3010 |      | Text variables
+| 4000 |      | Text literals
 | .... |      |
 | FFFF |      | Final address
 
@@ -199,7 +200,7 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 | 0006+|      | Program instructions
 | 00XX |  06  | Final EXIT
 | 00XX |      | Sub-procedure definitions
-| 00XX |      | Text constants
+| 00XX |      | Text literals
 
 # --- ADDRESS SYNTAX -------------------------------------------------
 | NAME            | SYNTAX
@@ -207,6 +208,7 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 | Register Name   | $z, $pc
 | Number Variable | %bufsize, %Users
 | Text Variable   | @name, @City
+| Text Literal    | "heya", "LDPL rox!"
 | Label           | print-fn, DISPLAY
 
 # --- INSTRUCTIONS ---------------------------------------------------
