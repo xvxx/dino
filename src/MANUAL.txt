@@ -241,8 +241,8 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 |  2B  | RANDOM $a         | Put random number in $a.
 | ==== | ================= | I/O COMMANDS ============================
 |  30  | DISPLAY $x        | Print content of register $x
-|  31  | ACCEPT $x         |
-|  32  | EXEC @x @a        |
+|  31  | ACCEPT $x         | Accept user input into num or text var.
+|  32  | EXEC @x @a $a     | Run @x. Output goes in @a, exit code in $a. Sets $e.
 |  33  | READ @x @a        | Read file at path @x into @a. Sets $e, @e
 |  34  | WRITE @x @y       | Write @y to file at path @x.
 |  35  | APPEND @x @y      | Append @y to file at path @x.
