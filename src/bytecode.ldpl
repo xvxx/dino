@@ -1,5 +1,5 @@
 # === BYTECODE SPECIFICATION =========================================
-# Used by the compiler and VM.
+# Used by the compiler and VM. Kind of like a dino.h
 
 DATA:
 $VERSION       is number
@@ -28,11 +28,10 @@ $SP            is number
 $PC            is number
 
 # 5 text registers
-$TA            is number
-$TX            is number
-$TY            is number
-$TZ            is number
-$TE            is number
+@A             is text
+@X             is text
+@Y             is text
+@E             is text
 
 # private
 $opname        is text
@@ -43,8 +42,9 @@ store 1 in $VERSION
 
 # memory offsets
 store     5 in $OFFSET.CODE # First instruction
-store    16 in $OFFSET.VARS # 0x0010
-store 12288 in $OFFSET.TEXT # 0x3000
+store    16 in $OFFSET.VARS # 0x0010 - num variables
+store 12288 in $OFFSET.TXRG # 0x3000 - text registers
+store 12304 in $OFFSET.TEXT # 0x3010 - text variables
 
 # bytecode header
 store character code of "L" in $HEADER:0
@@ -65,11 +65,11 @@ store 6 in $SP
 store 7 in $PC
 
 # text registers
-store 10 in $TA
-store 11 in $TX
-store 12 in $TY
-store 13 in $TZ
-store 14 in $TE
+store $OFFSET.TXRG in @A
+add @A and 1 in @X
+add @X and 1 in @Y
+add @Y and 1 in @T
+add @T and 1 in @E
 
 # === CONTROL FLOW ===================================================
 store "JUMP" in $opname

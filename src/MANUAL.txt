@@ -174,9 +174,18 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 | 0009 | $PC  | Program counter
 | .... |      | Reserved
 | 000F |      | Reserved
-| 3000 | @A   | Reserved
-| 3000 | @X   | Reserved
-| 3000 | @Y   | Reserved
+| 0010 |      | Number variables
+| .... |      |
+| 3000 | @A   | Text accumulator
+| 3001 | @X   | Text variable
+| 3002 | @Y   | Text variable
+| 3003 | @T   | Text variable
+| 3004 | @E   | Error message
+| .... |      | Reserved
+| 300F |      | Reserved
+| 3010 |      | Text variables
+| .... |      |
+| FFFF |      | Final address
 
 # --- BYTECODE FORMAT ------------------------------------------------
 | BYTE | DATA | DESCRIPTION
