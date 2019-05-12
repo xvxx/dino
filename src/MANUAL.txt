@@ -141,7 +141,7 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
       * [x] PRINT
       * [x] ACCEPT
       * [ ] EXEC
-      * [ ] READ
+      * [x] READ
       * [ ] WRITE
       * [ ] APPEND
       * [ ] LEN
@@ -243,7 +243,7 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 |  30  | DISPLAY $x        | Print content of register $x
 |  31  | ACCEPT $x         |
 |  32  | EXEC @x @a        |
-|  33  | READ @x @a        |
+|  33  | READ @x @a        | Read file at path @x into @a. Sets $e, @e
 |  34  | WRITE @x @a       |
 |  35  | APPEND @x @a      |
 | ==== | ================  | TEXT OPERATIONS ========================
