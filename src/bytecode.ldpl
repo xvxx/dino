@@ -44,7 +44,7 @@ $opname        is text
 
 PROCEDURE:
 # bytecode format version
-store 1 in $VERSION
+store 2 in $VERSION
 
 # debug mode
 store 0 in $DEBUG
