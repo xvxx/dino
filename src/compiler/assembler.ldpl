@@ -82,13 +82,10 @@ end sub-procedure
 sub-procedure asm.token.to-address
     get character at 0 from asm.token in asm.char
     if asm.char is equal to "\"" then
-        # text literal - first store it in text section
+        # text literal
         store asm.token in c.text:c.text.len
         add 1 and c.text.len in c.text.len
-        # then store in memory
-        store asm.token in asm.tvars:asm.tvars.next
-        store asm.tvars.next in asm.address
-        add 1 and asm.tvars.next in asm.tvars.next
+        store c.text.len in asm.address
     else if asm.char is equal to "$" then
         # register
         store asm.addresses:asm.token in asm.address
