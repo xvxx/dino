@@ -3,6 +3,7 @@
 
 DATA:
 $VERSION       is number
+$DEBUG         is number
 
 $HEADER        is number vector
 $HEADER.len    is number
@@ -26,6 +27,8 @@ $Y             is number
 $Z             is number
 $C             is number
 $E             is number
+$I             is number
+$T             is number
 $SP            is number
 $PC            is number
 
@@ -42,6 +45,9 @@ $opname        is text
 PROCEDURE:
 # bytecode format version
 store 1 in $VERSION
+
+# debug mode
+store 1 in $DEBUG
 
 # memory offsets
 store     5 in $OFFSET.CODE # First instruction
@@ -65,8 +71,10 @@ store 2 in $Y
 store 3 in $Z
 store 4 in $C
 store 5 in $E
-store 6 in $SP
-store 7 in $PC
+store 6 in $I
+store 7 in $T
+store 8 in $SP
+store 9 in $PC
 
 # text registers
 store $OFFSET.TEXT in @A

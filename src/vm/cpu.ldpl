@@ -117,6 +117,10 @@ sub-procedure cpu.run
             add 1 and cpu.pc in cpu.pc
             store vm.code:cpu.pc in cpu.y
 
+            if $DEBUG is equal to 1 then
+                display crlf "SET x=" cpu.x " y=" cpu.y crlf
+            end if
+
             if cpu.y is greater than or equal to $OFFSET.TEXT then
                 if cpu.x is greater than or equal to $OFFSET.TEXT then
                     store vm.text:cpu.y in vm.text:cpu.x
@@ -274,6 +278,36 @@ sub-procedure cpu.run
             join "UNIMPLEMENTED: " and cpu.code in cpu.error
             in cpu.error join cpu.error " (" $NAMES:cpu.code ") "
             call cpu.error
+        end if
+
+
+        if $DEBUG is equal to 1 then
+            display crlf
+            display "\e[1;33m# --- \e[0;1mDEBUG\e[33m -----------------------------------------------------------\e[0m" crlf
+            display "\e[1;35mcpu.pc: \e[0;1m" cpu.pc crlf
+            display "\e[1;35mopcode: \e[0;1m" cpu.code " " $NAMES:cpu.code crlf
+            display "\e[1;35mcpu.a: \e[0;1m" cpu.a crlf
+            display "\e[1;35mcpu.x: \e[0;1m" cpu.x crlf
+            display "\e[1;35mcpu.y: \e[0;1m" cpu.y crlf
+            display "\e[1;35mcpu.i: \e[0;1m" cpu.i crlf
+            display "\e[1;35mcpu.t: \e[0;1m" cpu.t crlf
+            display "\e[1;33m# --- \e[0;1mREGISTERS\e[33m -------------------------------------------------------\e[0m" crlf
+            display "\e[1;35m$a\t\e[0;1m" vm.reg:$a "\t\t"
+            display "\e[1;35m@a\t\e[0;1m" vm.text:@a crlf
+            display "\e[1;35m$x\t\e[0;1m" vm.reg:$x "\t\t"
+            display "\e[1;35m@x\t\e[0;1m" vm.text:@x crlf
+            display "\e[1;35m$y\t\e[0;1m" vm.reg:$y "\t\t"
+            display "\e[1;35m@y\t\e[0;1m" vm.text:@y crlf
+            display "\e[1;35m$z\t\e[0;1m" vm.reg:$z "\t\t"
+            display "\e[1;35m@t\t\e[0;1m" vm.text:@t crlf
+            display "\e[1;35m$c\t\e[0;1m" vm.reg:$c "\t\t"
+            display "\e[1;35m@e\t\e[0;1m" vm.text:@e crlf
+            display "\e[1;35m$i\t\e[0;1m" vm.reg:$i crlf
+            display "\e[1;35m$t\t\e[0;1m" vm.reg:$t crlf
+            display "\e[1;35m$e\t\e[0;1m" vm.reg:$e crlf
+            display "\e[1;35m$sp\t\e[0;1m" vm.reg:$sp crlf
+            display "\e[1;35m$pc\t\e[0;1m" vm.reg:$pc crlf
+            display cpu.pc "> " cpu.code crlf
         end if
 
         add 1 and cpu.pc in cpu.pc
