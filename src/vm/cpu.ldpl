@@ -241,8 +241,19 @@ sub-procedure cpu.run
                 accept vm.reg:vm.code:cpu.pc
             end if
         else if $CODES:"EXEC" is equal to cpu.code then
-            in cpu.error join "unimplemented:" "EXEC"
-            call cpu.error
+            add 1 and cpu.pc in cpu.pc
+            store vm.text:vm.code:cpu.pc in cpu.t
+            add 1 and cpu.pc in cpu.pc
+            execute cpu.t and store output in vm.text:vm.code:cpu.pc
+            store ERRORCODE in vm.reg:$E
+            store ERRORTEXT in vm.text:@E
+        else if $CODES:"EXECC" is equal to cpu.code then
+            add 1 and cpu.pc in cpu.pc
+            store vm.text:vm.code:cpu.pc in cpu.t
+            add 1 and cpu.pc in cpu.pc
+            execute cpu.t and store exit code in vm.reg:vm.code:cpu.pc
+            store ERRORCODE in vm.reg:$E
+            store ERRORTEXT in vm.text:@E
         else if $CODES:"READ" is equal to cpu.code then
             add 1 and cpu.pc in cpu.pc
             store vm.text:vm.code:cpu.pc in cpu.t
