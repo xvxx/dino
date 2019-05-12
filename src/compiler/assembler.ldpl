@@ -280,8 +280,13 @@ end sub-procedure
 #  IN: c.asm
 # OUT: asm.dinocode
 sub-procedure asm.to-dinocode
-     # L D P L char codes, version #
-    store "76 68 80 76 01 " in asm.segment.head
+    # L D P L char codes, version #
+    store 0 in asm.i
+    store "" in asm.segment.head
+    while asm.i is less than $HEADER.len do
+        in asm.segment.head join asm.segment.head $HEADER:asm.i " "
+        incr asm.i
+    repeat
 
     store 0 in asm.pc
     store "" in asm.segment.code
