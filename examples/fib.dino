@@ -7,7 +7,7 @@ while:
     JIF end_while
     ADD %a, %b, %a
     STORE %b, %a
-    PRINTL %a
+    PRINL %a
     SET $x, 1
     SUB %length, $x, %length
     JUMP while
