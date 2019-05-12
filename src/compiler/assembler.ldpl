@@ -77,7 +77,7 @@ end sub-procedure
 sub-procedure asm.token.to-address
     get character at 0 from asm.token in asm.char
     if asm.char is equal to "\"" then
-        add $OFFSET.TEXT and c.text.len in asm.address
+        add $OFFSET.TVAR and c.text.len in asm.address
         store asm.token in c.text:c.text.len
         add 1 and c.text.len in c.text.len
     else if asm.char is equal to "$" then

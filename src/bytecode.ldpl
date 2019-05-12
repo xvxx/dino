@@ -10,8 +10,8 @@ $HEADER.len    is number
 # offsets
 $OFFSET.CODE   is number
 $OFFSET.VARS   is number
-$OFFSET.TXRG   is number
 $OFFSET.TEXT   is number
+$OFFSET.TVAR   is number
 
 # cpu instructions
 $CODES         is number vector
@@ -45,8 +45,8 @@ store 1 in $VERSION
 # memory offsets
 store     5 in $OFFSET.CODE # First instruction
 store    16 in $OFFSET.VARS # 0x0010 - num variables
-store 12288 in $OFFSET.TXRG # 0x3000 - text registers
-store 12304 in $OFFSET.TEXT # 0x3010 - text variables
+store 12288 in $OFFSET.TEXT # 0x3000 - text variables & registers
+store 12304 in $OFFSET.TVAR # 0x3010 - text variables
 
 # bytecode header
 store character code of "L" in $HEADER:0
@@ -67,7 +67,7 @@ store 6 in $SP
 store 7 in $PC
 
 # text registers
-store $OFFSET.TXRG in @A
+store $OFFSET.TEXT in @A
 add @A and 1 in @X
 add @X and 1 in @Y
 add @Y and 1 in @T

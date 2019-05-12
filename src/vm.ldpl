@@ -18,3 +18,5 @@ vm.text        is text vector
 vm.text.len    is number
 
 PROCEDURE:
+# text variable counter starts after text registers
+subtract $OFFSET.TEXT from $OFFSET.TVAR in vm.text.len
