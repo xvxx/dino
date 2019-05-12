@@ -10,6 +10,7 @@ $HEADER.len    is number
 # offsets
 $OFFSET.CODE   is number
 $OFFSET.VARS   is number
+$OFFSET.TXRG   is number
 $OFFSET.TEXT   is number
 
 # cpu instructions
@@ -17,7 +18,7 @@ $CODES         is number vector
 $NAMES         is text vector
 $SIZES         is number vector
 
-# 8 numeric registers
+# numeric register addresses
 $A             is number
 $X             is number
 $Y             is number
@@ -27,11 +28,12 @@ $E             is number
 $SP            is number
 $PC            is number
 
-# 5 text registers
-@A             is text
-@X             is text
-@Y             is text
-@E             is text
+# text register addresses
+@A             is number
+@X             is number
+@Y             is number
+@T             is number
+@E             is number
 
 # private
 $opname        is text
