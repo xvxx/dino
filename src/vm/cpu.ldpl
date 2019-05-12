@@ -14,6 +14,7 @@ cpu.a  is number
 cpu.x  is number
 cpu.y  is number
 cpu.i  is number
+cpu.t  is text
 
 PROCEDURE:
 # Print an error and crashes.
@@ -231,8 +232,10 @@ sub-procedure cpu.run
             in cpu.error join "unimplemented:" "EXEC"
             call cpu.error
         else if $CODES:"READ" is equal to cpu.code then
-            in cpu.error join "unimplemented:" "READ"
-            call cpu.error
+            add 1 and cpu.pc in cpu.pc
+            store vm.text:vm.code:cpu.pc in cpu.t
+            add 1 and cpu.pc in cpu.pc
+            load file cpu.t in vm.text:vm.code:cpu.pc
         else if $CODES:"WRITE" is equal to cpu.code then
             in cpu.error join "unimplemented:" "WRITE"
             call cpu.error
