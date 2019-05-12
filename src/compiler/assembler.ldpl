@@ -52,7 +52,7 @@ store $OFFSET.TLIT in c.text.len
 
 #  IN: asm.error
 sub-procedure asm.error
-    display "\e[1;31mASM ERROR: \e[0m"
+    display "\e[1;31mASM ERROR \e[0;1m(" asm.pc "): \e[0m"
     display asm.error crlf
     exit
 end sub-procedure
