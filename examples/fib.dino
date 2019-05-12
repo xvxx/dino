@@ -1,0 +1,16 @@
+    ;; Fibonacci Sequence
+    SET %length, 30
+    SET %a, 1
+    SET %b, 1
+while:
+    GT %length, 0, $a
+    JIF end_while
+    ADD %a, %b, %a
+    STORE %b, %a
+    DISPLAY %a
+    DISPLAY "\n"
+    SET $x, 1
+    SUB %length, $x, %length
+    JUMP while
+end_while:
+    EXIT
