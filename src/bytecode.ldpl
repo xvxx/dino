@@ -192,38 +192,43 @@ store 1 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
 
 # === I/O COMMANDS ==================================================
-store "DISPLAY" in $opname
+store "PRINT" in $opname
 store 48 in $CODES:$opname
 store 1 in $SIZES:$CODES:$opname
-store "DIS" in $NAMES:$CODES:$opname
+store $opname in $NAMES:$CODES:$opname
 
-store "ACCEPT" in $opname
+store "PRINL" in $opname
 store 49 in $CODES:$opname
 store 1 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
 
-store "EXEC" in $opname
+store "ACCEPT" in $opname
 store 50 in $CODES:$opname
-store 2 in $SIZES:$CODES:$opname
+store 1 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
 
-store "EXECC" in $opname
+store "EXEC" in $opname
 store 51 in $CODES:$opname
 store 2 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
 
-store "READ" in $opname
+store "EXECC" in $opname
 store 52 in $CODES:$opname
 store 2 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
 
-store "WRITE" in $opname
+store "READ" in $opname
 store 53 in $CODES:$opname
 store 2 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
 
-store "APPEND" in $opname
+store "WRITE" in $opname
 store 54 in $CODES:$opname
+store 2 in $SIZES:$CODES:$opname
+store $opname in $NAMES:$CODES:$opname
+
+store "APPEND" in $opname
+store 55 in $CODES:$opname
 store 2 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
 

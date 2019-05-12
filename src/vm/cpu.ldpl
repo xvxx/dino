@@ -222,7 +222,7 @@ sub-procedure cpu.run
             store random in vm.reg:vm.code:cpu.pc
 
         # --- I/O COMMANDS -------------------------------------------
-        else if $CODES:"DISPLAY" is equal to cpu.code then
+        else if $CODES:"PRINT" is equal to cpu.code then
             store 0 in cpu.i
             while cpu.i is less than $SIZES:cpu.code do
                 add 1 and cpu.pc in cpu.pc
@@ -230,6 +230,17 @@ sub-procedure cpu.run
                     display vm.text:vm.code:cpu.pc
                 else
                     display vm.reg:vm.code:cpu.pc
+                end if
+                add 1 and cpu.i in cpu.i
+            repeat
+        else if $CODES:"PRINL" is equal to cpu.code then
+            store 0 in cpu.i
+            while cpu.i is less than $SIZES:cpu.code do
+                add 1 and cpu.pc in cpu.pc
+                if vm.code:cpu.pc is greater than or equal to $OFFSET.TEXT then
+                    display vm.text:vm.code:cpu.pc crlf
+                else
+                    display vm.reg:vm.code:cpu.pc crlf
                 end if
                 add 1 and cpu.i in cpu.i
             repeat
