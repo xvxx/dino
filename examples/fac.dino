@@ -1,5 +1,5 @@
 ;; factorial
-    DISPLAY "🦕 Enter a number: "
+    PRINT "🦕 Enter a number: "
     ACCEPT %n
     SET %result, 1   ; default
 while:
@@ -11,7 +11,6 @@ while:
     SUB %n, $y, %n
     JUMP while
 end_while:
-    DISPLAY "Factorial: "
-    DISPLAY %result
-    DISPLAY "\n"
+    PRINT "Factorial: "
+    PRINL %result
     EXIT

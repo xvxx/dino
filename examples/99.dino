@@ -5,27 +5,26 @@ song:
     GT %beer, $y, $a                ; a=x>y
     JIF end_song                    ; if(a==0) JUMP end_song
     CALL print_bottles
-    DISPLAY " on the wall, "
+    PRINT " on the wall, "
     CALL print_bottles
-    DISPLAY ". "
-    DISPLAY "Take one down, pass it around, "
+    PRINT ". "
+    PRINT "Take one down, pass it around, "
     SET $y, 1                       ; y=1
     SUB %beer, $y, %beer            ; x=x-y
     CALL print_bottles
-    DISPLAY " on the wall!"
-    DISPLAY "\n"
+    PRINL " on the wall!"
     JUMP song
 end_song:
     EXIT
 
 print_bottles:
-    DISPLAY %beer
+    PRINT %beer
     SET $y, 1
     EQ %beer, $y, $a
     JIF pb_plural
-    DISPLAY " bottle of beer"
+    PRINT " bottle of beer"
     JUMP pb_body
 pb_plural:
-    DISPLAY " bottles of beer"
+    PRINT " bottles of beer"
 pb_body:
     RETURN
