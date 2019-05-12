@@ -117,10 +117,6 @@ sub-procedure cpu.run
             add 1 and cpu.pc in cpu.pc
             store vm.code:cpu.pc in cpu.y
 
-            if $DEBUG is equal to 1 then
-                display crlf "SET x=" cpu.x " y=" cpu.y crlf
-            end if
-
             if cpu.y is greater than or equal to $OFFSET.TEXT then
                 if cpu.x is greater than or equal to $OFFSET.TEXT then
                     store vm.text:cpu.y in vm.text:cpu.x
@@ -129,9 +125,9 @@ sub-procedure cpu.run
                 end if
             else
                 if cpu.x is greater than or equal to $OFFSET.TEXT then
-                    store vm.reg:cpu.y in vm.text:cpu.x
+                    store cpu.y in vm.text:cpu.x
                 else
-                    store vm.reg:cpu.y in vm.reg:cpu.x
+                    store cpu.y in vm.reg:cpu.x
                 end if
             end if
 
