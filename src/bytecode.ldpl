@@ -243,7 +243,7 @@ store 67 in $CODES:$opname
 store 2 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
 
-store "PUTC" in $opname
+store "PUTCC" in $opname
 store 68 in $CODES:$opname
 store 2 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname

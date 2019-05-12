@@ -314,11 +314,11 @@ sub-procedure cpu.run
                 store ERRORCODE in vm.reg:$e
                 store ERRORTEXT in vm.text:@e
             end if
-
-        else if $CODES:"PUTC" is equal to cpu.code then
-            in cpu.error join "unimplemented:" "PUTC"
-            call cpu.error
-
+        else if $CODES:"PUTCC" is equal to cpu.code then
+            add 1 and cpu.pc in cpu.pc
+            store vm.code:cpu.pc in cpu.x
+            add 1 and cpu.pc in cpu.pc
+            store character cpu.x in vm.text:vm.code:cpu.pc
         else
             join "UNIMPLEMENTED: " and cpu.code in cpu.error
             in cpu.error join cpu.error " (" $NAMES:cpu.code ") "
