@@ -33,10 +33,11 @@ end sub-procedure
 # Check bytecode format. Crashes if invalid.
 #  IN: vm.code
 sub-procedure cpu.validate
-    store "INVALID BYTECODE FORMAT" in cpu.error
+    store "INVALID BYTECODE FORMAT: " in cpu.error
     store 0 in cpu.i
     while cpu.i is less than $OFFSET.CODE do
         if vm.code:cpu.i is not equal to $HEADER:cpu.i then
+            in cpu.error join cpu.error "header word " cpu.i ": want " $HEADER:cpu.i ", got " vm.code:cpu.i
             call cpu.error
         end if
         add 1 and cpu.i in cpu.i
