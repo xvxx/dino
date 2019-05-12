@@ -14,11 +14,12 @@ Dino is an interpreter for the LDPL programming language, written in
 LDPL. Because LDPL is a compiled language, Dino's goal is to provide a
 lightweight, scriptable version of the language runtime that can be
 used to quickly prototype ideas, perform system tasks, or compose
-programs in an interactive fashion using a REPL.
+programs in an interactive fashion using a REPL. Dino can also be used
+to run LDPL programs on systems which lack a C++11 compiler.
 
-Dino is organized into three parts: compiler, virtual machine, and
-tooling, with the `dino` command line program serving as the primary
-means of interacting with the suite.
+Internally, Dino is organized into three parts: compiler, virtual
+machine, and tooling, with the `dino` command line program serving as
+the primary means of interacting with the suite.
 
 The compiler translates LDPL source code to DinoASM, Dino's simple
 assembly language, then to Dinocode, Dino's bytecode format. The
@@ -28,10 +29,10 @@ command line program for running LDPL programs and using the compiler
 suite, the REPL, and `dino dis` for displaying / disassembling
 dinocode.
 
-The classic bytecode/VM architecture means Dino could support
-languages other than LDPL in the future, but for now it's focused on
-supporting the full LDPL 3.0.5 specification on Linux, MacOS,
-Windows, WebAssembly, and Raspberry Pi.
+The classic bytecode/VM architecture means Dino could (with changes)
+support languages other than LDPL in the future, but for now it's
+focused on supporting the full LDPL 3.0.5 specification on Linux,
+MacOS, Windows, WebAssembly, and Raspberry Pi.
 
 === ISSUES ===========================================================
 
@@ -62,8 +63,8 @@ Windows, WebAssembly, and Raspberry Pi.
 * Registers, variables, and constants share a logical address space:
 * Two types: numeric and text. Address determines type.
 
-# ----- MEMORY ADDRESSES ----------------------------------------------
-| BEGN | END  | TYPE | DESCRIPTION
+# ----- MEMORY ADDRESSES ---------------------------------------------
+| 1ST  | LAST | TYPE | DESCRIPTION
 +------+------+---------------------------------------------------
 | 0000 | 000F | NUM  | Registers
 | 0010 | 2FFF | NUM  | Variables
@@ -160,7 +161,7 @@ Windows, WebAssembly, and Raspberry Pi.
       * [x] ABS
       * [x] CEIL
       * [x] FLOOR
-      * [ ] RANDOM
+      * [x] RANDOM
       * [x] PRINT
       * [x] ACCEPT
       * [ ] EXEC
@@ -192,8 +193,9 @@ Windows, WebAssembly, and Raspberry Pi.
 # --- ADDRESS SYNTAX -------------------------------------------------
 | NAME            | SYNTAX
 +-----------------+---------------------------------------------------
-| Register Name   | $z, $TA
-| Num Variable    | %bufsize, %Users
+| Register Name   | $z, $pc
+| Number Variable | %bufsize, %Users
+| Text Variable   | @name, @City
 | Label           | print-fn, DISPLAY
 
 # --- INSTRUCTIONS ---------------------------------------------------
@@ -212,8 +214,8 @@ Windows, WebAssembly, and Raspberry Pi.
 |  10  | STORE %var $r     | Store value of register r in variable var.
 |  11  | SET $r 3.14       | Set $r to literal number value.
 | ==== | ================= | ARITHMETIC ==============================
-|  20  | EQ $x $y $a       | Set $a=1 if $x == $y
 |  21  | GT $x $y $a       | Set $a=1 if $x > $y
+|  20  | EQ $x $y $a       | Set $a=1 if $x == $y
 |  22  | LT $x $y $a       | Set $a=1 if $x < $y
 |  23  | ADD $x $y $a      | Put sum of registers $x and $y in $a
 |  24  | SUB $x $y $a      | Subtract value of $y from $x and put in $a.
@@ -225,15 +227,15 @@ Windows, WebAssembly, and Raspberry Pi.
 |  2A  | FLOOR $x          | Round $x to previous whole number.
 |  2B  | RANDOM $a         | Put random number in $a.
 | ==== | ================= | I/O COMMANDS ============================
-|  30  | DISPLAY $r        | Print content of register $r
-|  31  | ACCEPT $a         |
-|  32  | EXEC $ta          |
-|  33  | READ $ta $tz      |
-|  34  | WRITE $ta $tb     |
-|  35  | APPEND $ta $tb    |
+|  30  | DISPLAY $x        | Print content of register $x
+|  31  | ACCEPT $x         |
+|  32  | EXEC @x @a        |
+|  33  | READ @x @a        |
+|  34  | WRITE @x @a       |
+|  35  | APPEND @x @a      |
 | ==== | ================  | TEXT OPERATIONS ========================
-|  40  | LEN $tx $a        | Get length of string in $tx.
-|  41  | JOIN $tx $ty $ta  | Concatenate text in registers into $ta.
-|  42  | GETC n %str $ta   | Get character at position n in %str.
-|  43  | GETCC n %str $a   | Get character code at n in %str.
-|  44  | PUTC $tr n        | Put ascii character with code n into $tr.
+|  40  | LEN @x $a         | Get length of string in @x.
+|  41  | JOIN @x @y @a     | Concatenate text in registers into @a.
+|  42  | GETC n @str @a    | Get character at position n in @str.
+|  43  | GETCC n @str $a   | Get character code at n in @str.
+|  44  | PUTC @a n         | Put ascii character with code n into @a.
