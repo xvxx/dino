@@ -113,12 +113,22 @@ sub-procedure cpu.run
             end if
         else if $CODES:"SET" is equal to cpu.code then
             add 1 and cpu.pc in cpu.pc
-            store vm.code:cpu.pc in cpu.i
+            store vm.code:cpu.pc in cpu.x
             add 1 and cpu.pc in cpu.pc
-            if cpu.i is greater than or equal to $OFFSET.TEXT then
-                store vm.code:cpu.pc in vm.text:cpu.i
+            store vm.code:cpu.pc in cpu.y
+
+            if cpu.y is greater than or equal to $OFFSET.TEXT then
+                if cpu.x is greater than or equal to $OFFSET.TEXT then
+                    store vm.text:cpu.y in vm.text:cpu.x
+                else
+                    store vm.text:cpu.y in vm.reg:cpu.x
+                end if
             else
-                store vm.code:cpu.pc in vm.reg:cpu.i
+                if cpu.x is greater than or equal to $OFFSET.TEXT then
+                    store vm.reg:cpu.y in vm.text:cpu.x
+                else
+                    store vm.reg:cpu.y in vm.reg:cpu.x
+                end if
             end if
 
         # --- ARITHMETIC ---------------------------------------------

@@ -47,7 +47,7 @@ store 7 in asm.addresses:"$PC"
 
 store $OFFSET.VARS in asm.vars.len
 store $OFFSET.TVAR in asm.tvars.next
-store $OFFSET.TEXT in c.text.len
+store $OFFSET.TLIT in c.text.len
 
 #  IN: asm.token
 # OUT: asm.token.label?
@@ -84,8 +84,8 @@ sub-procedure asm.token.to-address
     if asm.char is equal to "\"" then
         # text literal
         store asm.token in c.text:c.text.len
-        add 1 and c.text.len in c.text.len
         store c.text.len in asm.address
+        add 1 and c.text.len in c.text.len
     else if asm.char is equal to "$" then
         # register
         store asm.addresses:asm.token in asm.address
@@ -298,7 +298,7 @@ sub-procedure asm.to-dinocode
 
     # assemble text
     store "" in asm.segment.text
-    store $OFFSET.TEXT in asm.x
+    store $OFFSET.TLIT in asm.x
     while asm.x is less than c.text.len do
         in asm.segment.text join asm.segment.text c.text:asm.x " "
         add 1 and asm.x in asm.x

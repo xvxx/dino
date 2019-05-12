@@ -26,7 +26,7 @@ sub-procedure dis.print
                 add 1 and dis.i in dis.i
                 display "\e[35m"
                 store vm.code:dis.i in dis.opcode
-                if dis.opcode is greater than or equal to $OFFSET.TEXT then
+                if dis.opcode is greater than or equal to $OFFSET.TLIT then
                     display "\"" vm.text:dis.opcode "\""
                 else
                     display dis.opcode
