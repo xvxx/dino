@@ -249,8 +249,12 @@ sub-procedure cpu.run
             store ERRORCODE in vm.reg:$E
             store ERRORTEXT in vm.text:@E
         else if $CODES:"WRITE" is equal to cpu.code then
-            in cpu.error join "unimplemented:" "WRITE"
-            call cpu.error
+            add 1 and cpu.pc in cpu.pc
+            store vm.text:vm.code:cpu.pc in cpu.t
+            add 1 and cpu.pc in cpu.pc
+            write vm.text:vm.code:cpu.pc to file cpu.t
+            store ERRORCODE in vm.reg:$E
+            store ERRORTEXT in vm.text:@E
         else if $CODES:"APPEND" is equal to cpu.code then
             in cpu.error join "unimplemented:" "APPEND"
             call cpu.error
