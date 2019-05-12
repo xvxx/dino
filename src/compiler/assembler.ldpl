@@ -18,7 +18,7 @@ asm.addresses     is number vector
 asm.vars          is number vector
 asm.vars.len      is number
 asm.tvars         is number vector
-asm.tvars.len     is number
+asm.tvars.next    is number
 
 asm.segment.head  is text
 asm.segment.code  is text
@@ -46,6 +46,8 @@ store 6 in asm.addresses:"$SP"
 store 7 in asm.addresses:"$PC"
 
 store $OFFSET.VARS in asm.vars.len
+store $OFFSET.TVAR in asm.tvars.next
+store $OFFSET.TEXT in c.text.len
 
 #  IN: asm.token
 # OUT: asm.token.label?
@@ -80,18 +82,21 @@ end sub-procedure
 sub-procedure asm.token.to-address
     get character at 0 from asm.token in asm.char
     if asm.char is equal to "\"" then
-        # text literal
-        add $OFFSET.TVAR and c.text.len in asm.address
+        # text literal - first store it in text section
         store asm.token in c.text:c.text.len
         add 1 and c.text.len in c.text.len
+        # then store in memory
+        store asm.token in asm.tvars:asm.tvars.next
+        store asm.tvars.next in asm.address
+        add 1 and asm.tvars.next in asm.tvars.next
     else if asm.char is equal to "$" then
         # register
         store asm.addresses:asm.token in asm.address
     else if asm.char is equal to "@" then
         # text variable
         if asm.tvars:asm.token is equal to 0 then
-            add 1 and asm.tvars.len in asm.tvars.len
-            store asm.tvars.len in asm.tvars:asm.token
+            store asm.tvars.next in asm.tvars:asm.token
+            add 1 and asm.tvars.next in asm.tvars.next
         end if
         store asm.tvars:asm.token in asm.address
     else if asm.char is equal to "%" then
@@ -296,7 +301,7 @@ sub-procedure asm.to-dinocode
 
     # assemble text
     store "" in asm.segment.text
-    store 0 in asm.x
+    store $OFFSET.TEXT in asm.x
     while asm.x is less than c.text.len do
         in asm.segment.text join asm.segment.text c.text:asm.x " "
         add 1 and asm.x in asm.x
