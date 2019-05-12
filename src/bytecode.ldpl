@@ -47,7 +47,7 @@ PROCEDURE:
 store 1 in $VERSION
 
 # debug mode
-store 1 in $DEBUG
+store 0 in $DEBUG
 
 # memory offsets
 store     5 in $OFFSET.CODE # First instruction
