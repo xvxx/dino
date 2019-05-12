@@ -275,11 +275,22 @@ sub-procedure cpu.run
 
         # --- TEXT OPERATIONS ----------------------------------------
         else if $CODES:"LEN" is equal to cpu.code then
-            in cpu.error join "unimplemented:" "LEN"
-            call cpu.error
+            add 1 and cpu.pc in cpu.pc
+            store vm.text:vm.code:cpu.pc in cpu.t
+            add 1 and cpu.pc in cpu.pc
+            store length of cpu.t in vm.reg:vm.code:cpu.pc
+            if vm.reg:$A is equal to 0 then
+                store 1 in vm.reg:$Z
+            else
+                store 0 in vm.reg:$Z
+            end if
         else if $CODES:"JOIN" is equal to cpu.code then
-            in cpu.error join "unimplemented:" "JOIN"
-            call cpu.error
+            add 1 and cpu.pc in cpu.pc
+            store vm.text:vm.code:cpu.pc in cpu.tx
+            add 1 and cpu.pc in cpu.pc
+            store vm.text:vm.code:cpu.pc in cpu.ty
+            add 1 and cpu.pc in cpu.pc
+            join cpu.tx and cpu.ty in vm.text:vm.code:cpu.pc
         else if $CODES:"GETC" is equal to cpu.code then
             in cpu.error join "unimplemented:" "GETC"
             call cpu.error
