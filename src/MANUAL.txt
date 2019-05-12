@@ -62,30 +62,6 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 * 10 numeric registers (A, X, Y, Z, E, C, I, J, SP, PC)
 * Registers, variables, and constants share a logical address space:
 * Two types: numeric and text. Address determines type.
-
-# ----- MEMORY ADDRESSES ---------------------------------------------
-| 1ST  | LAST | TYPE | DESCRIPTION
-+------+------+---------------------------------------------------
-| 0000 | 000F | NUM  | Registers
-| 0010 | 2FFF | NUM  | Variables
-| 3000 | FFFF | TEXT | Variables
-
-# --- REGISTERS ------------------------------------------------------
-| NUM  | NAME | DESCRIPTION
-+------+------+------------------------------------------------
-| 0000 | $A   | Accumulator
-| 0001 | $X   | Parameter
-| 0002 | $Y   | Parameter
-| 0003 | $Z   | $a = 0?
-| 0004 | $E   | Non-zero error code
-| 0005 | $C   | Carry
-| 0006 | $I   | Incrementor
-| 0007 | $T   | Temporary value
-| 0008 | $SP  | Stack pointer
-| 0009 | $PC  | Program counter
-| .... |      | Reserved
-| 000F |      | Reserved
-
 --- CENTRAL PROCESSING UNIT ------------------------------------------
 
 * Instructions are 1-4 words: One opcode and 0-3 operands.
@@ -175,6 +151,32 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
       * [ ] PUTC
 
 === REFERENCE ========================================================
+
+# ----- MEMORY ADDRESSES ---------------------------------------------
+| 1ST  | LAST | TYPE | DESCRIPTION
++------+------+---------------------------------------------------
+| 0000 | 000F | NUM  | Registers ($x, $y, $a, $pc)
+| 0010 | 2FFF | NUM  | Variables (%count, %item-size)
+| 3000 | FFFF | TEXT | Variables (@name, @ErrorMessage)
+
+# --- REGISTERS ------------------------------------------------------
+| NUM  | NAME | DESCRIPTION
++------+------+------------------------------------------------
+| 0000 | $A   | Accumulator
+| 0001 | $X   | Parameter
+| 0002 | $Y   | Parameter
+| 0003 | $Z   | $a = 0?
+| 0004 | $E   | Non-zero error code
+| 0005 | $C   | Carry
+| 0006 | $I   | Incrementor
+| 0007 | $T   | Temporary value
+| 0008 | $SP  | Stack pointer
+| 0009 | $PC  | Program counter
+| .... |      | Reserved
+| 000F |      | Reserved
+| 3000 | @A   | Reserved
+| 3000 | @X   | Reserved
+| 3000 | @Y   | Reserved
 
 # --- BYTECODE FORMAT ------------------------------------------------
 | BYTE | DATA | DESCRIPTION
