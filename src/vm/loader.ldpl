@@ -25,7 +25,6 @@ sub-procedure loader.run
     store 0 in loader.i
     store 0 in loader.string?
     store 0 in vm.code.len
-    store $OFFSET.TEXT in vm.text.len
     store "" in loader.token
     while loader.i is less than loader.len do
         store loader.char in loader.prev

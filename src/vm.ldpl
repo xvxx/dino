@@ -13,10 +13,14 @@ vm.reg         is number vector
 vm.code        is number vector
 vm.code.len    is number
 
-# text registers, constants, and variables share space
+# text literals
 vm.text        is text vector
 vm.text.len    is number
 
+# text variables
+vm.tvar        is text vector
+vm.tvar.len    is number
+
 PROCEDURE:
-# text variable counter starts after text registers
-subtract $OFFSET.TEXT from $OFFSET.TVAR in vm.text.len
+store $OFFSET.TEXT in vm.text.len
+store $OFFSET.TVAR in vm.tvar.len
