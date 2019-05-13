@@ -276,6 +276,8 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 |  10  | STORE %var $r     | Store value of register r in variable var.
 |  11  | SET $r 314        | Set $r to literal number value.
 |  12  | FETCH $r $x       | Set $r to value of memory at address in $x.
+|  13  | PUSH $x           | Push $x onto the stack.
+|  14  | POP $a            | Pop off the stack into $a.
 | ==== | ================= | ARITHMETIC ==============================
 |  21  | GT $x $y $a       | Set $a=1 if $x > $y
 |  20  | EQ $x $y $a       | Set $a=1 if $x == $y

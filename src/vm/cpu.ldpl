@@ -6,7 +6,6 @@ cpu.code         is number
 cpu.address      is number
 
 cpu.stack        is number vector
-cpu.sp           is number
 cpu.pc           is number
 
 # Temp vars - not actual registers. They're in vm.reg
@@ -76,12 +75,12 @@ sub-procedure cpu.run
             end if
         else if $CODES:"CALL" is equal to cpu.code then
             add 1 and cpu.pc in cpu.pc
-            add 1 and cpu.pc in cpu.stack:cpu.sp
-            add 1 and cpu.sp in cpu.sp
+            add 1 and cpu.pc in cpu.stack:vm.reg:$sp
+            add 1 and vm.reg:$sp in vm.reg:$sp
             add vm.code:cpu.pc and cpu.pc in cpu.pc
         else if $CODES:"RETURN" is equal to cpu.code then
-            subtract 1 from cpu.sp in cpu.sp
-            subtract 1 from cpu.stack:cpu.sp in cpu.pc
+            subtract 1 from vm.reg:$sp in vm.reg:$sp
+            subtract 1 from cpu.stack:vm.reg:$sp in cpu.pc
         else if $CODES:"EXIT" is equal to cpu.code then
             exit
         else if $CODES:"WAIT" is equal to cpu.code then
@@ -132,6 +131,22 @@ sub-procedure cpu.run
                 else
                     store vm.text:cpu.y in vm.text:cpu.x
                 end if
+            end if
+        else if $CODES:"PUSH" is equal to cpu.code then
+            incr cpu.pc
+            store vm.code:cpu.pc in cpu.stack:vm.reg:$sp
+            incr vm.reg:$sp
+
+        else if $CODES:"POP" is equal to cpu.code then
+            incr cpu.pc
+            if vm.reg:$sp is greater than 0 then
+                decr vm.reg:$sp
+                store cpu.stack:vm.reg:$sp in vm.reg:vm.code:cpu.pc
+            else
+                store 0 in vm.reg:vm.code:cpu.pc
+                store 0 in vm.reg:$z
+                store 1 in vm.reg:$e
+                store "can't pop empty stack" in vm.text:@e
             end if
 
         # --- ARITHMETIC ---------------------------------------------
