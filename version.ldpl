@@ -1,0 +1,4 @@
+DATA:
+$DINO.VERSION is text
+PROCEDURE:
+store "dev" in $DINO.VERSION

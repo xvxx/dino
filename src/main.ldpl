@@ -19,13 +19,19 @@
 # The `dino` command line program.
 
 DATA:
-main.i    is number
-main.x    is number
-main.l    is number
-main.char is text
-main.ext  is text
+main.i       is number
+main.x       is number
+main.l       is number
+main.char    is text
+main.ext     is text
 
 PROCEDURE:
+# --- DISPLAY VERSION ------------------------------------------------
+# $ dino version
+sub-procedure main.version
+    display "dino version " $DINO.VERSION crlf
+end sub-procedure
+
 # --- DISPLAY HELP ---------------------------------------------------
 # $ dino help
 sub-procedure main.help
@@ -166,6 +172,10 @@ sub-procedure main
         call main.run
     else if argv:0 is equal to "dis" then
         call main.bytecode-to-asm
+    else if argv:0 is equal to "-v" then
+        call main.version
+    else if argv:0 is equal to "version" then
+        call main.version
     else
         call main.help
     end if
