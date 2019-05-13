@@ -17,6 +17,44 @@ used to quickly prototype ideas, perform system tasks, or compose
 programs in an interactive fashion using a REPL. Dino can also be used
 to run LDPL programs on systems which lack a C++11 compiler.
 
+=== GETTING STARTED ==================================================
+
+You must have the official LDPL compiler installed in your $PATH:
+
+   https://www.ldpl-lang.org/
+
+Once that's done, clone Dino:
+
+   git clone https://github.com/dvkt/dino
+
+And build it:
+
+   cd dino
+   make dino
+
+You should see a "File(s) compiled successfully." message if
+everything worked.
+
+Now you can explore Dino:
+
+   $ dino -h
+
+   Usage: $ dino [command] [options...]
+
+   Commands:
+      run     execute .ldpl, .dino, or .dinocode file
+      asm     compile .ldpl file to .dino assembly
+      bytes   compile .ldpl or .dino file to .dinocode bytecode
+      dis     disassemble .dinocode file to .dino assembly
+      help    print help screen
+
+   Examples:
+      $ dino spark.ldpl 1 3 7 12 22 31  # run file with args
+      $ dino bytes gild.ldpl            # print bytecode
+      $ dino asm spacemines.ldpl        # print assembly code
+
+=== OVERVIEW =========================================================
+
 Internally, Dino is organized into three parts: compiler, virtual
 machine, and tooling, with the `dino` command line program serving as
 the primary means of interacting with the suite.
@@ -62,6 +100,7 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 * 10 numeric registers (A, X, Y, Z, E, C, I, J, SP, PC)
 * Registers, variables, and constants share a logical address space:
 * Two types: numeric and text. Address determines type.
+
 --- CENTRAL PROCESSING UNIT ------------------------------------------
 
 * Instructions are 1-4 words: One opcode and 0-3 operands.
