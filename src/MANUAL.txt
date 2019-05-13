@@ -193,8 +193,8 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
       * [x] PUTC
       * [x] PUSH
       * [x] POP
-      * [ ] INCR
-      * [ ] DECR
+      * [x] INCR
+      * [x] DECR
 
 === REFERENCE ========================================================
 
