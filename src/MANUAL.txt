@@ -84,6 +84,9 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 2. We are not considering performance at this time, but rather seeking
    to educate ourselves by creating this friendly dino vm.
 
+3. The bytecode format, version number, and set of CPU instructions
+   are going to change a lot while this is still in development.
+
 === TECHNNICAL SPECIFICATIONS ========================================
 
 * 32 bit words
@@ -102,17 +105,18 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 +---+-----------+-----------------------------------------------------
 |   | ========= | COMPILER ===========================================
 | X | Lexer     | Mostly Working
-|   | Parser    | Planning
-|   | Generator | Planning
+| > | Parser    | Design
+|   | Generator | 
 | X | Assembler | Mostly Working
 |   | ========= | VIRTUAL MACHINE =====================================
 | X | CPU       | Mostly Working
 | X | Memory    | Mostly Working
 | = | ========= | TOOLING =============================================
-|   | REPL      | Planning
-|   | Debugger  | Planning
-|   | CLI       | Basics
+|   | REPL      | 
+|   | Debugger  | 
+| > | CLI       | Basics
 | X | dis       | Working, basic version
+| X | vscode    | Syntax highlighting. No Tasks.
 
 === TODO =============================================================
 
@@ -141,9 +145,12 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
    * [ ] save bytecode to file
 * [x] bytecode -> assembly $ dino dis file.dinocode
    * [x] load bytecode from file
-* [ ] VM
+* [ ] RAM 
+   * [ ] vectors?
+* [ ] CPU
    * [x] load bytecode from file
    * [x] run bytecode
+   * [ ] vectors?
    * [x] Instructions:
       * [x] JUMP
       * [x] JIF
