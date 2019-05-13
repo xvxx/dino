@@ -274,7 +274,8 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 |  07  | WAIT $r           | Pause for milliseconds in register.
 | ==== | ================= | MEMORY COMMANDS =========================
 |  10  | STORE %var $r     | Store value of register r in variable var.
-|  11  | SET $r 3.14       | Set $r to literal number value.
+|  11  | SET $r 314        | Set $r to literal number value.
+|  12  | FETCH $r $x       | Set $r to value of memory at address in $x.
 | ==== | ================= | ARITHMETIC ==============================
 |  21  | GT $x $y $a       | Set $a=1 if $x > $y
 |  20  | EQ $x $y $a       | Set $a=1 if $x == $y

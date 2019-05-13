@@ -134,6 +134,11 @@ store 17 in $CODES:$opname
 store 2 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
 
+store "FETCH" in $opname
+store 18 in $CODES:$opname
+store 2 in $SIZES:$CODES:$opname
+store $opname in $NAMES:$CODES:$opname
+
 # === ARITHMETIC =====================================================
 store "EQ" in $opname
 store 32 in $CODES:$opname

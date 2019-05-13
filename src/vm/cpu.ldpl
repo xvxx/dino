@@ -112,19 +112,25 @@ sub-procedure cpu.run
             add 1 and cpu.pc in cpu.pc
             store vm.code:cpu.pc in cpu.x
             add 1 and cpu.pc in cpu.pc
-            store vm.code:cpu.pc in cpu.y
+            store vm.code:cpu.pc in vm.reg:cpu.x
+        else if $CODES:"FETCH" is equal to cpu.code then
+            add 1 and cpu.pc in cpu.pc
+            store vm.code:cpu.pc in cpu.x  # dest
+            add 1 and cpu.pc in cpu.pc
+            store vm.code:cpu.pc in cpu.y  # src
+            store vm.reg:cpu.y in cpu.y    # get address
 
-            if cpu.y is greater than or equal to $OFFSET.TEXT then
-                if cpu.x is greater than or equal to $OFFSET.TEXT then
-                    store vm.text:cpu.y in vm.text:cpu.x
+            if cpu.y is less than $OFFSET.TEXT then
+                if cpu.x is less than $OFFSET.TEXT then
+                    store vm.reg:cpu.y in vm.reg:cpu.x
                 else
-                    store vm.text:cpu.y in vm.reg:cpu.x
+                    store vm.reg:cpu.y in vm.text:cpu.x
                 end if
             else
-                if cpu.x is greater than or equal to $OFFSET.TEXT then
-                    store cpu.y in vm.text:cpu.x
+                if cpu.x is less than $OFFSET.TEXT then
+                    store vm.text:cpu.y in vm.reg:cpu.x
                 else
-                    store cpu.y in vm.reg:cpu.x
+                    store vm.text:cpu.y in vm.text:cpu.x
                 end if
             end if
 
