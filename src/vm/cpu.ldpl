@@ -236,6 +236,22 @@ sub-procedure cpu.run
         else if $CODES:"RANDOM" is equal to cpu.code then
             add 1 and cpu.pc in cpu.pc
             store random in vm.reg:vm.code:cpu.pc
+        else if $CODES:"INCR" is equal to cpu.code then
+            incr cpu.pc
+            incr vm.reg:vm.code:cpu.pc
+            if vm.reg:vm.code:cpu.pc is equal to 0 then
+                store 1 in vm.reg:$z
+            else
+                store 0 in vm.reg:$z
+            end if
+        else if $CODES:"DECR" is equal to cpu.code then
+            incr cpu.pc
+            decr vm.reg:vm.code:cpu.pc
+            if vm.reg:vm.code:cpu.pc is equal to 0 then
+                store 1 in vm.reg:$z
+            else
+                store 0 in vm.reg:$z
+            end if
 
         # --- I/O COMMANDS -------------------------------------------
         else if $CODES:"PRINT" is equal to cpu.code then

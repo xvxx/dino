@@ -216,6 +216,16 @@ store 43 in $CODES:$opname
 store 1 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
 
+store "INCR" in $opname
+store 44 in $CODES:$opname
+store 1 in $SIZES:$CODES:$opname
+store $opname in $NAMES:$CODES:$opname
+
+store "DECR" in $opname
+store 45 in $CODES:$opname
+store 1 in $SIZES:$CODES:$opname
+store $opname in $NAMES:$CODES:$opname
+
 # === I/O COMMANDS ==================================================
 store "PRINT" in $opname
 store 48 in $CODES:$opname
