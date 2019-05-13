@@ -43,6 +43,7 @@ sub-procedure main.help
     display "\t" "bytes" "\t" "compile .ldpl or .dino file to .dinocode bytecode" crlf
     display "\t" "dis  " "\t" "disassemble .dinocode file to .dino assembly" crlf
     display "\t" "lex  " "\t" "lex .ldpl file and print tokens" crlf
+    display "\t" "parse" "\t" "parse .ldpl file and print nodes" crlf
     display "\t" "help " "\t" "print help screen" crlf
 end sub-procedure
 
@@ -67,7 +68,7 @@ sub-procedure main.repl
 end sub-procedure
 
 # --- LEX FILE -------------------------------------------------------
-# $ dino run file.ldpl
+# $ dino lex file.ldpl
 sub-procedure main.lex
     load file argv:1 in lexer.input
     call lexer.run
@@ -79,6 +80,21 @@ sub-procedure main.lex
         if main.i is less than lexer.tokens.len then
             display "\e[0m, "
         end if
+    repeat
+    display "\e[0m"
+end sub-procedure
+
+# --- PARSE FILE -----------------------------------------------------
+# $ dino parse file.ldpl
+sub-procedure main.parse
+    load file argv:1 in lexer.input
+    call lexer.run
+    call parser.run
+    store 0 in main.i
+    display "nodes:\n  "
+    while main.i is less than c.nodes.len do
+        display "#<node " main.i "> " c.nodes:main.i crlf
+        incr main.i
     repeat
     display "\e[0m"
 end sub-procedure
@@ -192,6 +208,8 @@ sub-procedure main
         call main.bytecode-to-asm
     else if argv:0 is equal to "lex" then
         call main.lex
+    else if argv:0 is equal to "parse" then
+        call main.parse
     else if argv:0 is equal to "-v" then
         call main.version
     else if argv:0 is equal to "version" then

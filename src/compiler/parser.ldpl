@@ -1,0 +1,61 @@
+# === PARSER =========================================================
+# The parser turns a text vector of tokens into DATA and CODE nodes. 
+DATA:
+parser.i is number
+parser.x is number
+parser.y is number
+parser.t is text
+
+parser.mode is number # 1=data, 2=code
+parser.token is text
+parser.error is text
+parser.char is text
+parser.comment? is number 
+
+PROCEDURE:
+sub-procedure parser.error
+    display "parser.error: " parser.error crlf
+    exit
+end sub-procedure
+
+sub-procedure parser.run
+    store 0 in parser.i
+    store 0 in parser.mode
+    store 0 in c.nodes.len 
+    while parser.i is less than lexer.tokens.len do
+        store lexer.tokens:parser.i in parser.token
+
+        # ignore comments
+        if parser.comment? is equal to 1 then 
+            if parser.token is equal to tokens.newline then 
+                store 0 in parser.comment?
+            end if 
+            incr parser.i 
+            continue
+        end if
+        
+        get character at 0 from parser.token in parser.char 
+
+        if parser.token is equal to "DATA:" then 
+            store 1 in parser.mode
+        else if parser.token is equal to "PROCEDURE:" then 
+            store 2 in parser.mode
+        else if parser.char is equal to "#" then 
+            # skip until end of line
+            store 1 in parser.comment?
+        else if parser.token is equal to tokens.newline then 
+            # end the line 
+        else if parser.mode is equal to 1 then
+            display "var: " parser.token crlf
+        else if parser.mode is equal to 2 then
+            store parser.token in c.nodes:c.nodes.len
+            incr c.nodes.len
+        else 
+            in parser.error join "unknown parser.mode: " parser.mode
+            in parser.error join parser.error " token: " parser.token
+            call parser.error
+        end if
+        
+        incr parser.i
+    repeat
+end sub-procedure
