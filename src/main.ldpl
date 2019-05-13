@@ -29,7 +29,7 @@ PROCEDURE:
 # --- DISPLAY VERSION ------------------------------------------------
 # $ dino version
 sub-procedure main.version
-    display "dino version " $DINO.VERSION crlf
+    display "\e[1;32m🦖 Dino \e[33mv" $DINO.VERSION "\e[0;1mbuilt \e[0m" $DINO.BUILT crlf
 end sub-procedure
 
 # --- DISPLAY HELP ---------------------------------------------------

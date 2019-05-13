@@ -13,13 +13,15 @@ test: dino
 define VERSIONLDPL
 DATA:
 $$DINO.VERSION is text
+$$DINO.BUILT   is text
 PROCEDURE:
 store "<v>" in $$DINO.VERSION
+store "<b>" in $$DINO.BUILT
 endef
 export VERSIONLDPL
 
 version:
-	echo "$$VERSIONLDPL" | sed "s/<v>/$(shell git rev-parse --short HEAD | tr -d '\n')/g" > src/version.ldpl
+	echo "$$VERSIONLDPL" | sed "s/<v>/$(shell git rev-parse --short HEAD | tr -d '\n')/g" | sed "s/<b>/$(shell date +%Y-%m-%d | tr -d '\n')/g" > src/version.ldpl
 
 clean:
 	rm -f dino
