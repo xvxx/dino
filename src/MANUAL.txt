@@ -191,8 +191,10 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
       * [x] GETC
       * [x] GETCC
       * [x] PUTC
-      * [ ] stack push
-      * [ ] stack pop
+      * [x] PUSH
+      * [x] POP
+      * [ ] INCR
+      * [ ] DECR
 
 === REFERENCE ========================================================
 
@@ -291,6 +293,8 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 |  29  | CEIL $x           | Round $x to next whole number.
 |  2A  | FLOOR $x          | Round $x to previous whole number.
 |  2B  | RANDOM $a         | Put random number in $a.
+|  2C  | INCR $x           | Add 1 to $x.
+|  2D  | DECR $x           | Subtract 1 from $x.
 | ==== | ================= | I/O COMMANDS ============================
 |  30  | PRINT $x          | Print content of register $x
 |  31  | PRINL $x          | Print content of register $x and newline.
