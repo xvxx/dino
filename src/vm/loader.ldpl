@@ -13,6 +13,7 @@ loader.char     is text
 loader.prev     is text
 loader.token    is text
 loader.string?  is number
+loader.chars    is text vector
 
 PROCEDURE:
 #  IN: loader.input
@@ -25,14 +26,16 @@ sub-procedure loader.run
     store 0 in loader.string?
     store 0 in vm.code.len
     store "" in loader.token
+    split loader.input by "" in loader.chars
     while loader.i is less than loader.len do
         store loader.char in loader.prev
-        get character at loader.i from loader.input in loader.char
+        store loader.chars:loader.i in loader.char
 
         if loader.string? is equal to 1 then
             add 1 and loader.i in loader.i
             if loader.char is equal to "\\" then
                 get character at loader.i from loader.input in loader.char
+                store loader.chars:loader.i in loader.char
                 if loader.char is equal to "n" then
                     join loader.token and "\n" in loader.token
                 else if loader.char is equal to "t" then

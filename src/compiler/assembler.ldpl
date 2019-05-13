@@ -15,6 +15,7 @@ asm.label         is text
 asm.address       is number
 asm.pc            is number  # program counter
 asm.addresses     is number vector
+asm.chars         is text vector # character cache for lexing asm
 
 asm.vars          is number vector
 asm.vars.len      is number
@@ -234,10 +235,11 @@ sub-procedure c.input.to-tokens
     store "" in asm.char
     store "" in asm.token
     store "" in asm.prev
+    split c.asm by "" in asm.chars
 
     while asm.pc is less than asm.len do
         store asm.char in asm.prev
-        get character at asm.pc from c.asm in asm.char
+        store asm.chars:asm.pc in asm.char
 
         if asm.string? is equal to 1 then
             if asm.char is equal to "\"" then
