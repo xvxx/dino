@@ -1,3 +1,4 @@
+
                 *  *__* _*  *  * _*  *__*_ *__*  *
                 * |   \(_)_ _  __\ \ / /  \/  |  *
                 * | |) | | ' \/ _ \ V /| |\/| |  *
@@ -7,15 +8,16 @@
                            An LDPL VM
                            Written in
                               LDPL
+                               🦖
 
 === INTRODUCTION =====================================================
 
 Dino is an interpreter for the LDPL programming language, written in
 LDPL. Because LDPL is a compiled language, Dino's goal is to provide a
-lightweight, scriptable version of the language runtime that can be
-used to quickly prototype ideas, perform system tasks, or compose
-programs in an interactive fashion using a REPL. Dino can also be used
-to run LDPL programs on systems which lack a C++11 compiler.
+lightweight, scriptable version of the language that can be used to
+quickly prototype ideas, perform system tasks, or compose programs in
+an interactive fashion using a REPL. Dino can also be used to run LDPL
+programs on systems which lack a C++11 compiler.
 
 === GETTING STARTED ==================================================
 
@@ -35,7 +37,16 @@ And build it:
 You should see a "File(s) compiled successfully." message if
 everything worked.
 
-Now you can explore Dino:
+For extra protection, run the official ldpltests:
+
+   make test
+
+Once again, you should see a "success" message if everything is
+working properly. If not, please kindly report an issue at this URL:
+
+   https://github.com/dvkt/dino/issues
+
+Now then, we can start to properly explore Dino:
 
    $ dino -h
 
@@ -82,7 +93,7 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
    document, assume we mean "word".
 
 2. We are not considering performance at this time, but rather seeking
-   to educate ourselves by creating this friendly dino vm.
+   to educate ourselves by creating this prehistoric vm.
 
 3. The bytecode format, version number, and set of CPU instructions
    are going to change a lot while this is still in development.
@@ -143,6 +154,13 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
       * [ ] labels?
    * [x] relative jumps
    * [ ] save bytecode to file
+* [ ] REPL
+   * [ ] >> input
+   * [ ] == output
+   * [ ] readline
+   * [ ] history
+   * [ ] multi-lines   
+   * [ ] asm mode
 * [x] bytecode -> assembly $ dino dis file.dinocode
    * [x] load bytecode from file
 * [ ] RAM 
@@ -189,7 +207,7 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
       * [x] INCR
       * [x] DECR
 
-=== REFERENCE ========================================================
+=== APPENDIX =========================================================
 
 # ----- MEMORY ADDRESSES ---------------------------------------------
 | 1ST  | LAST | TYPE | DESCRIPTION
