@@ -42,6 +42,7 @@ sub-procedure main.help
     display "\t" "asm  " "\t" "compile .ldpl file to .dino assembly" crlf
     display "\t" "bytes" "\t" "compile .ldpl or .dino file to .dinocode bytecode" crlf
     display "\t" "dis  " "\t" "disassemble .dinocode file to .dino assembly" crlf
+    display "\t" "lex  " "\t" "lex .ldpl file and print tokens" crlf
     display "\t" "help " "\t" "print help screen" crlf
 end sub-procedure
 
@@ -63,6 +64,23 @@ end sub-procedure
 # $ dino run file.ldpl
 # The REPL reads, evaluates, and prints LDPL source code in a loop.
 sub-procedure main.repl
+end sub-procedure
+
+# --- LEX FILE -------------------------------------------------------
+# $ dino run file.ldpl
+sub-procedure main.lex
+    load file argv:1 in lexer.input
+    call lexer.run
+    store 0 in main.i
+    display "tokens:\n  "
+    while main.i is less than lexer.tokens.len do
+        display "\e[36m<\e[33m" lexer.tokens:main.i "\e[36m>"
+        incr main.i
+        if main.i is less than lexer.tokens.len then
+            display "\e[0m, "
+        end if
+    repeat
+    display "\e[0m"
 end sub-procedure
 
 # --- RUN FILE -------------------------------------------------------
@@ -172,6 +190,8 @@ sub-procedure main
         call main.run
     else if argv:0 is equal to "dis" then
         call main.bytecode-to-asm
+    else if argv:0 is equal to "lex" then
+        call main.lex
     else if argv:0 is equal to "-v" then
         call main.version
     else if argv:0 is equal to "version" then

@@ -39,13 +39,14 @@ Now you can explore Dino:
 
    $ dino -h
 
-   Usage: $ dino [command] [options...]
+   Usage: $ dino [command] [file]
 
    Commands:
       run     execute .ldpl, .dino, or .dinocode file
       asm     compile .ldpl file to .dino assembly
       bytes   compile .ldpl or .dino file to .dinocode bytecode
       dis     disassemble .dinocode file to .dino assembly
+      lex     lex .ldpl file and print tokens
       help    print help screen
       version print version number
 
