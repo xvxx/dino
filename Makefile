@@ -21,8 +21,7 @@ endef
 export VERSIONLDPL
 
 version:
-	echo "$$VERSIONLDPL" | sed "s/<v>/$(shell git rev-parse --short HEAD | tr -d '\n')/g" | sed "s/<b>/$(shell date +%Y-%m-%d | tr -d '\n')/g" > src/version.ldpl
+	@echo "$$VERSIONLDPL" | sed "s/<v>/$(shell git rev-parse --short HEAD | tr -d '\n')/g" | sed "s/<b>/$(shell date +%Y-%m-%d | tr -d '\n')/g" > src/version.ldpl
 
 clean:
 	rm -f dino
-	rm -f src/version.ldpl
