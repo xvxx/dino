@@ -74,13 +74,13 @@ sub-procedure lexer.run
 
             join lexer.token and lexer.char in lexer.token
         else
-            # # don't upcase text
-            # if lexer.text? is equal to 0 then
-            #     # upcase letter
-            #     store lexer.char in upcase.letter
-            #     call upcase-letter
-            #     store upcase.letter in lexer.char
-            # end if
+            # don't upcase text
+            if lexer.text? is equal to 0 then
+                # upcase letter
+                store lexer.char in upcase.letter
+                call upcase-letter
+                store upcase.letter in lexer.char
+            end if
 
             # store char in current token
             join lexer.token and lexer.char in lexer.token
