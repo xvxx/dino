@@ -1,0 +1,25 @@
+{
+    "name": "dinoasm",
+    "displayName": "DinoASM",
+    "description": "Support for Dino assembly",
+    "version": "0.0.1",
+    "engines": {
+        "vscode": "^1.33.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "contributes": {
+        "languages": [{
+            "id": "dinoasm",
+            "aliases": ["DinoASM", "dinoasm"],
+            "extensions": [".dino",".dasm",".dinoasm"],
+            "configuration": "./language-configuration.json"
+        }],
+        "grammars": [{
+            "language": "dinoasm",
+            "scopeName": "source.dinoasm",
+            "path": "./syntaxes/dinoasm.tmLanguage.json"
+        }]
+    }
+}

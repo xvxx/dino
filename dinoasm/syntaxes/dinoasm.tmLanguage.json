@@ -1,0 +1,82 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "DinoASM",
+	"patterns": [
+		{
+			"include": "#strings"
+		},
+		{
+			"include": "#comments"
+		},
+		{
+			"include": "#keywords"
+		},
+		{
+			"include": "#variables"
+		},
+		{
+			"include": "#labels"
+		},
+		{
+			"include": "#numbers"
+		}
+	],
+	"repository": {
+		"keywords": {
+			"patterns": [{
+				"name": "keyword.control.dinoasm",
+				"match": "(?<=^|[\\s:])((?i)JUMP|JIF|JIT|CALL|RETURN|EXIT|WAIT|STORE|SET|EQ|GT|LT|ADD|SUB|MUL|DIV|MOD|ABS|CEIL|FLOOR|RANDOM|PRINT|PRINL|ACCEPT|EXEC|READ|WRITE|APPEND|LEN|JOIN|GETC|GETCC|PUTC|PUSH|POP|INCR|DECR)(?=\\s|$)"
+			}]
+		},
+		"variables": {
+			"patterns": [
+				{
+					"match": "(?<=^|[\\s\\b,])((%|\\$)\\w+)(?=\\s|,|$)",
+					"name": "entity.name.function.dinoasm"
+				}
+			]
+		},
+		"labels": {
+			"patterns": [
+				{
+					"match": "(?<=^|\\s)((?i)[a-z][a-z0-9_]*:?)(?=\\s|$)",
+					"name": "label.dinoasm"
+				}
+			]
+		},
+		"numbers": {
+			"patterns": [
+				{
+					"match": "(?<=^|[\\s:])(-?\\d\\d*(\\.\\d\\d*)?)(?=\\s|$)",
+					"name": "constant.numeric.double.dinoasm"
+				}
+			]
+		},
+		"strings": {
+			"name": "string.quoted.double.dinoasm",
+			"begin": "\"",
+			"end": "\"",
+			"patterns": [
+				{
+					"name": "constant.character.escape.dinoasm",
+					"match": "\\\\."
+				}
+			]
+		},
+		"comments": {
+			"patterns": [
+				{
+					"begin": ";",
+					"beginCaptures": {
+						"0": {
+							"name": "punctuation.definition.comment.dinoasm"
+						}
+					},
+					"end": "$",
+					"name": "comment.line.dinoasm"
+				}
+			]
+		}
+	},
+	"scopeName": "source.dinoasm"
+}
