@@ -1,0 +1,92 @@
+# === LEXER ==========================================================
+# The lexer turns source code into a text vector of tokens.
+DATA:
+# IN:
+lexer.input          is text         # source code
+
+# OUT:
+lexer.tokens         is text vector  # this line's tokens
+lexer.tokens.len     is number
+lexer.lineno         is number       # current line number
+
+# LOCAL:
+lexer.newline        is text         # newline token
+lexer.input.len      is number       # input length
+lexer.ci             is number       # current character index
+lexer.char           is text         # current character
+lexer.prev           is text         # previous character
+lexer.token          is text         # current token
+lexer.text?          is number       # boolean
+lexer.tokens.i       is number       # for clearing the list
+
+PROCEDURE:
+store ":newline:" in lexer.newline
+
+#  IN: lexer.input
+# OUT: lexer.tokens(.len)
+sub-procedure lexer.run
+    store length of lexer.input in lexer.input.len
+    store 0 in lexer.ci
+    store 0 in lexer.lineno
+    store 0 in lexer.tokens.len
+    store "" in lexer.char
+    store "" in lexer.token
+    while lexer.ci is less than lexer.input.len do
+        store lexer.char in lexer.prev
+        get character at lexer.ci from lexer.input in lexer.char
+
+        if lexer.char is equal to "\n" then
+            # first line is line 1
+            add 1 and lexer.lineno in lexer.lineno
+
+            # store current token in tokens vector
+            if lexer.token is not equal to "" then
+                store lexer.token in lexer.tokens:lexer.tokens.len
+                add 1 and lexer.tokens.len in lexer.tokens.len
+                store "" in lexer.token
+            end if
+
+            # add newline token
+            store lexer.newline in lexer.tokens:lexer.tokens.len
+            incr lexer.tokens.len
+        else if lexer.char is equal to " " then
+            if lexer.text? is equal to 0 then
+                # store current token in tokens vector
+                if lexer.token is not equal to "" then
+                    store lexer.token in lexer.tokens:lexer.tokens.len
+                    add 1 and lexer.tokens.len in lexer.tokens.len
+                    store "" in lexer.token
+                end if
+            else
+                # store string verbatum
+                join lexer.token and lexer.char in lexer.token
+            end if
+        else if lexer.char is equal to "\"" then
+            if lexer.prev is not equal to "\\" then
+                if lexer.text? is equal to 0 then
+                    # open string
+                    store 1 in lexer.text?
+                else
+                    # close string
+                    store 0 in lexer.text?
+                end if
+            end if
+
+            join lexer.token and lexer.char in lexer.token
+        else
+            # # don't upcase text
+            # if lexer.text? is equal to 0 then
+            #     # upcase letter
+            #     store lexer.char in upcase.letter
+            #     call upcase-letter
+            #     store upcase.letter in lexer.char
+            # end if
+
+            # store char in current token
+            join lexer.token and lexer.char in lexer.token
+        end if
+
+        # increment reader counter
+        add 1 and lexer.ci in lexer.ci
+    repeat
+end sub-procedure
