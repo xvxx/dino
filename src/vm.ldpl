@@ -23,8 +23,6 @@ __vm.x          is number
 __vm.boot       is number
 
 PROCEDURE:
-store $OFFSET.TLIT in vm.text.next
-
 # vm must be booted (initalized) before it can run
 sub-procedure vm.boot
     if __vm.boot is not equal to 0 then

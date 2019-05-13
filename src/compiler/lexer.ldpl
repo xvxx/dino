@@ -9,8 +9,10 @@ lexer.tokens         is text vector  # source code's tokens
 lexer.tokens.len     is number
 lexer.chars          is text vector  # every letter
 
+# TOKENS:
+tokens.newline        is text         # newline token
+
 # LOCAL:
-lexer.newline        is text         # newline token
 lexer.input.len      is number       # input length
 lexer.ci             is number       # current character index
 lexer.char           is text         # current character
@@ -20,7 +22,7 @@ lexer.text?          is number       # are we lexing a string?
 lexer.tokens.i       is number       # for clearing the list
 
 PROCEDURE:
-store ":NL:" in lexer.newline
+store ":NL:" in tokens.newline
 
 #  IN: lexer.input
 # OUT: lexer.tokens(.len)
@@ -44,7 +46,7 @@ sub-procedure lexer.run
             end if
 
             # add newline token
-            store lexer.newline in lexer.tokens:lexer.tokens.len
+            store tokens.newline in lexer.tokens:lexer.tokens.len
             incr lexer.tokens.len
         else if lexer.char is equal to " " then
             if lexer.text? is equal to 0 then
