@@ -16,29 +16,15 @@
 #   @**&   **** ****.****.****#######(
 
 # === DINO ===========================================================
-# The `dino` command line program, given a file of LDPL source code,
-# runs the code.
-#
-# Functions:
-#   $ help
-#   $ repl
-#   $ run file.ldpl
-#   $ run file.dino
-#   $ run file.dinocode
-#   $ asm file.ldpl -> file.dino
-#   $ bytes file.dino -> file.dinocode
-#   $ bytes file.ldpl -> file.dinocode
-#   $ dis file.dinocode -> file.dino
+# The `dino` command line program.
 
 DATA:
-
 main.i    is number
 main.l    is number
 main.char is text
 main.ext  is text
 
 PROCEDURE:
-
 # --- DISPLAY HELP ---------------------------------------------------
 # $ dino help
 sub-procedure main.help
@@ -46,10 +32,9 @@ sub-procedure main.help
     display crlf
     display "Commands:" crlf
     display "\t" "run  " "\t" "execute .ldpl, .dino, or .dinocode file" crlf
-    display "\t" "compile" "\t" "compile .ldpl program to .dinocode" crlf
     display "\t" "asm  " "\t" "compile .ldpl file to .dino assembly" crlf
-    display "\t" "bytes" "\t" "compile .dino file to .dinocode bytecode" crlf
-    display "\t" "dis  " "\t" "decompile .dinocode file to .dino assembly" crlf
+    display "\t" "bytes" "\t" "compile .ldpl or .dino file to .dinocode bytecode" crlf
+    display "\t" "dis  " "\t" "disassemble .dinocode file to .dino assembly" crlf
     display "\t" "help " "\t" "print help screen" crlf
 end sub-procedure
 
@@ -91,6 +76,7 @@ sub-procedure main.run.dinocode
     call cpu.run
 end sub-procedure
 
+# $ dino run file
 sub-procedure main.run
     store 0 in main.i
     store "" in main.ext
