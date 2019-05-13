@@ -1,7 +1,10 @@
 ;; factorial
+    SET %result, 1   ; default
+    STORE %n, @arg0
+    EQ $ac, 0, $a
+    JIF while
     PRINT "🦕 Enter a number: "
     ACCEPT %n
-    SET %result, 1   ; default
 while:
     SET $y, 0
     GT %n, $y, $a
