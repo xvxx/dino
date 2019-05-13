@@ -77,7 +77,7 @@ sub-procedure main.run.dino
     call asm.to-dinocode
     store asm.dinocode in loader.input
     call main.strip-args
-    call vm.init
+    call vm.boot
     call loader.run
     call cpu.run
 end sub-procedure
@@ -90,7 +90,7 @@ sub-procedure main.run.dinocode
         exit
     end if
     call main.strip-args
-    call vm.init
+    call vm.boot
     call loader.run
     call cpu.run
 end sub-procedure

@@ -51,7 +51,7 @@ PROCEDURE:
 # bytecode format version
 store 2 in $VERSION
 
-# debug mode
+# debug mode (does nothing)
 store 0 in $DEBUG
 
 # memory offsets
