@@ -60,12 +60,6 @@ sub-procedure cpu.run
             continue
         end if
 
-        # make sure we know about the opcode
-        if $NAMES:cpu.code is equal to "" then
-            join "BAD OPCODE: " and cpu.code in cpu.error
-            call cpu.error
-        end if
-
         # --- CONTROL FLOW -------------------------------------------
         if $CODES:"JUMP" is equal to cpu.code then
             add 1 and cpu.pc in cpu.pc
@@ -343,8 +337,10 @@ sub-procedure cpu.run
             add 1 and cpu.pc in cpu.pc
             store character cpu.x in vm.text:vm.code:cpu.pc
         else
-            join "UNIMPLEMENTED: " and cpu.code in cpu.error
-            in cpu.error join cpu.error " (" $NAMES:cpu.code ") "
+            join "BAD OPCODE: " and cpu.code in cpu.error
+            if $NAMES:cpu.code is not equal to "" then
+                in cpu.error join cpu.error " (" $NAMES:cpu.code ") "
+            end if
             call cpu.error
         end if
 
