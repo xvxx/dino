@@ -16,10 +16,8 @@ loader.string?  is number
 
 PROCEDURE:
 #  IN: loader.input
-# OUT: vm.code
-#      vm.code.len
-#      vm.text
-#      vm.text.len
+# OUT: vm.code(.len)
+#      vm.text(.next)
 sub-procedure loader.run
     store length of loader.input in loader.len
     store 0 in loader.i
@@ -53,8 +51,8 @@ sub-procedure loader.run
             if loader.char is equal to "\"" then
                 if loader.prev is not equal to "\\" then
                     store 0 in loader.string?
-                    store loader.token in vm.text:vm.text.len
-                    add 1 and vm.text.len in vm.text.len
+                    store loader.token in vm.text:vm.text.next
+                    add 1 and vm.text.next in vm.text.next
                     store "" in loader.token
                     continue
                 end if

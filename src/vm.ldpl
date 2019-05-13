@@ -15,16 +15,14 @@ vm.code.len    is number
 
 # text literals & variables
 vm.text        is text vector
-vm.text.len    is number
-vm.tvar.len    is number
+vm.text.next   is number
 
 # tmp
 __vm.i          is number
 __vm.x          is number
 
 PROCEDURE:
-store $OFFSET.TLIT in vm.text.len
-store $OFFSET.TVAR in vm.tvar.len
+store $OFFSET.TLIT in vm.text.next
 
 # Set command line arguments on boot.
 store ARGC in vm.reg:$AC
