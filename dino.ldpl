@@ -31,12 +31,12 @@ DATA:
 reader.input           is text   # source code
 reader.name            is text   # filename
 
-# OUT:  
+# OUT:
 line.tokens            is text vector  # this line's tokens
 line.tokens.length     is number
 line.number            is number       # current line number
-  
-# LOCAL:  
+
+# LOCAL:
 reader.input.length    is number # input length
 reader.ci              is number # current character index
 reader.char            is text   # current character
@@ -54,9 +54,9 @@ eval.line               is text
 eval.token              is text
 eval.jump-to-end-if     is number # open-if we're jumping in
 eval.jump-to-else       is number # open-if we're jumping in
-eval.open-if            is number # incremented when opening ifs 
+eval.open-if            is number # incremented when opening ifs
 
-# OUT:  
+# OUT:
 eval.state              is number # 1=data, 2=procedure
 eval.token.type         is number #1=n,2=t,3=var,4=?,5=crlf
 eval.token.number       is number
@@ -64,13 +64,13 @@ eval.token.text         is text
 eval.token.variable     is text
 eval.conditional?       is number # 0=f,1=t
 
-# LOCAL:    
+# LOCAL:
 eval.i                  is number
 eval.first              is text   # first char, to check for comments
 eval.token.char         is text
-eval.cond.compare       is text   # eq,ne,lt,gt,lte,gte 
+eval.cond.compare       is text   # eq,ne,lt,gt,lte,gte
 eval.cond.not           is number # 0=false,1=true
-eval.cond.opener        is text   # DO or THEN 
+eval.cond.opener        is text   # DO or THEN
 eval.tmp.a              is number # tmp var
 eval.tmp.b              is number # tmp var
 eval.tmp.c              is number # tmp var
@@ -195,12 +195,12 @@ sub-procedure eval.token-to-value
         store eval.token in eval.token.text
     else
         # check for literal number
-        if eval.token.char is equal to "-" then 
+        if eval.token.char is equal to "-" then
             get character at 1 from eval.token in eval.token.char
-        end if 
-        store eval.token.char in is-digit.in
-        call is-digit
-        if is-digit.out is equal to 1 then
+        end if
+        store eval.token.char in digit?.in
+        call digit?
+        if digit? is equal to 1 then
             store 1 in eval.token.type
             store eval.token in eval.token.number
             return
@@ -226,8 +226,8 @@ end sub-procedure
 #  IN: line.tokens
 #      line.tokens.length
 sub-procedure eval.accept
-    if line.tokens.length is greater than 2 then 
-        call error 
+    if line.tokens.length is greater than 2 then
+        call error
     end if
     store env.types:line.tokens:1 in eval.token.type
     if eval.token.type is equal to 1 then
@@ -237,13 +237,13 @@ sub-procedure eval.accept
     else
         call error
     end if
-    if env.types:line.tokens:1 is equal to 1 then 
-        accept eval.tmp.a 
+    if env.types:line.tokens:1 is equal to 1 then
+        accept eval.tmp.a
         store eval.tmp.a in env.nvalues:line.tokens:1
-    else if env.types:line.tokens:1 is equal to 2 then 
+    else if env.types:line.tokens:1 is equal to 2 then
         accept eval.tmp.x
         store eval.tmp.x in env.tvalues:line.tokens:1
-    else 
+    else
         call error
     end if
 end sub-procedure
@@ -277,22 +277,22 @@ end sub-procedure
 #  IN: line.tokens
 #      line.tokens.length
 sub-procedure eval.add
-    if line.tokens.length is not equal to 6 then 
-        call error 
+    if line.tokens.length is not equal to 6 then
+        call error
     end if
-    if line.tokens:2 is not equal to "AND" then 
-        call error 
+    if line.tokens:2 is not equal to "AND" then
+        call error
     end if
-    if line.tokens:4 is not equal to "IN" then 
-        call error 
-    end if 
+    if line.tokens:4 is not equal to "IN" then
+        call error
+    end if
 
     # eval $1 and $2
     store line.tokens:1 in eval.token
-    call eval.token-to-value 
+    call eval.token-to-value
     store eval.token.number in eval.tmp.a
     store line.tokens:3 in eval.token
-    call eval.token-to-value 
+    call eval.token-to-value
     store eval.token.number in eval.tmp.b
 
     # math
@@ -303,22 +303,22 @@ end sub-procedure
 #  IN: line.tokens
 #      line.tokens.length
 sub-procedure eval.subtract
-    if line.tokens.length is not equal to 6 then 
-        call error 
+    if line.tokens.length is not equal to 6 then
+        call error
     end if
-    if line.tokens:2 is not equal to "FROM" then 
-        call error 
+    if line.tokens:2 is not equal to "FROM" then
+        call error
     end if
-    if line.tokens:4 is not equal to "IN" then 
-        call error 
-    end if 
+    if line.tokens:4 is not equal to "IN" then
+        call error
+    end if
 
     # eval $1 and $2
     store line.tokens:1 in eval.token
-    call eval.token-to-value 
+    call eval.token-to-value
     store eval.token.number in eval.tmp.a
     store line.tokens:3 in eval.token
-    call eval.token-to-value 
+    call eval.token-to-value
     store eval.token.number in eval.tmp.b
 
     # math
@@ -329,22 +329,22 @@ end sub-procedure
 #  IN: line.tokens
 #      line.tokens.length
 sub-procedure eval.multiply
-    if line.tokens.length is not equal to 6 then 
-        call error 
+    if line.tokens.length is not equal to 6 then
+        call error
     end if
-    if line.tokens:2 is not equal to "BY" then 
-        call error 
+    if line.tokens:2 is not equal to "BY" then
+        call error
     end if
-    if line.tokens:4 is not equal to "IN" then 
-        call error 
-    end if 
+    if line.tokens:4 is not equal to "IN" then
+        call error
+    end if
 
     # eval $1 and $2
     store line.tokens:1 in eval.token
-    call eval.token-to-value 
+    call eval.token-to-value
     store eval.token.number in eval.tmp.a
     store line.tokens:3 in eval.token
-    call eval.token-to-value 
+    call eval.token-to-value
     store eval.token.number in eval.tmp.b
 
     # math
@@ -355,22 +355,22 @@ end sub-procedure
 #  IN: line.tokens
 #      line.tokens.length
 sub-procedure eval.divide
-    if line.tokens.length is not equal to 6 then 
-        call error 
+    if line.tokens.length is not equal to 6 then
+        call error
     end if
-    if line.tokens:2 is not equal to "BY" then 
-        call error 
+    if line.tokens:2 is not equal to "BY" then
+        call error
     end if
-    if line.tokens:4 is not equal to "IN" then 
-        call error 
-    end if 
+    if line.tokens:4 is not equal to "IN" then
+        call error
+    end if
 
     # eval $1 and $2
     store line.tokens:1 in eval.token
-    call eval.token-to-value 
+    call eval.token-to-value
     store eval.token.number in eval.tmp.a
     store line.tokens:3 in eval.token
-    call eval.token-to-value 
+    call eval.token-to-value
     store eval.token.number in eval.tmp.b
 
     # math
@@ -381,22 +381,22 @@ end sub-procedure
 #  IN: line.tokens
 #      line.tokens.length
 sub-procedure eval.modulo
-    if line.tokens.length is not equal to 6 then 
-        call error 
+    if line.tokens.length is not equal to 6 then
+        call error
     end if
-    if line.tokens:2 is not equal to "BY" then 
-        call error 
+    if line.tokens:2 is not equal to "BY" then
+        call error
     end if
-    if line.tokens:4 is not equal to "IN" then 
-        call error 
-    end if 
+    if line.tokens:4 is not equal to "IN" then
+        call error
+    end if
 
     # eval $1 and $2
     store line.tokens:1 in eval.token
-    call eval.token-to-value 
+    call eval.token-to-value
     store eval.token.number in eval.tmp.a
     store line.tokens:3 in eval.token
-    call eval.token-to-value 
+    call eval.token-to-value
     store eval.token.number in eval.tmp.b
 
     # math
@@ -411,15 +411,15 @@ end sub-procedure
 sub-procedure eval.conditional
     store 0 in eval.conditional?
 
-    if line.tokens:0 is equal to "IF" then 
+    if line.tokens:0 is equal to "IF" then
         store "THEN" in eval.cond.opener
     else
         store "DO" in eval.cond.opener
     end if
-    
-    if line.tokens:3 is equal to "EQUAL" then 
-        if line.tokens:4 is equal to "TO" then 
-            if line.tokens:6 is equal to eval.cond.opener then 
+
+    if line.tokens:3 is equal to "EQUAL" then
+        if line.tokens:4 is equal to "TO" then
+            if line.tokens:6 is equal to eval.cond.opener then
                 store "eq" in eval.cond.compare
                 store line.tokens:5 in eval.tmp.b
             else
@@ -428,13 +428,13 @@ sub-procedure eval.conditional
         else
             call error
         end if
-    else if line.tokens:3 is equal to "NOT" then 
-        if line.tokens:4 is equal to "EQUAL" then 
-            if line.tokens:5 is equal to "TO" then 
-                if line.tokens:7 is equal to eval.cond.opener then 
+    else if line.tokens:3 is equal to "NOT" then
+        if line.tokens:4 is equal to "EQUAL" then
+            if line.tokens:5 is equal to "TO" then
+                if line.tokens:7 is equal to eval.cond.opener then
                     store "ne" in eval.cond.compare
                     store line.tokens:6 in eval.tmp.b
-                else 
+                else
                     call error
                 end if
             else
@@ -443,25 +443,25 @@ sub-procedure eval.conditional
         else
             call error
         end if
-    else if line.tokens:3 is equal to "GREATER" then 
-        if line.tokens:4 is equal to "THAN" then 
-            if line.tokens:5 is equal to "OR" then 
-                if line.tokens:6 is equal to "EQUAL" then 
-                    if line.tokens:7 is equal to "TO" then 
-                        if line.tokens:9 is equal to eval.cond.opener then 
+    else if line.tokens:3 is equal to "GREATER" then
+        if line.tokens:4 is equal to "THAN" then
+            if line.tokens:5 is equal to "OR" then
+                if line.tokens:6 is equal to "EQUAL" then
+                    if line.tokens:7 is equal to "TO" then
+                        if line.tokens:9 is equal to eval.cond.opener then
                             store "gte" in eval.cond.compare
                             store line.tokens:8 in eval.tmp.b
-                        else 
+                        else
                             call error
                         end if
-                    else 
+                    else
                         call error
                     end if
-                else 
+                else
                     call error
                 end if
             else
-                if line.tokens:6 is equal to eval.cond.opener then 
+                if line.tokens:6 is equal to eval.cond.opener then
                     store "gt" in eval.cond.compare
                     store line.tokens:5 in eval.tmp.b
                 else
@@ -471,25 +471,25 @@ sub-procedure eval.conditional
         else
             call error
         end if
-    else if line.tokens:3 is equal to "LESS" then 
-        if line.tokens:4 is equal to "THAN" then 
-            if line.tokens:5 is equal to "OR" then 
-                if line.tokens:6 is equal to "EQUAL" then 
-                    if line.tokens:7 is equal to "TO" then 
-                        if line.tokens:9 is equal to eval.cond.opener then 
+    else if line.tokens:3 is equal to "LESS" then
+        if line.tokens:4 is equal to "THAN" then
+            if line.tokens:5 is equal to "OR" then
+                if line.tokens:6 is equal to "EQUAL" then
+                    if line.tokens:7 is equal to "TO" then
+                        if line.tokens:9 is equal to eval.cond.opener then
                             store "lte" in eval.cond.compare
                             store line.tokens:8 in eval.tmp.b
-                        else 
+                        else
                             call error
                         end if
-                    else 
+                    else
                         call error
                     end if
-                else 
+                else
                     call error
                 end if
             else
-                if line.tokens:6 is equal to eval.cond.opener then 
+                if line.tokens:6 is equal to eval.cond.opener then
                     store "lt" in eval.cond.compare
                     store line.tokens:5 in eval.tmp.b
                 else
@@ -501,46 +501,46 @@ sub-procedure eval.conditional
         end if
     else
         call error
-    end if 
+    end if
 
-    # eval $a and $b 
+    # eval $a and $b
     store line.tokens:1 in eval.token
     call eval.token-to-value
     store eval.token.number in eval.tmp.a
-    store eval.tmp.b in eval.token 
+    store eval.tmp.b in eval.token
     call eval.token-to-value
     store eval.token.number in eval.tmp.b
     store 0 in eval.tmp.c
 
     # compare $a and $b
-    if eval.cond.compare is equal to "eq" then 
-        if eval.tmp.a is equal to eval.tmp.b then 
+    if eval.cond.compare is equal to "eq" then
+        if eval.tmp.a is equal to eval.tmp.b then
             store 1 in eval.tmp.c
         end if
-    else if eval.cond.compare is equal to "ne" then 
-        if eval.tmp.a is not equal to eval.tmp.b then 
+    else if eval.cond.compare is equal to "ne" then
+        if eval.tmp.a is not equal to eval.tmp.b then
             store 1 in eval.tmp.c
         end if
-    else if eval.cond.compare is equal to "gt" then 
-        if eval.tmp.a is greater than eval.tmp.b then 
+    else if eval.cond.compare is equal to "gt" then
+        if eval.tmp.a is greater than eval.tmp.b then
             store 1 in eval.tmp.c
         end if
-    else if eval.cond.compare is equal to "lt" then 
-        if eval.tmp.a is less than eval.tmp.b then 
+    else if eval.cond.compare is equal to "lt" then
+        if eval.tmp.a is less than eval.tmp.b then
             store 1 in eval.tmp.c
         end if
-    else if eval.cond.compare is equal to "gte" then 
-        if eval.tmp.a is greater than or equal to eval.tmp.b then 
+    else if eval.cond.compare is equal to "gte" then
+        if eval.tmp.a is greater than or equal to eval.tmp.b then
             store 1 in eval.tmp.c
         end if
-    else if eval.cond.compare is equal to "lte" then 
-        if eval.tmp.a is less than or equal to eval.tmp.b then 
+    else if eval.cond.compare is equal to "lte" then
+        if eval.tmp.a is less than or equal to eval.tmp.b then
             store 1 in eval.tmp.c
         end if
     else
         join "Unknown eval.tmp.compare value: " and eval.cond.compare in error.msg
         call error
-    end if 
+    end if
 
     # output
     store eval.tmp.c in eval.conditional?
@@ -556,7 +556,7 @@ sub-procedure eval.if
         call error
     end if
 
-    if line.tokens.length is less than 7 then 
+    if line.tokens.length is less than 7 then
         call error
     end if
 
@@ -565,9 +565,9 @@ sub-procedure eval.if
 
     # check conditional
     call eval.conditional
-    
+
     # jump if false
-    if eval.conditional? is equal to 0 then 
+    if eval.conditional? is equal to 0 then
         store eval.open-if in eval.jump-to-else
     end if
 end sub-procedure
@@ -599,29 +599,29 @@ sub-procedure eval.code-line
         call eval.display
     else if line.tokens:0 is equal to "STORE" then
         call eval.store
-    else if line.tokens:0 is equal to "ADD" then 
+    else if line.tokens:0 is equal to "ADD" then
         call eval.add
-    else if line.tokens:0 is equal to "SUBTRACT" then 
+    else if line.tokens:0 is equal to "SUBTRACT" then
         call eval.subtract
-    else if line.tokens:0 is equal to "MULTIPLY" then 
+    else if line.tokens:0 is equal to "MULTIPLY" then
         call eval.multiply
-    else if line.tokens:0 is equal to "DIVIDE" then 
+    else if line.tokens:0 is equal to "DIVIDE" then
         call eval.divide
-    else if line.tokens:0 is equal to "MODULO" then 
+    else if line.tokens:0 is equal to "MODULO" then
         call eval.modulo
     else if line.tokens:0 is equal to "IF" then
         call eval.if
     else if line.tokens:0 is equal to "ELSE" then
-        if eval.open-if is greater than 0 then 
+        if eval.open-if is greater than 0 then
             store eval.open-if in eval.jump-to-end-if
-        else 
-            call error 
+        else
+            call error
         end if
     else if line.tokens:0 is equal to "END" then
         if line.tokens:1 is equal to "IF" then
             subtract 1 from eval.open-if in eval.open-if
-        else 
-            call error 
+        else
+            call error
         end if
     else
         in error.msg join "Unknown statement: " eval.line
@@ -685,7 +685,7 @@ sub-procedure eval.line
                 end if
                 subtract 1 from eval.open-if in eval.open-if
             end if
-        else if line.tokens:0 is equal to "IF" then 
+        else if line.tokens:0 is equal to "IF" then
             add 1 and eval.open-if in eval.open-if
         end if
         return
@@ -694,19 +694,19 @@ sub-procedure eval.line
     # skip this statement if we're jumping to an ELSE/END IF
     if eval.jump-to-else is greater than 0 then
         if line.tokens:0 is equal to "ELSE" then
-            if eval.open-if is equal to eval.jump-to-else then 
+            if eval.open-if is equal to eval.jump-to-else then
                 store 0 in eval.jump-to-else
-            end if 
-        else if line.tokens:0 is equal to "END" then 
-            if line.tokens:1 is equal to "IF" then 
+            end if
+        else if line.tokens:0 is equal to "END" then
+            if line.tokens:1 is equal to "IF" then
                 if eval.open-if is equal to eval.jump-to-else then
                     store 0 in eval.jump-to-else
                 end if
                 subtract 1 from eval.open-if in eval.open-if
             end if
-        else if line.tokens:0 is equal to "IF" then 
+        else if line.tokens:0 is equal to "IF" then
             add 1 and eval.open-if in eval.open-if
-        end if 
+        end if
         return
     end if
 
@@ -735,7 +735,7 @@ sub-procedure main
     store argv:0 in reader.name
     load file argv:0 in reader.input
     store length of reader.input in reader.input.length
-    
+
     while reader.ci is less than reader.input.length do
         store reader.char in reader.prev
         get character at reader.ci from reader.input in reader.char
