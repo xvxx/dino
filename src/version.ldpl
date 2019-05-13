@@ -1,4 +1,4 @@
 DATA:
 $DINO.VERSION is text
 PROCEDURE:
-store "97e3b83" in $DINO.VERSION
+store "(dev)" in $DINO.VERSION
