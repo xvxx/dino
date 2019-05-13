@@ -16,6 +16,9 @@ $OFFSET.ARGV   is number
 $OFFSET.TVAR   is number
 $OFFSET.TLIT   is number
 
+# constants
+$MAX.ARGS      is number
+
 # cpu instructions
 $CODES         is number vector
 $NAMES         is text vector
@@ -58,6 +61,9 @@ store 12288 in $OFFSET.TEXT # 0x3000 - text registers
 store 12304 in $OFFSET.ARGV # 0x3010 - command line arguments
 store 12320 in $OFFSET.TVAR # 0x3020 - text variables
 store 16384 in $OFFSET.TLIT # 0x4000 - text literals
+
+# constants
+store 16 in $MAX.ARGS
 
 # bytecode header
 store character code of "L" in $HEADER:0

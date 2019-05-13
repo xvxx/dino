@@ -49,15 +49,12 @@ store  8 in asm.addresses:"$SP"
 store  9 in asm.addresses:"$PC"
 store 10 in asm.addresses:"$AC"
 
-store $OFFSET.ARGV in asm.addresses:"@ARG0"
-add asm.addresses:"@ARG0" and 1 in asm.addresses:"@ARG1"
-add asm.addresses:"@ARG1" and 1 in asm.addresses:"@ARG2"
-add asm.addresses:"@ARG2" and 1 in asm.addresses:"@ARG3"
-add asm.addresses:"@ARG3" and 1 in asm.addresses:"@ARG4"
-add asm.addresses:"@ARG4" and 1 in asm.addresses:"@ARG5"
-add asm.addresses:"@ARG5" and 1 in asm.addresses:"@ARG6"
-add asm.addresses:"@ARG6" and 1 in asm.addresses:"@ARG7"
-add asm.addresses:"@ARG7" and 1 in asm.addresses:"@ARG8"
+store 0 in asm.i
+while asm.i is less than 16 do
+    join "@ARG" and asm.i in asm.t
+    add $OFFSET.ARGV and asm.i in asm.addresses:asm.t
+    incr asm.i
+repeat
 
 store $OFFSET.VARS in asm.vars.len
 store $OFFSET.TVAR in asm.tvars.next
