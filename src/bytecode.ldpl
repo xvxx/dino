@@ -12,6 +12,7 @@ $HEADER.len    is number
 $OFFSET.CODE   is number
 $OFFSET.VARS   is number
 $OFFSET.TEXT   is number
+$OFFSET.ARGV   is number
 $OFFSET.TVAR   is number
 $OFFSET.TLIT   is number
 
@@ -31,6 +32,7 @@ $I             is number
 $T             is number
 $SP            is number
 $PC            is number
+$AC            is number
 
 # text register addresses
 @A             is number
@@ -53,7 +55,8 @@ store 0 in $DEBUG
 store     5 in $OFFSET.CODE # First instruction
 store    16 in $OFFSET.VARS # 0x0010 - num variables
 store 12288 in $OFFSET.TEXT # 0x3000 - text registers
-store 12304 in $OFFSET.TVAR # 0x3010 - text variables
+store 12304 in $OFFSET.ARGV # 0x3010 - command line arguments
+store 12320 in $OFFSET.TVAR # 0x3020 - text variables
 store 16384 in $OFFSET.TLIT # 0x4000 - text literals
 
 # bytecode header
@@ -65,16 +68,17 @@ store $VERSION in $HEADER:4
 store 5 in $HEADER.len
 
 # num registers
-store 0 in $A
-store 1 in $X
-store 2 in $Y
-store 3 in $Z
-store 4 in $C
-store 5 in $E
-store 6 in $I
-store 7 in $T
-store 8 in $SP
-store 9 in $PC
+store  0 in $A
+store  1 in $X
+store  2 in $Y
+store  3 in $Z
+store  4 in $C
+store  5 in $E
+store  6 in $I
+store  7 in $T
+store  8 in $SP
+store  9 in $PC
+store 10 in $AC
 
 # text registers
 store $OFFSET.TEXT in @A

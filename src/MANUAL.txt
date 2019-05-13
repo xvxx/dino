@@ -76,7 +76,8 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 
 1. This first iteration plays fast and loose with the "byte" in
    bytecode. Once LDPL supports bitwise operations we will revisit the
-   core design so it's more bit-tastic.
+   core design so it's more bit-tastic. When we say "byte" in this
+   document, assume we mean "word".
 
 2. We are not considering performance at this time, but rather seeking
    to educate ourselves by creating this friendly dino vm.
@@ -97,7 +98,8 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 
 * 32 bit words
 * 0xFFFF words of memory
-* 10 numeric registers (A, X, Y, Z, E, C, I, J, SP, PC)
+* 11 numeric registers (A, X, Y, Z, E, C, I, J, SP, PC, AC)
+* 5 text registers (A, X, Y, T, E)
 * Registers, variables, and constants share a logical address space:
 * Two types: numeric and text. Address determines type.
 
@@ -189,6 +191,8 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
       * [x] GETC
       * [x] GETCC
       * [x] PUTC
+      * [ ] stack push
+      * [ ] stack pop
 
 === REFERENCE ========================================================
 
@@ -212,6 +216,7 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 | 0007 | $T   | Temporary value
 | 0008 | $SP  | Stack pointer
 | 0009 | $PC  | Program counter
+| 0010 | $AC  | Num of command line arguments given aka ARGC. 8 max.
 | .... |      | Reserved
 | 000F |      | Reserved
 | 0010 |      | Number variables
@@ -223,7 +228,11 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 | 3004 | @E   | Error message
 | .... |      | Reserved
 | 300F |      | Reserved
-| 3010 |      | Text variables
+| 3010 | @arg0| First command line argument (ARGV)
+| 3011 | @arg1| Second...
+| 3017 | @arg7| Penultimate
+| 3018 | @arg8| Final command line argument
+| 3020 |      | Text variables
 | 4000 |      | Text literals
 | .... |      |
 | FFFF |      | Final address

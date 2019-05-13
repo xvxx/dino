@@ -37,14 +37,27 @@ asm.comment?      is number
 asm.string?       is number
 
 PROCEDURE:
-store 0 in asm.addresses:"$A"
-store 1 in asm.addresses:"$X"
-store 2 in asm.addresses:"$Y"
-store 3 in asm.addresses:"$Z"
-store 4 in asm.addresses:"$C"
-store 5 in asm.addresses:"$E"
-store 6 in asm.addresses:"$SP"
-store 7 in asm.addresses:"$PC"
+store  0 in asm.addresses:"$A"
+store  1 in asm.addresses:"$X"
+store  2 in asm.addresses:"$Y"
+store  3 in asm.addresses:"$Z"
+store  4 in asm.addresses:"$C"
+store  5 in asm.addresses:"$E"
+store  6 in asm.addresses:"$I"
+store  7 in asm.addresses:"$T"
+store  8 in asm.addresses:"$SP"
+store  9 in asm.addresses:"$PC"
+store 10 in asm.addresses:"$AC"
+
+store $OFFSET.ARGV in asm.addresses:"@ARG0"
+add asm.addresses:"@ARG0" and 1 in asm.addresses:"@ARG1"
+add asm.addresses:"@ARG1" and 1 in asm.addresses:"@ARG2"
+add asm.addresses:"@ARG2" and 1 in asm.addresses:"@ARG3"
+add asm.addresses:"@ARG3" and 1 in asm.addresses:"@ARG4"
+add asm.addresses:"@ARG4" and 1 in asm.addresses:"@ARG5"
+add asm.addresses:"@ARG5" and 1 in asm.addresses:"@ARG6"
+add asm.addresses:"@ARG6" and 1 in asm.addresses:"@ARG7"
+add asm.addresses:"@ARG7" and 1 in asm.addresses:"@ARG8"
 
 store $OFFSET.VARS in asm.vars.len
 store $OFFSET.TVAR in asm.tvars.next
@@ -99,11 +112,15 @@ sub-procedure asm.token.to-address
         store asm.addresses:asm.token in asm.address
     else if asm.char is equal to "@" then
         # text variable
-        if asm.tvars:asm.token is equal to 0 then
+        if asm.addresses:asm.token is not equal to 0 then
+            store asm.addresses:asm.token in asm.address
+        else if asm.tvars:asm.token is equal to 0 then
             store asm.tvars.next in asm.tvars:asm.token
             add 1 and asm.tvars.next in asm.tvars.next
+            store asm.tvars:asm.token in asm.address
+        else
+            store asm.tvars:asm.token in asm.address
         end if
-        store asm.tvars:asm.token in asm.address
     else if asm.char is equal to "%" then
         # number variable
         if asm.vars:asm.token is equal to 0 then
