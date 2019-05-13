@@ -84,19 +84,7 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 2. We are not considering performance at this time, but rather seeking
    to educate ourselves by creating this friendly dino vm.
 
-=== COMPILER =========================================================
-
---- LEXER ------------------------------------------------------------
-
---- PARSER -----------------------------------------------------------
-
---- CODE GENERATOR ---------------------------------------------------
-
---- ASSEMBLER --------------------------------------------------------
-
-=== VIRTUAL MACHINE ==================================================
-
---- MEMORY -----------------------------------------------------------
+=== TECHNNICAL SPECIFICATIONS ========================================
 
 * 32 bit words
 * 0xFFFF words of memory
@@ -104,12 +92,8 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 * 5 text registers (A, X, Y, T, E)
 * Registers, variables, and constants share a logical address space:
 * Two types: numeric and text. Address determines type.
-
---- CENTRAL PROCESSING UNIT ------------------------------------------
-
 * Instructions are 1-4 words: One opcode and 0-3 operands.
-
-=== TOOLING ==========================================================
+* ...?
 
 === PROJECT STATUS ===================================================
 
