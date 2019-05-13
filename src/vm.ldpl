@@ -24,12 +24,14 @@ __vm.x          is number
 PROCEDURE:
 store $OFFSET.TLIT in vm.text.next
 
-# Set command line arguments on boot.
-store ARGC in vm.reg:$AC
-store 0 in __vm.i
-store $OFFSET.ARGV in __vm.x
-while __vm.i is less than ARGC do
-    store ARGV:__vm.i in vm.text:__vm.x
-    incr __vm.x
-    incr __vm.i
-repeat
+sub-procedure vm.init
+    # Set command line arguments on boot.
+    store ARGC in vm.reg:$AC
+    store 0 in __vm.i
+    store $OFFSET.ARGV in __vm.x
+    while __vm.i is less than ARGC do
+        store ARGV:__vm.i in vm.text:__vm.x
+        incr __vm.x
+        incr __vm.i
+    repeat
+end sub-procedure

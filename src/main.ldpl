@@ -20,6 +20,7 @@
 
 DATA:
 main.i    is number
+main.x    is number
 main.l    is number
 main.char is text
 main.ext  is text
@@ -36,6 +37,20 @@ sub-procedure main.help
     display "\t" "bytes" "\t" "compile .ldpl or .dino file to .dinocode bytecode" crlf
     display "\t" "dis  " "\t" "disassemble .dinocode file to .dino assembly" crlf
     display "\t" "help " "\t" "print help screen" crlf
+end sub-procedure
+
+# Strip dino related command line arguments from argv and update argc.
+#    argv: "run" "file.dino" "123" "456"
+# -> argv: "123" "456"
+sub-procedure main.strip-args
+    store 2 in main.i
+    store 0 in main.x
+    while main.i is less than argc do
+        store argv:main.i in argv:main.x
+        incr main.i
+        incr main.x
+    repeat
+    subtract 2 from argc in argc
 end sub-procedure
 
 # --- READ-EVAL-PRINT-LOOP -------------------------------------------
@@ -61,6 +76,8 @@ sub-procedure main.run.dino
     call asm.compile
     call asm.to-dinocode
     store asm.dinocode in loader.input
+    call main.strip-args
+    call vm.init
     call loader.run
     call cpu.run
 end sub-procedure
@@ -72,6 +89,8 @@ sub-procedure main.run.dinocode
         display errortext crlf
         exit
     end if
+    call main.strip-args
+    call vm.init
     call loader.run
     call cpu.run
 end sub-procedure

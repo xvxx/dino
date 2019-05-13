@@ -19,6 +19,7 @@ PROCEDURE:
 # OUT: vm.code(.len)
 #      vm.text(.next)
 sub-procedure loader.run
+    store $OFFSET.TLIT in vm.text.next
     store length of loader.input in loader.len
     store 0 in loader.i
     store 0 in loader.string?
