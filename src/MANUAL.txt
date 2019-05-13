@@ -117,13 +117,13 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 | ? | NAME      | STATUS
 +---+-----------+-----------------------------------------------------
 |   | ========= | COMPILER ===========================================
-|   | Lexer     | Planning
+| X | Lexer     | Mostly Working
 |   | Parser    | Planning
 |   | Generator | Planning
 | X | Assembler | Mostly Working
 |   | ========= | VIRTUAL MACHINE =====================================
-| > | CPU       | In progress!
-| > | Memory    | In progress!
+| X | CPU       | Mostly Working
+| X | Memory    | Mostly Working
 | = | ========= | TOOLING =============================================
 |   | REPL      | Planning
 |   | Debugger  | Planning
@@ -133,14 +133,14 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 === TODO =============================================================
 
 * [ ] build each part separately
-   * [ ] lexer
+   * [x] lexer
    * [ ] parser
    * [ ] generator
-   * [ ] assembler
-   * [ ] loader
-   * [ ] memory
-   * [ ] cpu
-   * [ ] vscode for dinoasm
+   * [x] assembler
+   * [x] loader
+   * [x] memory
+   * [x] cpu
+   * [x] vscode for dinoasm
 * [x] assembly -> bytecode $ dino bytes examples/99.dino
    * [x] strip comments
    * [x] trim line

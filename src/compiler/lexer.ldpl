@@ -20,7 +20,7 @@ lexer.text?          is number       # boolean
 lexer.tokens.i       is number       # for clearing the list
 
 PROCEDURE:
-store ":newline:" in lexer.newline
+store ":NL:" in lexer.newline
 
 #  IN: lexer.input
 # OUT: lexer.tokens(.len)
