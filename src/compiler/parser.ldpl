@@ -9,6 +9,7 @@
 #   * $id:arg2...
 #   * $id:arg7
 #   * $id:arg0:type    # type of 1st arg
+#   * $id:arg1:type    # ...
 #
 # Most nodes follow this format. Others may have other fields with
 # information unique to that node, such as IF.
@@ -36,10 +37,10 @@ parser.char      is text
 parser.prev      is number
 parser.next      is number
 parser.var       is text
-parser.type      is text
 parser.key       is text
 parser.expect    is text
 
+parser.type      is number
 parser.arg       is number
 
 parser.peek      is text
@@ -82,31 +83,71 @@ sub-procedure parser.expect
     end if
 end sub-procedure
 
+# Identify the type of `parser.token`
+#  IN: parser.token
+# OUT: parser.type
+sub-procedure parser.type.identify
+    get character at 0 from parser.token in parser.char
+
+    # number
+    store parser.char in digit?.in
+    if parser.char is equal to "-" then
+        get character at 1 from parser.token in digit?.in
+    end if
+    call digit?
+    if digit? is equal to 1 then
+        store $TYPES:"NUM" in parser.type
+        return
+    end if
+
+    # text
+    if parser.char is equal to "\"" then
+        store $TYPES:"TXT" in parser.type
+        return
+    end if
+
+end sub-procedure
+
 # Uses the value of `parser.arg` to set c.Nodes:$id:arg
 sub-procedure parser.node.set-arg
     in parser.key join c.Nodes* ":arg" parser.arg
     store parser.token in c.Nodes:parser.key
+    join parser.key and ":type" in parser.key
+    call parser.type.identify
+    store parser.type in c.Nodes:parser.key
 end sub-procedure
+
 # sets the value of `parser.token` to c.Nodes:$id:arg0
 sub-procedure parser.node.set-arg0
     join c.Nodes* and ":arg0" in parser.key
     store parser.token in c.Nodes:parser.key
+    join parser.key and ":type" in parser.key
+    call parser.type.identify
+    store parser.type in c.Nodes:parser.key
 end sub-procedure
 sub-procedure parser.node.set-arg1
     join c.Nodes* and ":arg1" in parser.key
     store parser.token in c.Nodes:parser.key
+    call parser.type.identify
+    store parser.type in c.Nodes:parser.key
 end sub-procedure
 sub-procedure parser.node.set-arg2
     join c.Nodes* and ":arg2" in parser.key
     store parser.token in c.Nodes:parser.key
+    call parser.type.identify
+    store parser.type in c.Nodes:parser.key
 end sub-procedure
 sub-procedure parser.node.set-arg3
     join c.Nodes* and ":arg3" in parser.key
     store parser.token in c.Nodes:parser.key
+    call parser.type.identify
+    store parser.type in c.Nodes:parser.key
 end sub-procedure
 sub-procedure parser.node.set-arg4
     join c.Nodes* and ":arg4" in parser.key
     store parser.token in c.Nodes:parser.key
+    call parser.type.identify
+    store parser.type in c.Nodes:parser.key
 end sub-procedure
 
 # Parse procedure statement and create a node.
@@ -183,6 +224,7 @@ sub-procedure parser.Run
                 incr parser.run.c
                 continue
             end if
+            store parser.token in c.Vars:c.Vars*
             store parser.token in parser.var
             call parser.advance
             if parser.token is not equal to tokens.is then
@@ -190,23 +232,22 @@ sub-procedure parser.Run
                 call parser.error
             end if
             call parser.advance
-            store parser.token in parser.type
+            store parser.token in parser.t
             add parser.run.c and 1 in parser.next
             if c.Tokens:parser.next is equal to tokens.vector then
-                if parser.type is equal to tokens.number then
-                    store 3 in c.Types:c.Vars*
-                else if parser.type is equal to tokens.text then
-                    store 4 in c.Types:c.Vars*
+                if parser.t is equal to tokens.number then
+                    store 3 in c.Types:parser.var
+                else if parser.t is equal to tokens.text then
+                    store 4 in c.Types:parser.var
                 end if
                 incr parser.run.c
             else
-                if parser.type is equal to tokens.number then
-                    store 1 in c.Types:c.Vars*
-                else if parser.type is equal to tokens.text then
-                    store 2 in c.Types:c.Vars*
+                if parser.t is equal to tokens.number then
+                    store 1 in c.Types:parser.var
+                else if parser.t is equal to tokens.text then
+                    store 2 in c.Types:parser.var
                 end if
             end if
-            store parser.var in c.Vars:c.Vars*
             incr c.Vars*
         else if parser.mode is equal to 2 then # PROC: section
             call parser.node.create
