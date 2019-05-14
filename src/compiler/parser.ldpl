@@ -1,7 +1,7 @@
 # === PARSER =========================================================
 # The parser validates syntax and turns a text vector of tokens into
 # DATA and CODE nodes.
-# CODE nodes all live in the c.nodes vector and fake a struct
+# CODE nodes all live in the c.Nodes vector and fake a struct
 # using these keys:
 #   * $id:type
 #   * $id:x
@@ -15,14 +15,14 @@
 
 DATA:
 # USES:
-# c.nodes        is text vector
-# c.tokens       is text vector
+# c.Nodes        is text vector
+# c.Tokens       is text vector
 
 # OUT:                            # 1=num,2=text,3=nv,4=tv
 parser.tnames    is text vector   # human names of types
 parser.types     is number vector # type of each variable
 parser.names     is text vector   # human names of variables
-parser.names.len is number
+parser.names*    is number
 
 parser.i         is number
 parser.x         is number
@@ -55,28 +55,28 @@ end sub-procedure
 sub-procedure parser.advance
     store parser.i in parser.prev
     incr parser.i
-    store c.tokens:parser.i in parser.token
+    store c.Tokens:parser.i in parser.token
 end sub-procedure
 
 # Parse procedure statement
 #  IN: parser.token
 sub-procedure parser.proc.parse
-    store parser.token in c.nodes:c.nodes.len
-    incr c.nodes.len
+    store parser.token in c.Nodes:c.Nodes*
+    incr c.Nodes*
 
 end sub-procedure
 
-#  IN: c.tokens
-# OUT: c.nodes
+#  IN: c.Tokens
+# OUT: c.Nodes
 #      parser.types
 #      parser.names
 sub-procedure parser.run
     store 0 in parser.i
     store 0 in parser.mode
-    store 0 in c.nodes.len
-    while parser.i is less than c.tokens.len do
+    store 0 in c.Nodes*
+    while parser.i is less than c.Tokens* do
         subtract 1 from parser.i in parser.prev
-        store c.tokens:parser.i in parser.token
+        store c.Tokens:parser.i in parser.token
         get character at 0 from parser.token in parser.char
 
         if parser.token is equal to "DATA:" then
@@ -92,28 +92,28 @@ sub-procedure parser.run
             store parser.token in parser.var
             call parser.advance
             if parser.token is not equal to tokens.is then
-                in parser.error join "expected IS after " c.tokens:parser.prev ", got " parser.token
+                in parser.error join "expected IS after " c.Tokens:parser.prev ", got " parser.token
                 call parser.error
             end if
             call parser.advance
             store parser.token in parser.type
             add parser.i and 1 in parser.next
-            if c.tokens:parser.next is equal to tokens.vector then
+            if c.Tokens:parser.next is equal to tokens.vector then
                 if parser.type is equal to tokens.number then
-                    store 3 in parser.types:parser.names.len
+                    store 3 in parser.types:parser.names*
                 else if parser.type is equal to tokens.text then
-                    store 4 in parser.types:parser.names.len
+                    store 4 in parser.types:parser.names*
                 end if
                 incr parser.i
             else
                 if parser.type is equal to tokens.number then
-                    store 1 in parser.types:parser.names.len
+                    store 1 in parser.types:parser.names*
                 else if parser.type is equal to tokens.text then
-                    store 2 in parser.types:parser.names.len
+                    store 2 in parser.types:parser.names*
                 end if
             end if
-            store parser.var in parser.names:parser.names.len
-            incr parser.names.len
+            store parser.var in parser.names:parser.names*
+            incr parser.names*
         else if parser.mode is equal to 2 then # PROC: section
             call parser.proc.parse
         else if parser.token is equal to tokens.newline then

@@ -1,39 +1,39 @@
 # === COMPILER =======================================================
 DATA:
 # Input -> {Lexer}
-c.input         is text           # LDPL source code
+c.Input         is text           # LDPL source code
 
 # Input -> {Lexer} -> Tokens
-c.tokens        is text vector    # source code as tokens
-c.tokens.len    is number
+c.Tokens        is text vector    # source code as tokens
+c.Tokens*       is number
 
 # Tokens -> {Parser} -> Nodes & Vars
-c.nodes         is text vector    # code
-c.nodes.len     is number
-c.types         is number vector  # variable types. 1=n,2=t,3=nv,4=tv
-c.vars          is text vector    # variable names
-c.vars.len      is number
-c.types.names   is text vector    # type class names, eg number
+c.Nodes         is text vector    # code
+c.Nodes*        is number
+c.Types         is number vector  # variable types. 1=n,2=t,3=nv,4=tv
+c.Vars          is text vector    # variable names
+c.Vars*         is number
+c.TypeNames     is text vector    # type class names, eg number
 
 # Nodes -> {Generator} -> Assembly
-c.asm           is text           # assembly source code
+c.Asm           is text           # assembly source code
 
 # Asm -> {Assembler} -> Bytecode
-c.bytes         is number vector   # instructions
-c.bytes.len     is number
-c.text          is text vector     # text literals
-c.text.len      is number
+c.Bytes         is number vector   # instructions
+c.Bytes*        is number
+c.Text          is text vector     # text literals
+c.Text*         is number
 
 # TOKENS:
-tokens.newline  is text            # newline token
-tokens.is       is text            # `is` token
-tokens.vector   is text            # ...you get it
-tokens.number   is text
-tokens.text     is text
+tokens.NEWLINE  is text            # newline token
+tokens.IS       is text            # `is` token
+tokens.VECTOR   is text            # ...you get it
+tokens.NUMBER   is text
+tokens.TEXT     is text
 
 PROCEDURE:
-store ":NL:"   in tokens.newline
-store "IS"     in tokens.is
-store "VECTOR" in tokens.vector
-store "NUMBER" in tokens.number
-store "TEXT"   in tokens.text
+store ":NL:"   in tokens.NEWLINE
+store "IS"     in tokens.IS
+store "VECTOR" in tokens.VECTOR
+store "NUMBER" in tokens.NUMBER
+store "TEXT"   in tokens.TEXT

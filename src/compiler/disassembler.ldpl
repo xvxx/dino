@@ -10,8 +10,8 @@ PROCEDURE:
 
 sub-procedure dis.print
     store $OFFSET.CODE in dis.i
-    while dis.i is less than vm.code.len do
-        store vm.code:dis.i in dis.opcode
+    while dis.i is less than vm.Code* do
+        store vm.Code:dis.i in dis.opcode
 
         display "\e[36m"
         if dis.opcode is less than 10 then
@@ -25,9 +25,9 @@ sub-procedure dis.print
             while dis.j is less than dis.x do
                 add 1 and dis.i in dis.i
                 display "\e[35m"
-                store vm.code:dis.i in dis.opcode
+                store vm.Code:dis.i in dis.opcode
                 if dis.opcode is greater than or equal to $OFFSET.TLIT then
-                    display "\"" vm.text:dis.opcode "\""
+                    display "\"" vm.Text:dis.opcode "\""
                 else
                     display dis.opcode
                 end if

@@ -8,7 +8,7 @@ loader.input    is text # bytecode in .dinocode text format
 
 # LOCALS:
 loader.i        is number
-loader.len      is number
+loader*         is number
 loader.char     is text
 loader.prev     is text
 loader.token    is text
@@ -17,17 +17,17 @@ loader.chars    is text vector
 
 PROCEDURE:
 #  IN: loader.input
-# OUT: vm.code(.len)
-#      vm.text(.next)
+# OUT: vm.Code(*)
+#      vm.Text(.next)
 sub-procedure loader.run
-    store $OFFSET.TLIT in vm.text.next
-    store length of loader.input in loader.len
+    store $OFFSET.TLIT in vm.Text*
+    store length of loader.input in loader*
     store 0 in loader.i
     store 0 in loader.string?
-    store 0 in vm.code.len
+    store 0 in vm.Code*
     store "" in loader.token
     split loader.input by "" in loader.chars
-    while loader.i is less than loader.len do
+    while loader.i is less than loader* do
         store loader.char in loader.prev
         store loader.chars:loader.i in loader.char
 
@@ -55,8 +55,8 @@ sub-procedure loader.run
             if loader.char is equal to "\"" then
                 if loader.prev is not equal to "\\" then
                     store 0 in loader.string?
-                    store loader.token in vm.text:vm.text.next
-                    add 1 and vm.text.next in vm.text.next
+                    store loader.token in vm.Text:vm.Text*
+                    add 1 and vm.Text* in vm.Text*
                     store "" in loader.token
                     continue
                 end if
@@ -67,8 +67,8 @@ sub-procedure loader.run
 
         if loader.char is equal to " " then
             if loader.token is not equal to "" then
-                store loader.token in vm.code:vm.code.len
-                add 1 and vm.code.len in vm.code.len
+                store loader.token in vm.Code:vm.Code*
+                add 1 and vm.Code* in vm.Code*
                 store "" in loader.token
             end if
         else if loader.char is equal to "\"" then

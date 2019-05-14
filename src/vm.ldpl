@@ -1,26 +1,26 @@
 # === VIRTUAL MACHINE ================================================
 DATA:
 # instruction set version
-vm.version     is number
+vm.Version     is number
 
 # text bytecode input for the loader
-vm.input       is text
+vm.Input       is text
 
 # 8 numeric registers
-vm.reg         is number vector
+vm.R           is number vector
 
 # instructions
-vm.code        is number vector
-vm.code.len    is number
+vm.Code        is number vector
+vm.Code*       is number
 
 # text literals & variables
-vm.text        is text vector
-vm.text.next   is number
+vm.Text        is text vector
+vm.Text*       is number
 
 # tmp
-__vm.i          is number
-__vm.x          is number
-__vm.boot       is number
+__vm.i         is number
+__vm.x         is number
+__vm.boot      is number
 
 PROCEDURE:
 # vm must be booted (initalized) before it can run
@@ -33,11 +33,11 @@ sub-procedure vm.boot
     if ARGC is greater than $MAX.ARGS then
         store $MAX.ARGS in ARGC
     end if
-    store ARGC in vm.reg:$AC
+    store ARGC in vm.R:$AC
     store $OFFSET.ARGV in __vm.x
     store 0 in __vm.i
     while __vm.i is less than ARGC do
-        store ARGV:__vm.i in vm.text:__vm.x
+        store ARGV:__vm.i in vm.Text:__vm.x
         incr __vm.x
         incr __vm.i
     repeat

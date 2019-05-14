@@ -6,7 +6,7 @@ $VERSION       is number
 $DEBUG         is number
 
 $HEADER        is number vector
-$HEADER.len    is number
+$HEADER*       is number
 
 # offsets
 $OFFSET.CODE   is number
@@ -71,7 +71,7 @@ store character code of "D" in $HEADER:1
 store character code of "P" in $HEADER:2
 store character code of "L" in $HEADER:3
 store $VERSION in $HEADER:4
-store 5 in $HEADER.len
+store 5 in $HEADER*
 
 # num registers
 store  0 in $A
