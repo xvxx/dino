@@ -25,6 +25,7 @@ main.l       is number
 main.char    is text
 main.ext     is text
 main.key     is text
+main.tkey    is text
 
 PROCEDURE:
 # --- DISPLAY VERSION ------------------------------------------------
@@ -99,7 +100,8 @@ sub-procedure main.parse
         while main.x is less than 8 do
             in main.key join main.i ":arg" main.x
             if c.Nodes:main.key is not equal to "" then
-                display "    - a" main.x ": " c.Nodes:main.key crlf
+                join main.key and ":type" in main.tkey
+                display "    - a" main.x "(" $TYPES:c.Nodes:main.tkey "): " c.Nodes:main.key crlf
             end if
             incr main.x
         repeat

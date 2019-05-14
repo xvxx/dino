@@ -129,24 +129,28 @@ sub-procedure parser.node.set-arg1
     join c.Nodes* and ":arg1" in parser.key
     store parser.token in c.Nodes:parser.key
     call parser.type.identify
+    join parser.key and ":type" in parser.key
     store parser.type in c.Nodes:parser.key
 end sub-procedure
 sub-procedure parser.node.set-arg2
     join c.Nodes* and ":arg2" in parser.key
     store parser.token in c.Nodes:parser.key
     call parser.type.identify
+    join parser.key and ":type" in parser.key
     store parser.type in c.Nodes:parser.key
 end sub-procedure
 sub-procedure parser.node.set-arg3
     join c.Nodes* and ":arg3" in parser.key
     store parser.token in c.Nodes:parser.key
     call parser.type.identify
+    join parser.key and ":type" in parser.key
     store parser.type in c.Nodes:parser.key
 end sub-procedure
 sub-procedure parser.node.set-arg4
     join c.Nodes* and ":arg4" in parser.key
     store parser.token in c.Nodes:parser.key
     call parser.type.identify
+    join parser.key and ":type" in parser.key
     store parser.type in c.Nodes:parser.key
 end sub-procedure
 
