@@ -94,17 +94,15 @@ sub-procedure main.parse
     store 0 in main.i
     display "nodes (" c.Nodes* "):\n"
     while main.i is less than c.Nodes* do
-        display "  #<node " main.i "> " c.Nodes:main.i crlf
-        join main.i and ":arg0" in main.key
-        display "    - a0: " c.Nodes:main.key crlf
-        join main.i and ":arg1" in main.key
-        display "    - a1: " c.Nodes:main.key crlf
-        join main.i and ":arg2" in main.key
-        display "    - a2: " c.Nodes:main.key crlf
-        join main.i and ":arg3" in main.key
-        display "    - a3: " c.Nodes:main.key crlf
-        join main.i and ":arg4" in main.key
-        display "    - a4: " c.Nodes:main.key crlf
+        display "  " c.Nodes:main.i crlf
+        store 0 in main.x
+        while main.x is less than 8 do
+            in main.key join main.i ":arg" main.x
+            if c.Nodes:main.key is not equal to "" then
+                display "    - a" main.x ": " c.Nodes:main.key crlf
+            end if
+            incr main.x
+        repeat
         incr main.i
     repeat
     display "vars:\n"
