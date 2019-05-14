@@ -1,22 +1,31 @@
 # === PARSER =========================================================
-# The parser turns a text vector of tokens into DATA and CODE nodes. 
+# The parser turns a text vector of tokens into DATA and CODE nodes.
 DATA:
-parser.i is number
-parser.x is number
-parser.y is number
-parser.t is text
+# OUT:
+parser.types     is number vector #1=num,2=text,3=nv,4=tv
+parser.names     is text vector
+parser.names.len is number
 
-parser.mode is number # 1=data, 2=code
-parser.token is text
-parser.error is text
-parser.char is text
-parser.comment? is number 
-
-parser.prev is number 
-parser.var  is text
-parser.type is text
+parser.i         is number
+parser.x         is number
+parser.y         is number
+parser.t         is text
+parser.mode      is number # 1=data, 2=code
+parser.token     is text
+parser.error     is text
+parser.char      is text
+parser.comment?  is number
+parser.prev      is number
+parser.next      is number
+parser.var       is text
+parser.type      is text
 
 PROCEDURE:
+store "NUM" in parser.types:1
+store "TXT" in parser.types:2
+store "NMV" in parser.types:3
+store "TXV" in parser.types:4
+
 sub-procedure parser.error
     display "parser.error: " parser.error crlf
     exit
@@ -31,50 +40,63 @@ end sub-procedure
 sub-procedure parser.run
     store 0 in parser.i
     store 0 in parser.mode
-    store 0 in c.nodes.len 
+    store 0 in c.nodes.len
     while parser.i is less than lexer.tokens.len do
         subtract 1 from parser.i in parser.prev
         store lexer.tokens:parser.i in parser.token
 
         # ignore comments
-        if parser.comment? is equal to 1 then 
-            if parser.token is equal to tokens.newline then 
+        if parser.comment? is equal to 1 then
+            if parser.token is equal to tokens.newline then
                 store 0 in parser.comment?
-            end if 
-            incr parser.i 
+            end if
+            incr parser.i
             continue
         end if
-        
-        get character at 0 from parser.token in parser.char 
 
-        if parser.token is equal to "DATA:" then 
+        get character at 0 from parser.token in parser.char
+
+        if parser.token is equal to "DATA:" then
             store 1 in parser.mode
-        else if parser.token is equal to "PROCEDURE:" then 
+        else if parser.token is equal to "PROCEDURE:" then
             store 2 in parser.mode
-        else if parser.char is equal to "#" then 
-            # skip until end of line
+        else if parser.char is equal to "#" then
             store 1 in parser.comment?
-        else if parser.token is equal to tokens.newline then 
-            # end the line 
+        else if parser.token is equal to tokens.newline then
+            # end the line
         else if parser.mode is equal to 1 then
-            store parser.token in parser.var 
+            store parser.token in parser.var
             call parser.advance
-            if parser.token is not equal to tokens.is then 
-                in parser.error join "expected IS after " lexer.tokens:parser.prev ", got " parser.token 
+            if parser.token is not equal to tokens.is then
+                in parser.error join "expected IS after " lexer.tokens:parser.prev ", got " parser.token
                 call parser.error
-            end if 
+            end if
             call parser.advance
-            store parser.token in parser.type 
-            display "var [" parser.type "]: " parser.var crlf
+            store parser.token in parser.type
+            add parser.i and 1 in parser.next
+            if lexer.tokens:parser.next is equal to tokens.vector then
+                if parser.type is equal to tokens.number then
+                    store 3 in parser.types:parser.names.len
+                else if parser.type is equal to tokens.text then
+                    store 4 in parser.types:parser.names.len
+                end if
+                incr parser.i
+            else
+                if parser.type is equal to tokens.number then
+                    store 1 in parser.types:parser.names.len
+                else if parser.type is equal to tokens.text then
+                    store 2 in parser.types:parser.names.len
+                end if
+            end if
         else if parser.mode is equal to 2 then
             store parser.token in c.nodes:c.nodes.len
             incr c.nodes.len
-        else 
+        else
             in parser.error join "unknown parser.mode: " parser.mode
             in parser.error join parser.error " token: " parser.token
             call parser.error
         end if
-        
+
         incr parser.i
     repeat
 end sub-procedure
