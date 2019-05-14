@@ -5,8 +5,6 @@ DATA:
 lexer.input          is text         # source code
 
 # OUT:
-lexer.tokens         is text vector  # source code's tokens
-lexer.tokens.len     is number
 lexer.chars          is text vector  # every letter
 
 # LOCAL:
@@ -17,19 +15,19 @@ lexer.prev           is number       # idx of previous character
 lexer.token          is text         # current token
 lexer.text?          is number       # are we lexing a string?
 lexer.comment?       is number       # are we lexing a comment?
-lexer.tokens.i       is number       # for clearing the list
+c.tokens.i       is number       # for clearing the list
 
 PROCEDURE:
 
 #  IN: lexer.input
-# OUT: lexer.tokens(.len)
+# OUT: c.tokens(.len)
 sub-procedure lexer.run
     store length of lexer.input in lexer.input.len
     split lexer.input by "" in lexer.chars
     store 0 in lexer.comment?
     store 0 in lexer.text?
     store 0 in lexer.ci
-    store 0 in lexer.tokens.len
+    store 0 in c.tokens.len
     store "" in lexer.char
     store "" in lexer.token
     while lexer.ci is less than lexer.input.len do
@@ -47,20 +45,20 @@ sub-procedure lexer.run
         if lexer.char is equal to "\n" then
             # store current token in tokens vector
             if lexer.token is not equal to "" then
-                store lexer.token in lexer.tokens:lexer.tokens.len
-                add 1 and lexer.tokens.len in lexer.tokens.len
+                store lexer.token in c.tokens:c.tokens.len
+                add 1 and c.tokens.len in c.tokens.len
                 store "" in lexer.token
             end if
 
             # add newline token
-            store tokens.newline in lexer.tokens:lexer.tokens.len
-            incr lexer.tokens.len
+            store tokens.newline in c.tokens:c.tokens.len
+            incr c.tokens.len
         else if lexer.char is equal to " " then
             if lexer.text? is equal to 0 then
                 # store current token in tokens vector
                 if lexer.token is not equal to "" then
-                    store lexer.token in lexer.tokens:lexer.tokens.len
-                    add 1 and lexer.tokens.len in lexer.tokens.len
+                    store lexer.token in c.tokens:c.tokens.len
+                    add 1 and c.tokens.len in c.tokens.len
                     store "" in lexer.token
                 end if
             else
@@ -69,8 +67,8 @@ sub-procedure lexer.run
             end if
         else if lexer.char is equal to "#" then
             if lexer.token is not equal to "" then
-                store lexer.token in lexer.tokens:lexer.tokens.len
-                incr lexer.tokens.len
+                store lexer.token in c.tokens:c.tokens.len
+                incr c.tokens.len
                 store "" in lexer.token
             end if
             store 1 in lexer.comment?

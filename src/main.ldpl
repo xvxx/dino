@@ -74,10 +74,10 @@ sub-procedure main.lex
     call lexer.run
     store 0 in main.i
     display "tokens:\n  "
-    while main.i is less than lexer.tokens.len do
-        display "\e[36m<\e[33m" lexer.tokens:main.i "\e[36m>"
+    while main.i is less than c.tokens.len do
+        display "\e[36m<\e[33m" c.tokens:main.i "\e[36m>"
         incr main.i
-        if main.i is less than lexer.tokens.len then
+        if main.i is less than c.tokens.len then
             display "\e[0m, "
         end if
     repeat

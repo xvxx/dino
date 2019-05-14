@@ -34,16 +34,16 @@ end sub-procedure
 sub-procedure parser.advance
     store parser.i in parser.prev
     incr parser.i
-    store lexer.tokens:parser.i in parser.token
+    store c.tokens:parser.i in parser.token
 end sub-procedure
 
 sub-procedure parser.run
     store 0 in parser.i
     store 0 in parser.mode
     store 0 in c.nodes.len
-    while parser.i is less than lexer.tokens.len do
+    while parser.i is less than c.tokens.len do
         subtract 1 from parser.i in parser.prev
-        store lexer.tokens:parser.i in parser.token
+        store c.tokens:parser.i in parser.token
         get character at 0 from parser.token in parser.char
 
         if parser.token is equal to "DATA:" then
@@ -59,13 +59,13 @@ sub-procedure parser.run
             store parser.token in parser.var
             call parser.advance
             if parser.token is not equal to tokens.is then
-                in parser.error join "expected IS after " lexer.tokens:parser.prev ", got " parser.token
+                in parser.error join "expected IS after " c.tokens:parser.prev ", got " parser.token
                 call parser.error
             end if
             call parser.advance
             store parser.token in parser.type
             add parser.i and 1 in parser.next
-            if lexer.tokens:parser.next is equal to tokens.vector then
+            if c.tokens:parser.next is equal to tokens.vector then
                 if parser.type is equal to tokens.number then
                     store 3 in parser.types:parser.names.len
                 else if parser.type is equal to tokens.text then
