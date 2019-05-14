@@ -70,7 +70,7 @@ end sub-procedure
 # --- LEX FILE -------------------------------------------------------
 # $ dino lex file.ldpl
 sub-procedure main.lex
-    load file argv:1 in lexer.input
+    load file argv:1 in c.input
     call lexer.run
     store 0 in main.i
     display "tokens:\n  "
@@ -87,7 +87,7 @@ end sub-procedure
 # --- PARSE FILE -----------------------------------------------------
 # $ dino parse file.ldpl
 sub-procedure main.parse
-    load file argv:1 in lexer.input
+    load file argv:1 in c.input
     call lexer.run
     call parser.run
     store 0 in main.i

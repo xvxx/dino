@@ -1,36 +1,38 @@
 # === LEXER ==========================================================
 # The lexer turns source code into a text vector of tokens.
 DATA:
+# USES:
+# c.input
+
 # IN:
-lexer.input          is text         # source code
 
 # OUT:
 lexer.chars          is text vector  # every letter
 
 # LOCAL:
-lexer.input.len      is number       # input length
 lexer.ci             is number       # current character index
 lexer.char           is text         # current character
 lexer.prev           is number       # idx of previous character
 lexer.token          is text         # current token
 lexer.text?          is number       # are we lexing a string?
 lexer.comment?       is number       # are we lexing a comment?
-c.tokens.i       is number       # for clearing the list
+c.tokens.i           is number       # for clearing the list
+c.input.len          is number       # input length
 
 PROCEDURE:
 
-#  IN: lexer.input
+#  IN: c.input
 # OUT: c.tokens(.len)
 sub-procedure lexer.run
-    store length of lexer.input in lexer.input.len
-    split lexer.input by "" in lexer.chars
+    store length of c.input in c.input.len
+    split c.input by "" in lexer.chars
     store 0 in lexer.comment?
     store 0 in lexer.text?
     store 0 in lexer.ci
     store 0 in c.tokens.len
     store "" in lexer.char
     store "" in lexer.token
-    while lexer.ci is less than lexer.input.len do
+    while lexer.ci is less than c.input.len do
         subtract 1 from lexer.ci in lexer.prev
         store lexer.chars:lexer.ci in lexer.char
 

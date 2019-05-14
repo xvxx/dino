@@ -1,17 +1,22 @@
 # === PARSER =========================================================
-# The parser turns a text vector of tokens into DATA and CODE nodes.
+# The parser validates syntax and turns a text vector of tokens into
+# DATA and CODE nodes.
 DATA:
-# OUT:
-parser.types     is number vector #1=num,2=text,3=nv,4=tv
+# USES:
+# c.nodes        is text vector
+# c.tokens       is text vector
+
+# OUT:                            # 1=num,2=text,3=nv,4=tv
+parser.types     is number vector # type of each variable
 parser.tnames    is text vector   # human names of types
-parser.names     is text vector   # hunan names of variables
+parser.names     is text vector   # human names of variables
 parser.names.len is number
 
 parser.i         is number
 parser.x         is number
 parser.y         is number
 parser.t         is text
-parser.mode      is number # 1=data, 2=code
+parser.mode      is number        # 1=data, 2=code
 parser.token     is text
 parser.error     is text
 parser.char      is text
