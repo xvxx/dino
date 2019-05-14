@@ -23,7 +23,7 @@ PROCEDURE:
 
 #  IN: c.Input
 # OUT: c.Tokens(*)
-sub-procedure lexer.run
+sub-procedure lexer.Run
     store length of c.Input in c.Input*
     split c.Input by "" in lexer.chars
     store 0 in lexer.comment?
