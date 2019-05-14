@@ -96,6 +96,12 @@ sub-procedure main.parse
         display "  #<node " main.i "> " c.nodes:main.i crlf
         incr main.i
     repeat
+    display "vars:\n"
+    store 0 in main.i
+    while main.i is less than parser.names.len do
+        display "  #<" parser.tnames:parser.types:main.i ": " parser.names:main.i ">" crlf
+        incr main.i
+    repeat
     display "\e[0m"
 end sub-procedure
 
