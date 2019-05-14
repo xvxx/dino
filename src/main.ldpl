@@ -24,6 +24,7 @@ main.x       is number
 main.l       is number
 main.char    is text
 main.ext     is text
+main.key     is text
 
 PROCEDURE:
 # --- DISPLAY VERSION ------------------------------------------------
@@ -91,9 +92,19 @@ sub-procedure main.parse
     call lexer.Run
     call parser.Run
     store 0 in main.i
-    display "nodes:\n"
+    display "nodes (" c.Nodes* "):\n"
     while main.i is less than c.Nodes* do
         display "  #<node " main.i "> " c.Nodes:main.i crlf
+        join main.i and ":arg0" in main.key
+        display "    - a0: " c.Nodes:main.key crlf
+        join main.i and ":arg1" in main.key
+        display "    - a1: " c.Nodes:main.key crlf
+        join main.i and ":arg2" in main.key
+        display "    - a2: " c.Nodes:main.key crlf
+        join main.i and ":arg3" in main.key
+        display "    - a3: " c.Nodes:main.key crlf
+        join main.i and ":arg4" in main.key
+        display "    - a4: " c.Nodes:main.key crlf
         incr main.i
     repeat
     display "vars:\n"
