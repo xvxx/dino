@@ -11,6 +11,7 @@ lexer.chars          is text vector  # every letter
 
 # TOKENS:
 tokens.newline        is text         # newline token
+tokens.is             is text         # `is` token
 
 # LOCAL:
 lexer.input.len      is number       # input length
@@ -23,6 +24,7 @@ lexer.tokens.i       is number       # for clearing the list
 
 PROCEDURE:
 store ":NL:" in tokens.newline
+store "IS"   in tokens.is
 
 #  IN: lexer.input
 # OUT: lexer.tokens(.len)
