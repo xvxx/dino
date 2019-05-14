@@ -243,6 +243,9 @@ sub-procedure parser.Run
                     store 3 in c.Types:parser.var
                 else if parser.t is equal to tokens.text then
                     store 4 in c.Types:parser.var
+                else
+                    in parser.error join "bad token: " parser.token
+                    call parser.error
                 end if
                 incr parser.run.c
             else
@@ -250,6 +253,9 @@ sub-procedure parser.Run
                     store 1 in c.Types:parser.var
                 else if parser.t is equal to tokens.text then
                     store 2 in c.Types:parser.var
+                else
+                    in parser.error join "bad token: " parser.token
+                    call parser.error
                 end if
             end if
             incr c.Vars*
