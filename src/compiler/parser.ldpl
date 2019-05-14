@@ -3,7 +3,8 @@
 DATA:
 # OUT:
 parser.types     is number vector #1=num,2=text,3=nv,4=tv
-parser.names     is text vector
+parser.tnames    is text vector   # human names of types
+parser.names     is text vector   # hunan names of variables
 parser.names.len is number
 
 parser.i         is number
@@ -14,17 +15,16 @@ parser.mode      is number # 1=data, 2=code
 parser.token     is text
 parser.error     is text
 parser.char      is text
-parser.comment?  is number
 parser.prev      is number
 parser.next      is number
 parser.var       is text
 parser.type      is text
 
 PROCEDURE:
-store "NUM" in parser.types:1
-store "TXT" in parser.types:2
-store "NMV" in parser.types:3
-store "TXV" in parser.types:4
+store "NUM" in parser.tnames:1
+store "TXT" in parser.tnames:2
+store "NMV" in parser.tnames:3
+store "TXV" in parser.tnames:4
 
 sub-procedure parser.error
     display "parser.error: " parser.error crlf
@@ -44,27 +44,18 @@ sub-procedure parser.run
     while parser.i is less than lexer.tokens.len do
         subtract 1 from parser.i in parser.prev
         store lexer.tokens:parser.i in parser.token
-
-        # ignore comments
-        if parser.comment? is equal to 1 then
-            if parser.token is equal to tokens.newline then
-                store 0 in parser.comment?
-            end if
-            incr parser.i
-            continue
-        end if
-
         get character at 0 from parser.token in parser.char
 
         if parser.token is equal to "DATA:" then
             store 1 in parser.mode
         else if parser.token is equal to "PROCEDURE:" then
             store 2 in parser.mode
-        else if parser.char is equal to "#" then
-            store 1 in parser.comment?
-        else if parser.token is equal to tokens.newline then
-            # end the line
         else if parser.mode is equal to 1 then
+            if parser.token is equal to tokens.newline then
+                incr parser.i
+                continue
+            end if
+
             store parser.token in parser.var
             call parser.advance
             if parser.token is not equal to tokens.is then
@@ -88,6 +79,8 @@ sub-procedure parser.run
                     store 2 in parser.types:parser.names.len
                 end if
             end if
+            store parser.var in parser.names:parser.names.len
+            incr parser.names.len
         else if parser.mode is equal to 2 then
             store parser.token in c.nodes:c.nodes.len
             incr c.nodes.len
