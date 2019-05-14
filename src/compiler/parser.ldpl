@@ -12,10 +12,20 @@ parser.error is text
 parser.char is text
 parser.comment? is number 
 
+parser.prev is number 
+parser.var  is text
+parser.type is text
+
 PROCEDURE:
 sub-procedure parser.error
     display "parser.error: " parser.error crlf
     exit
+end sub-procedure
+
+sub-procedure parser.advance
+    store parser.i in parser.prev
+    incr parser.i
+    store lexer.tokens:parser.i in parser.token
 end sub-procedure
 
 sub-procedure parser.run
@@ -23,6 +33,7 @@ sub-procedure parser.run
     store 0 in parser.mode
     store 0 in c.nodes.len 
     while parser.i is less than lexer.tokens.len do
+        subtract 1 from parser.i in parser.prev
         store lexer.tokens:parser.i in parser.token
 
         # ignore comments
@@ -46,7 +57,15 @@ sub-procedure parser.run
         else if parser.token is equal to tokens.newline then 
             # end the line 
         else if parser.mode is equal to 1 then
-            display "var: " parser.token crlf
+            store parser.token in parser.var 
+            call parser.advance
+            if parser.token is not equal to tokens.is then 
+                in parser.error join "expected IS after " lexer.tokens:parser.prev ", got " parser.token 
+                call parser.error
+            end if 
+            call parser.advance
+            store parser.token in parser.type 
+            display "var [" parser.type "]: " parser.var crlf
         else if parser.mode is equal to 2 then
             store parser.token in c.nodes:c.nodes.len
             incr c.nodes.len
