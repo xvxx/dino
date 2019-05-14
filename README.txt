@@ -139,7 +139,91 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 * [ ] build each part separately
    * [x] lexer
    * [ ] parser
+      * [ ] all nodes:
+         * [ ] STORE
+         * [ ] IF
+         * [ ] WHILE
+         * [ ] BREAK
+         * [ ] CONTINUE
+         * [ ] CALL
+         * [ ] RETURN
+         * [ ] EXIT
+         * [ ] WAIT
+         * [ ] GOTO
+         * [ ] LABEL
+         * [ ] ADD
+         * [ ] SUB
+         * [ ] MUL
+         * [ ] DIV
+         * [ ] MOD
+         * [ ] ABS
+         * [ ] RAND
+         * [ ] FLOOR
+         * [ ] CEIL
+         * [ ] INCR
+         * [ ] DECR
+         * [ ] SOLVE
+         * [ ] SOLVE
+         * [ ] JOIN
+         * [ ] GET CHAR
+         * [ ] STORE LENGTH
+         * [ ] STORE CHAR
+         * [ ] STORE CHAR QUOTE
+         * [ ] STORE QUOTE
+         * [ ] IN JOIN
+         * [ ] DISPLAY
+         * [ ] ACCEPT
+         * [ ] EXECUTE
+         * [ ] EXECUTE AND STORE OUTPUT
+         * [ ] EXECUTE AND STORE EXIT CODE
+         * [ ] ACCEPT
+         * [ ] LOAD FILE
+         * [ ] WRITE FILE
+         * [ ] APPEND FILE
+         * [ ] EXTENSIONS? CALL EXTERNAL?
    * [ ] generator
+      * [ ] all nodes:
+         * [ ] STORE
+         * [ ] IF
+         * [ ] WHILE
+         * [ ] BREAK
+         * [ ] CONTINUE
+         * [ ] CALL
+         * [ ] RETURN
+         * [ ] EXIT
+         * [ ] WAIT
+         * [ ] GOTO
+         * [ ] LABEL
+         * [ ] ADD
+         * [ ] SUB
+         * [ ] MUL
+         * [ ] DIV
+         * [ ] MOD
+         * [ ] ABS
+         * [ ] RAND
+         * [ ] FLOOR
+         * [ ] CEIL
+         * [ ] INCR
+         * [ ] DECR
+         * [ ] SOLVE
+         * [ ] SOLVE
+         * [ ] JOIN
+         * [ ] GET CHAR
+         * [ ] STORE LENGTH
+         * [ ] STORE CHAR
+         * [ ] STORE CHAR QUOTE
+         * [ ] STORE QUOTE
+         * [ ] IN JOIN
+         * [ ] DISPLAY
+         * [ ] ACCEPT
+         * [ ] EXECUTE
+         * [ ] EXECUTE AND STORE OUTPUT
+         * [ ] EXECUTE AND STORE EXIT CODE
+         * [ ] ACCEPT
+         * [ ] LOAD FILE
+         * [ ] WRITE FILE
+         * [ ] APPEND FILE
+         * [ ] EXTENSIONS? CALL EXTERNAL?
    * [x] assembler
    * [x] loader
    * [x] memory
