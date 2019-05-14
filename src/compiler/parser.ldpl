@@ -130,7 +130,7 @@ sub-procedure parser.proc.parse
         call parser.advance
         call parser.node.create
     else
-        display "IGNORING: " parser.token crlf
+        # display "IGNORING: " parser.token crlf
     end if
 end sub-procedure
 
