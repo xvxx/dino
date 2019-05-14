@@ -84,6 +84,8 @@ sub-procedure parser.run
         else if parser.mode is equal to 2 then
             store parser.token in c.nodes:c.nodes.len
             incr c.nodes.len
+        else if parser.token is equal to tokens.newline then
+            # ignore rogue newlines
         else
             in parser.error join "unknown parser.mode: " parser.mode
             in parser.error join parser.error " token: " parser.token
