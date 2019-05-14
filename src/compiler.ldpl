@@ -13,7 +13,6 @@ c.Nodes*        is number
 c.Types         is number vector  # variable types. 1=n,2=t,3=nv,4=tv
 c.Vars          is text vector    # variable names
 c.Vars*         is number
-c.TypeNames     is text vector    # type class names, eg number
 
 # Nodes -> {Generator} -> Assembly
 c.Asm           is text           # assembly source code
@@ -27,13 +26,16 @@ c.Text*         is number
 # TOKENS:
 tokens.NEWLINE  is text            # newline token
 tokens.IS       is text            # `is` token
+tokens.IN       is text            # `is` token
 tokens.VECTOR   is text            # ...you get it
 tokens.NUMBER   is text
 tokens.TEXT     is text
 
 PROCEDURE:
+# TODO: like opcodes
 store ":NL:"   in tokens.NEWLINE
 store "IS"     in tokens.IS
+store "IN"     in tokens.IN
 store "VECTOR" in tokens.VECTOR
 store "NUMBER" in tokens.NUMBER
 store "TEXT"   in tokens.TEXT

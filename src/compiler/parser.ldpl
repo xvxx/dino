@@ -15,20 +15,20 @@
 
 DATA:
 # USES:
-# c.Nodes        is text vector
 # c.Tokens       is text vector
+# c.Nodes        is text vector
 
 # OUT:                            # 1=num,2=text,3=nv,4=tv
 parser.tnames    is text vector   # human names of types
 parser.types     is number vector # type of each variable
 parser.names     is text vector   # human names of variables
 parser.names*    is number
+parser.mode      is number        # 1=data, 2=code
+parser.node      is number
 
 parser.i         is number
-parser.x         is number
-parser.y         is number
+parser.n         is number
 parser.t         is text
-parser.mode      is number        # 1=data, 2=code
 parser.token     is text
 parser.error     is text
 parser.char      is text
@@ -36,6 +36,15 @@ parser.prev      is number
 parser.next      is number
 parser.var       is text
 parser.type      is text
+
+parser.x         is text
+parser.y         is text
+parser.z         is text
+parser.expect    is text
+parser.key.x     is text
+parser.key.y     is text
+parser.key.z     is text
+parser.key.type  is text
 
 PROCEDURE:
 store "NUM" in parser.tnames:1
@@ -46,6 +55,7 @@ store "TXV" in parser.tnames:4
 # IN: parser.error
 sub-procedure parser.error
     display "parser.error: " parser.error crlf
+    display "token " parser.i " of " c.Tokens* crlf
     exit
 end sub-procedure
 
@@ -58,12 +68,43 @@ sub-procedure parser.advance
     store c.Tokens:parser.i in parser.token
 end sub-procedure
 
-# Parse procedure statement
-#  IN: parser.token
-sub-procedure parser.proc.parse
-    store parser.token in c.Nodes:c.Nodes*
-    incr c.Nodes*
+sub-procedure parser.expect
+    call parser.advance
+    if parser.token is not equal to parser.expect then
+        in parser.error join "expected " parser.expect ", got " parser.token crlf
+        call parser.error
+    end if
+end sub-procedure
 
+# Parse procedure statement
+#   IN: parser.token
+# NODE:
+#   * $id       # node type
+#   * $id:x
+#   * $id:y
+#   * $id:z
+#   * $id:arg1...
+#   * $id:arg0
+#   * $id:argc
+sub-procedure parser.proc.parse
+    if "STORE" is equal to parser.token then
+        join c.Nodes* and ":x" in parser.key.x
+        join c.Nodes* and ":y" in parser.key.y
+
+        call parser.advance
+        store parser.token in parser.x
+        store tokens.IN in parser.expect
+        call parser.expect
+        call parser.advance
+        store parser.token in parser.y
+
+        store "STORE" in c.Nodes:c.Nodes*
+        store parser.x in c.Nodes:parser.key.x
+        store parser.y in c.Nodes:parser.key.y
+        incr c.Nodes*
+    else if "DISPLAY" is equal to parser.token then
+        display "herp" crlf
+    end if
 end sub-procedure
 
 #  IN: c.Tokens
