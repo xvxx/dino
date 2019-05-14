@@ -1,35 +1,35 @@
 # === COMPILER =======================================================
 DATA:
 # Input -> {Lexer}
-c.input        is text           # LDPL source code
+c.input         is text           # LDPL source code
 
 # Input -> {Lexer} -> Tokens
-c.tokens       is text vector    # source code as tokens
-c.tokens.len   is number
+c.tokens        is text vector    # source code as tokens
+c.tokens.len    is number
 
 # Tokens -> {Parser} -> Nodes & Vars
-c.nodes        is text vector    # code
-c.nodes.len    is number
-c.types        is number vector  # variable types. 1=n,2=t,3=nv,4=tv
-c.vars         is text vector    # variable names
-c.vars.len     is number
-c.types.names  is text vector    # type class names, eg number
+c.nodes         is text vector    # code
+c.nodes.len     is number
+c.types         is number vector  # variable types. 1=n,2=t,3=nv,4=tv
+c.vars          is text vector    # variable names
+c.vars.len      is number
+c.types.names   is text vector    # type class names, eg number
 
 # Nodes -> {Generator} -> Assembly
-c.asm          is text           # assembly source code
+c.asm           is text           # assembly source code
 
 # Asm -> {Assembler} -> Bytecode
-c.bytes        is number vector   # instructions
-c.bytes.len    is number
-c.text         is text vector     # text literals
-c.text.len     is number
+c.bytes         is number vector   # instructions
+c.bytes.len     is number
+c.text          is text vector     # text literals
+c.text.len      is number
 
 # TOKENS:
-tokens.newline        is text     # newline token
-tokens.is             is text     # `is` token
-tokens.vector         is text     # ...you get it
-tokens.number         is text
-tokens.text           is text
+tokens.newline  is text            # newline token
+tokens.is       is text            # `is` token
+tokens.vector   is text            # ...you get it
+tokens.number   is text
+tokens.text     is text
 
 PROCEDURE:
 store ":NL:"   in tokens.newline
