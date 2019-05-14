@@ -19,7 +19,7 @@ PROCEDURE:
 #  IN: loader.input
 # OUT: vm.Code(*)
 #      vm.Text(.next)
-sub-procedure loader.run
+sub-procedure loader.Run
     store $OFFSET.TLIT in vm.Text*
     store length of loader.input in loader*
     store 0 in loader.i

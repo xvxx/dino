@@ -52,7 +52,7 @@ end sub-procedure
 # Execute bytecode.
 #  IN: vm.Code(*)
 #      vm.Text(*)
-sub-procedure cpu.run
+sub-procedure cpu.Run
     call cpu.validate
     store $OFFSET.CODE in cpu.pc
     while cpu.pc is less than vm.Code* do
