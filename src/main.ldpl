@@ -91,9 +91,9 @@ sub-procedure main.parse
     call lexer.run
     call parser.run
     store 0 in main.i
-    display "nodes:\n  "
+    display "nodes:\n"
     while main.i is less than c.nodes.len do
-        display "#<node " main.i "> " c.nodes:main.i crlf
+        display "  #<node " main.i "> " c.nodes:main.i crlf
         incr main.i
     repeat
     display "\e[0m"
