@@ -3,7 +3,7 @@
 LDPL_FILES=$(shell ls -f src/{bytecode,compiler,vm,version}.ldpl src/{util,compiler,vm}/*.ldpl | sed -e 's/^/-i=/' | tr -s '\n' ' ')
 dino: src/*.ldpl src/**/*.ldpl
 	@make version
-	ldpl $(LDPL_FILES) src/main.ldpl -o=dino -f=-O3
+	ldpl $(LDPL_FILES) src/main.ldpl -o=dino #-f=-O3
 	@git checkout src/version.ldpl
 
 test: dino
