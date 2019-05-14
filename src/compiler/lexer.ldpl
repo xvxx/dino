@@ -21,6 +21,15 @@ c.Input*             is number       # input length
 
 PROCEDURE:
 
+# Adds `token.push` to c.Tokens and clears `lexer.token`
+#  IN: lexer.token
+# OUT: c.Tokens
+sub-procedure lexer.token.push
+    store lexer.token in c.Tokens:c.Tokens*
+    incr c.Tokens*
+    store "" in lexer.token
+end sub-procedure
+
 #  IN: c.Input
 # OUT: c.Tokens(*)
 sub-procedure lexer.Run
@@ -47,21 +56,18 @@ sub-procedure lexer.Run
         if lexer.char is equal to "\n" then
             # store current token in tokens vector
             if lexer.token is not equal to "" then
-                store lexer.token in c.Tokens:c.Tokens*
-                add 1 and c.Tokens* in c.Tokens*
-                store "" in lexer.token
+                call lexer.token.push
             end if
 
             # add newline token
-            store tokens.newline in c.Tokens:c.Tokens*
-            incr c.Tokens*
-        else if lexer.char is equal to " " then
+            store tokens.NEWLINE in lexer.token
+            call lexer.token.push
+        else if lexer.char is equ
+        al to " " then
             if lexer.text? is equal to 0 then
                 # store current token in tokens vector
                 if lexer.token is not equal to "" then
-                    store lexer.token in c.Tokens:c.Tokens*
-                    add 1 and c.Tokens* in c.Tokens*
-                    store "" in lexer.token
+                    call lexer.token.push
                 end if
             else
                 # store string verbatum
@@ -69,9 +75,7 @@ sub-procedure lexer.Run
             end if
         else if lexer.char is equal to "#" then
             if lexer.token is not equal to "" then
-                store lexer.token in c.Tokens:c.Tokens*
-                incr c.Tokens*
-                store "" in lexer.token
+                call lexer.token.push
             end if
             store 1 in lexer.comment?
         else if lexer.char is equal to "\"" then
