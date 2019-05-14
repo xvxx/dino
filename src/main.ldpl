@@ -107,8 +107,8 @@ sub-procedure main.parse
     repeat
     display "vars:\n"
     store 0 in main.i
-    while main.i is less than parser.names* do
-        display "  #<" parser.tnames:parser.types:main.i ": " parser.names:main.i ">" crlf
+    while main.i is less than c.Vars* do
+        display "  #<" $TYPES:c.Types:main.i ": " c.Vars:main.i ">" crlf
         incr main.i
     repeat
     display "\e[0m"
