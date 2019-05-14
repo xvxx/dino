@@ -210,6 +210,10 @@ sub-procedure asm.tokens.to-bytecode
                 if digit? is equal to 1 then
                     store asm.token in c.Bytes:c.Bytes*
                     add 1 and c.Bytes* in c.Bytes*
+                else if asm.token is equal to "\r" then
+                else if asm.token is equal to "\t" then
+                else if asm.token is equal to " " then
+                else if asm.token is equal to "\n" then
                 else
                     join "bad token: " and asm.token in asm.error
                     call asm.error
