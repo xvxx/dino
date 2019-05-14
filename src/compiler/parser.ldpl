@@ -59,6 +59,7 @@ sub-procedure parser.error
     exit
 end sub-procedure
 
+# Moves the parser forward by one token, setting parser.token.
 #  IN: parser.i
 # OUT: parser.token
 #      parser.prev
@@ -68,12 +69,29 @@ sub-procedure parser.advance
     store c.Tokens:parser.i in parser.token
 end sub-procedure
 
+# Check if the current token is what we want. Errors if not.
+#  IN: parser.expect
+#      parser.token
 sub-procedure parser.expect
     call parser.advance
     if parser.token is not equal to parser.expect then
         in parser.error join "expected " parser.expect ", got " parser.token crlf
         call parser.error
     end if
+end sub-procedure
+
+#  IN: c.Nodes*
+#      parser.x
+#      parser.y
+#      parser.z
+sub-procedure parser.node.create
+    join c.Nodes* and ":x" in parser.key.x
+    join c.Nodes* and ":y" in parser.key.y
+    join c.Nodes* and ":z" in parser.key.z
+    store parser.x in c.Nodes:parser.key.x
+    store parser.y in c.Nodes:parser.key.y
+    store parser.z in c.Nodes:parser.key.z
+    incr c.Nodes*
 end sub-procedure
 
 # Parse procedure statement
@@ -87,23 +105,32 @@ end sub-procedure
 #   * $id:arg0
 #   * $id:argc
 sub-procedure parser.proc.parse
-    if "STORE" is equal to parser.token then
-        join c.Nodes* and ":x" in parser.key.x
-        join c.Nodes* and ":y" in parser.key.y
+    store "" in parser.x
+    store "" in parser.y
+    store "" in parser.z
+    store parser.token in c.Nodes:c.Nodes*
 
+    if "STORE" is equal to parser.token then
         call parser.advance
         store parser.token in parser.x
         store tokens.IN in parser.expect
         call parser.expect
         call parser.advance
         store parser.token in parser.y
-
-        store "STORE" in c.Nodes:c.Nodes*
-        store parser.x in c.Nodes:parser.key.x
-        store parser.y in c.Nodes:parser.key.y
-        incr c.Nodes*
+        call parser.node.create
     else if "DISPLAY" is equal to parser.token then
-        display "herp" crlf
+        call parser.advance
+        store parser.token in parser.x
+        call parser.node.create
+    else if "ACCEPT" is equal to parser.token then
+        call parser.advance
+        store parser.token in parser.x
+        call parser.node.create
+    else if "TEMPLATE" is equal to parser.token then
+        call parser.advance
+        call parser.node.create
+    else
+        display "IGNORING: " parser.token crlf
     end if
 end sub-procedure
 
@@ -111,7 +138,7 @@ end sub-procedure
 # OUT: c.Nodes
 #      parser.types
 #      parser.names
-sub-procedure parser.run
+sub-procedure parser.Run
     store 0 in parser.i
     store 0 in parser.mode
     store 0 in c.Nodes*
