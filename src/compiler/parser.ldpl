@@ -4,12 +4,11 @@
 # CODE nodes all live in the c.Nodes vector and fake a struct
 # using these keys:
 #   * $id:type
-#   * $id:x
-#   * $id:y
-#   * $id:z
-#   * $id:arg1...
+#   * $id:argc  # number of args, 0-8
 #   * $id:arg0
-#   * $id:argc
+#   * $id:arg1
+#   * $id:arg2...
+#   * $id:arg7
 # Most nodes follow this format. Others may have other fields with
 # information unique to that node. See nodes.ldpl
 
@@ -26,8 +25,9 @@ parser.names*    is number
 parser.mode      is number        # 1=data, 2=code
 parser.node      is number
 
-parser.i         is number
+parser.run.c     is number        # main iterator
 parser.n         is number
+parser.i         is number
 parser.t         is text
 parser.token     is text
 parser.error     is text
@@ -36,15 +36,13 @@ parser.prev      is number
 parser.next      is number
 parser.var       is text
 parser.type      is text
-
-parser.x         is text
-parser.y         is text
-parser.z         is text
+parser.key       is text
 parser.expect    is text
-parser.key.x     is text
-parser.key.y     is text
-parser.key.z     is text
-parser.key.type  is text
+
+parser.arg       is number
+
+parser.peek      is text
+parser.peek.n    is number
 
 PROCEDURE:
 store "NUM" in parser.tnames:1
@@ -59,14 +57,22 @@ sub-procedure parser.error
     exit
 end sub-procedure
 
+# Stores next token in `parser.peek`
+#  IN: parser.run.c
+# OUT: parser.peek
+sub-procedure parser.peek
+    add 1 and parser.run.c in parser.peek.n
+    store c.Tokens:parser.peek.n in parser.peek
+end sub-procedure
+
 # Moves the parser forward by one token, setting parser.token.
-#  IN: parser.i
+#  IN: parser.run.c
 # OUT: parser.token
 #      parser.prev
 sub-procedure parser.advance
-    store parser.i in parser.prev
-    incr parser.i
-    store c.Tokens:parser.i in parser.token
+    store parser.run.c in parser.prev
+    incr parser.run.c
+    store c.Tokens:parser.run.c in parser.token
 end sub-procedure
 
 # Check if the current token is what we want. Errors if not.
@@ -80,22 +86,36 @@ sub-procedure parser.expect
     end if
 end sub-procedure
 
-#  IN: c.Nodes*
-#      parser.x
-#      parser.y
-#      parser.z
-sub-procedure parser.node.create
-    join c.Nodes* and ":x" in parser.key.x
-    join c.Nodes* and ":y" in parser.key.y
-    join c.Nodes* and ":z" in parser.key.z
-    store parser.x in c.Nodes:parser.key.x
-    store parser.y in c.Nodes:parser.key.y
-    store parser.z in c.Nodes:parser.key.z
-    incr c.Nodes*
+# Uses the value of `parser.arg` to set c.Nodes:$id:arg
+sub-procedure parser.node.set-arg
+    in parser.key join c.Nodes* ":arg" parser.arg
+    store parser.token in c.Nodes:parser.key
+end sub-procedure
+# sets the value of `parser.token` to c.Nodes:$id:arg0
+sub-procedure parser.node.set-arg0
+    join c.Nodes* and ":arg0" in parser.key
+    store parser.token in c.Nodes:parser.key
+end sub-procedure
+sub-procedure parser.node.set-arg1
+    join c.Nodes* and ":arg1" in parser.key
+    store parser.token in c.Nodes:parser.key
+end sub-procedure
+sub-procedure parser.node.set-arg2
+    join c.Nodes* and ":arg2" in parser.key
+    store parser.token in c.Nodes:parser.key
+end sub-procedure
+sub-procedure parser.node.set-arg3
+    join c.Nodes* and ":arg3" in parser.key
+    store parser.token in c.Nodes:parser.key
+end sub-procedure
+sub-procedure parser.node.set-arg4
+    join c.Nodes* and ":arg4" in parser.key
+    store parser.token in c.Nodes:parser.key
 end sub-procedure
 
-# Parse procedure statement
-#   IN: parser.token
+# Parse procedure statement and create a node.
+#   IN: c.Nodes
+#       parser.token
 # NODE:
 #   * $id       # node type
 #   * $id:x
@@ -104,34 +124,45 @@ end sub-procedure
 #   * $id:arg1...
 #   * $id:arg0
 #   * $id:argc
-sub-procedure parser.proc.parse
-    store "" in parser.x
-    store "" in parser.y
-    store "" in parser.z
+sub-procedure parser.node.create
+    if parser.token is equal to tokens.NEWLINE then
+        return
+    end if
+
     store parser.token in c.Nodes:c.Nodes*
 
     if "STORE" is equal to parser.token then
         call parser.advance
-        store parser.token in parser.x
+        call parser.node.set-arg0
         store tokens.IN in parser.expect
         call parser.expect
         call parser.advance
-        store parser.token in parser.y
-        call parser.node.create
+        call parser.node.set-arg1
     else if "DISPLAY" is equal to parser.token then
         call parser.advance
-        store parser.token in parser.x
-        call parser.node.create
+        call parser.node.set-arg0
+        # vargs...
+        store 1 in parser.arg
+        while parser.arg is less than 8 do
+            call parser.peek
+            if parser.peek is equal to tokens.NEWLINE then
+                break
+            else
+                call parser.advance
+                call parser.node.set-arg
+            end if
+            incr parser.arg
+        repeat
     else if "ACCEPT" is equal to parser.token then
         call parser.advance
-        store parser.token in parser.x
-        call parser.node.create
+        call parser.node.set-arg0
     else if "TEMPLATE" is equal to parser.token then
         call parser.advance
-        call parser.node.create
     else
         # display "IGNORING: " parser.token crlf
     end if
+
+    incr c.Nodes*
 end sub-procedure
 
 #  IN: c.Tokens
@@ -139,12 +170,12 @@ end sub-procedure
 #      parser.types
 #      parser.names
 sub-procedure parser.Run
-    store 0 in parser.i
+    store 0 in parser.run.c
     store 0 in parser.mode
     store 0 in c.Nodes*
-    while parser.i is less than c.Tokens* do
-        subtract 1 from parser.i in parser.prev
-        store c.Tokens:parser.i in parser.token
+    while parser.run.c is less than c.Tokens* do
+        subtract 1 from parser.run.c in parser.prev
+        store c.Tokens:parser.run.c in parser.token
         get character at 0 from parser.token in parser.char
 
         if parser.token is equal to "DATA:" then
@@ -153,10 +184,9 @@ sub-procedure parser.Run
             store 2 in parser.mode
         else if parser.mode is equal to 1 then # DATA: section
             if parser.token is equal to tokens.newline then
-                incr parser.i
+                incr parser.run.c
                 continue
             end if
-
             store parser.token in parser.var
             call parser.advance
             if parser.token is not equal to tokens.is then
@@ -165,14 +195,14 @@ sub-procedure parser.Run
             end if
             call parser.advance
             store parser.token in parser.type
-            add parser.i and 1 in parser.next
+            add parser.run.c and 1 in parser.next
             if c.Tokens:parser.next is equal to tokens.vector then
                 if parser.type is equal to tokens.number then
                     store 3 in parser.types:parser.names*
                 else if parser.type is equal to tokens.text then
                     store 4 in parser.types:parser.names*
                 end if
-                incr parser.i
+                incr parser.run.c
             else
                 if parser.type is equal to tokens.number then
                     store 1 in parser.types:parser.names*
@@ -183,8 +213,9 @@ sub-procedure parser.Run
             store parser.var in parser.names:parser.names*
             incr parser.names*
         else if parser.mode is equal to 2 then # PROC: section
-            call parser.proc.parse
+            call parser.node.create
         else if parser.token is equal to tokens.newline then
+            display "IGNNORING: " parser.token crlf
             # ignore rogue newlines
         else
             in parser.error join "unknown parser.mode: " parser.mode
@@ -192,6 +223,6 @@ sub-procedure parser.Run
             call parser.error
         end if
 
-        incr parser.i
+        incr parser.run.c
     repeat
 end sub-procedure
