@@ -18,6 +18,7 @@ $OFFSET.TLIT   is number
 
 # constants
 $MAX.ARGS      is number
+$TYPES         is text vector
 
 # cpu instructions
 $CODES         is number vector
@@ -64,6 +65,15 @@ store 16384 in $OFFSET.TLIT # 0x4000 - text literals
 
 # constants
 store 16 in $MAX.ARGS
+
+store 1 in $TYPES:"NUM"
+store 2 in $TYPES:"TXT"
+store 3 in $TYPES:"NMV"
+store 4 in $TYPES:"TXV"
+store "NUM" in $TYPES:1
+store "TXT" in $TYPES:2
+store "NMV" in $TYPES:3
+store "TXV" in $TYPES:4
 
 # bytecode header
 store character code of "L" in $HEADER:0
