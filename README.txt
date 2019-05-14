@@ -114,20 +114,25 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 +---+-----------+-----------------------------------------------------
 | ? | NAME      | STATUS
 +---+-----------+-----------------------------------------------------
-|   | ========= | COMPILER ===========================================
-| X | Lexer     | Mostly Working
-| > | Parser    | Design
-|   | Generator | 
-| X | Assembler | Mostly Working
-|   | ========= | VIRTUAL MACHINE =====================================
-| X | CPU       | Mostly Working
-| X | Memory    | Mostly Working
-| = | ========= | TOOLING =============================================
-|   | REPL      | 
-|   | Debugger  | 
-| > | CLI       | Basics
-| X | dis       | Working, basic version
-| X | vscode    | Syntax highlighting. No Tasks.
+| = | ========= | COMPILER ===========================================
+| X | Lexer     | Operational
+| > | Parser    | in progress
+|   | Generator |
+| X | Assembler | Operational
+| = | ========= | VIRTUAL MACHINE ====================================
+| X | CPU       | Operational
+| X | Memory    | Operational
+| = | ========= | TOOLING ============================================
+|   | REPL      |
+|   | Debugger  |
+| X | CLI       | Operational. Lacks options, features.
+| X | dis       | Operational: Basic debug, needs labels and real asm
+| X | vscode    | Operational: Syntax highlighting. No Tasks.
+| = | ========= | DOCUMENTATION ======================================
+| > | manual    | In progress.
+|   | website   | Need to generate from manual.
+|   | man page  | Need to figure out how to generate from manual
+
 
 === TODO =============================================================
 
@@ -159,11 +164,11 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
    * [ ] == output
    * [ ] readline
    * [ ] history
-   * [ ] multi-lines   
+   * [ ] multi-lines
    * [ ] asm mode
 * [x] bytecode -> assembly $ dino dis file.dinocode
    * [x] load bytecode from file
-* [ ] RAM 
+* [ ] RAM
    * [ ] vectors?
 * [ ] CPU
    * [x] load bytecode from file
@@ -209,12 +214,24 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 
 === APPENDIX =========================================================
 
+# --- ADDRESS SYNTAX -------------------------------------------------
+| NAME            | SYNTAX
++-----------------+---------------------------------------------------
+| Number Register | $z, $pc
+| Number Variable | %bufsize, %Users
+| Text Variable   | @name, @City
+| Text Literal    | "heya", "LDPL rox!"
+| Label           | print-fn, DISPLAY
+
 # ----- MEMORY ADDRESSES ---------------------------------------------
 | 1ST  | LAST | TYPE | DESCRIPTION
 +------+------+---------------------------------------------------
 | 0000 | 000F | NUM  | Registers ($x, $y, $a, $pc)
 | 0010 | 2FFF | NUM  | Variables (%count, %item-size)
-| 3000 | FFFF | TEXT | Variables (@name, @ErrorMessage)
+| 3000 | 300F | TEXT | Registers (@A, @X, @E)
+| 3010 | 301F | TEXT | Command line arguments (@arg0, @arg1...@arg8)
+| 3020 | 3FFF | TEXT | Variables (@beer, @name, @label)
+| 4000 | FFFF | TEXT | Literals ("Hiya", "SCORE", "????")
 
 # --- REGISTERS ------------------------------------------------------
 | NUM  | NAME | DESCRIPTION
@@ -230,8 +247,6 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 | 0008 | $SP  | Stack pointer
 | 0009 | $PC  | Program counter
 | 0010 | $AC  | Num of command line arguments given aka ARGC. 8 max.
-| .... |      | Reserved
-| 000F |      | Reserved
 | 0010 |      | Number variables
 | .... |      |
 | 3000 | @A   | Text accumulator
@@ -239,13 +254,14 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 | 3002 | @Y   | Text register
 | 3003 | @T   | Text register
 | 3004 | @E   | Error message
-| .... |      | Reserved
-| 300F |      | Reserved
+| .... |      |
 | 3010 | @arg0| First command line argument (ARGV)
 | 3011 | @arg1| Second...
 | 3017 | @arg7| Penultimate
 | 3018 | @arg8| Final command line argument
+| .... |      |
 | 3020 |      | Text variables
+| .... |      |
 | 4000 |      | Text literals
 | .... |      |
 | FFFF |      | Final address
@@ -263,15 +279,6 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 | 00XX |  06  | Final EXIT
 | 00XX |      | Sub-procedure definitions
 | 00XX |      | Text literals
-
-# --- ADDRESS SYNTAX -------------------------------------------------
-| NAME            | SYNTAX
-+-----------------+---------------------------------------------------
-| Register Name   | $z, $pc
-| Number Variable | %bufsize, %Users
-| Text Variable   | @name, @City
-| Text Literal    | "heya", "LDPL rox!"
-| Label           | print-fn, DISPLAY
 
 # --- INSTRUCTIONS ---------------------------------------------------
 | CODE | NAME              | DESCRIPTION
