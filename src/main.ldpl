@@ -177,6 +177,15 @@ end sub-procedure
 # --- CONVERT LDPL TO ASSEMBLY ---------------------------------------
 # $ dino asm file.ldpl
 sub-procedure main.ldpl-to-asm
+    load file argv:1 in c.Input
+    if ERRORCODE is greater than 0 then
+        display ERRORTEXT crlf
+        exit
+    end if
+    call lexer.Run
+    call parser.Run
+    call generator.Run
+    display c.Asm crlf
 end sub-procedure
 
 # --- CONVERT LDPL TO BYTECODE ---------------------------------------
@@ -210,6 +219,8 @@ sub-procedure main
         call main.asm-to-bytecode
     else if argv:0 is equal to "run" then
         call main.run
+    else if argv:0 is equal to "asm" then
+        call main.ldpl-to-asm
     else if argv:0 is equal to "dis" then
         call main.bytecode-to-asm
     else if argv:0 is equal to "lex" then
