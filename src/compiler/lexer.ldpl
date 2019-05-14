@@ -23,6 +23,7 @@ lexer.char           is text         # current character
 lexer.prev           is number       # idx of previous character
 lexer.token          is text         # current token
 lexer.text?          is number       # are we lexing a string?
+lexer.comment?       is number       # are we lexing a comment?
 lexer.tokens.i       is number       # for clearing the list
 
 PROCEDURE:
@@ -37,6 +38,8 @@ store "TEXT"   in tokens.text
 sub-procedure lexer.run
     store length of lexer.input in lexer.input.len
     split lexer.input by "" in lexer.chars
+    store 0 in lexer.comment?
+    store 0 in lexer.text?
     store 0 in lexer.ci
     store 0 in lexer.tokens.len
     store "" in lexer.char
@@ -44,6 +47,14 @@ sub-procedure lexer.run
     while lexer.ci is less than lexer.input.len do
         subtract 1 from lexer.ci in lexer.prev
         store lexer.chars:lexer.ci in lexer.char
+
+        if lexer.comment? is equal to 1 then
+            if lexer.char is equal to "\n" then
+                store 0 in lexer.comment?
+            end if
+            incr lexer.ci
+            continue
+        end if
 
         if lexer.char is equal to "\n" then
             # store current token in tokens vector
@@ -68,6 +79,13 @@ sub-procedure lexer.run
                 # store string verbatum
                 join lexer.token and lexer.char in lexer.token
             end if
+        else if lexer.char is equal to "#" then
+            if lexer.token is not equal to "" then
+                store lexer.token in lexer.tokens:lexer.tokens.len
+                incr lexer.tokens.len
+                store "" in lexer.token
+            end if
+            store 1 in lexer.comment?
         else if lexer.char is equal to "\"" then
             if lexer.chars:lexer.prev is not equal to "\\" then
                 if lexer.text? is equal to 0 then
