@@ -10,8 +10,8 @@ c.Tokens*       is number
 # Tokens -> {Parser} -> Nodes & Vars
 c.Nodes         is text vector    # code
 c.Nodes*        is number
-c.Types         is number vector  # variable types. 1=n,2=t,3=nv,4=tv
-c.Vars          is text vector    # variable names
+c.Types         is number vector  # name -> type 1=n,2=t,3=nv,4=tv
+c.Vars          is text vector    #    # -> name
 c.Vars*         is number
 
 # Nodes -> {Generator} -> Assembly
