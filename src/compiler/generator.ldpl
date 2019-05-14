@@ -1,0 +1,33 @@
+# === CODE GENERATOR =================================================
+# The generator produces Dino assembly in c.Asm from c.Nodes.
+
+DATA:
+gen.run.node is number
+gen.run.x is number
+gen.run.key is text
+gen.run.sep is text
+gen.run.indent is text
+
+PROCEDURE:
+sub-procedure generator.Run
+    store 0 in gen.run.node
+    while gen.run.node is less than c.Nodes* do
+        store "    " in gen.run.indent
+        display gen.run.indent c.Nodes:gen.run.node
+        store 0 in gen.run.x
+        store "  " in gen.run.sep
+        while gen.run.x is less than 8 do
+            in gen.run.key join gen.run.node ":arg" gen.run.x
+            if c.Nodes:gen.run.key is not equal to "" then
+                display gen.run.sep c.Nodes:gen.run.key
+                store ", " in gen.run.sep
+            else
+                break
+            end if
+            incr gen.run.x
+        repeat
+        display crlf
+        incr gen.run.node
+    repeat
+    display "\e[0m"
+end sub-procedure

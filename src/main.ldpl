@@ -139,7 +139,7 @@ end sub-procedure
 
 # $ dino run file.dinocode
 sub-procedure main.run.dinocode
-    load file argv:1 in loader.input
+    load file argv:1 in loader.Input
     if ERRORCODE is greater than 0 then
         display errortext crlf
         exit
