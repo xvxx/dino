@@ -8,12 +8,28 @@ gen.run.key is text
 gen.run.sep is text
 gen.run.indent is text
 
+gen.stmt is text
+
 PROCEDURE:
+# emit a just an opcode
+# IN: gen.stmt
+sub-procedure gen.emit-opcode
+    if "STORE" is equal to gen.stmt then
+        display "STORE"
+    else if "DISPLAY" is equal to gen.stmt then
+        display "PRINT"
+    else
+        # dunno
+    end if
+end sub-procedure
+
 sub-procedure generator.Run
     store 0 in gen.run.node
     while gen.run.node is less than c.Nodes* do
-        store "    " in gen.run.indent
-        display gen.run.indent c.Nodes:gen.run.node
+        display "    "
+        store c.Nodes:gen.run.node in gen.stmt
+        call gen.emit-opcode
+
         store 0 in gen.run.x
         store "  " in gen.run.sep
         while gen.run.x is less than 8 do
@@ -29,5 +45,4 @@ sub-procedure generator.Run
         display crlf
         incr gen.run.node
     repeat
-    display "\e[0m"
 end sub-procedure
