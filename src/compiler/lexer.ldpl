@@ -25,6 +25,11 @@ PROCEDURE:
 #  IN: lexer.token
 # OUT: c.Tokens
 sub-procedure lexer.token.push
+    # TODo big ol' CRLF hack
+    if lexer.token is equal to tokens.CRLF then
+        store "\"\\n\"" in lexer.token
+    end if
+
     store lexer.token in c.Tokens:c.Tokens*
     incr c.Tokens*
     store "" in lexer.token
@@ -62,8 +67,7 @@ sub-procedure lexer.Run
             # add newline token
             store tokens.NEWLINE in lexer.token
             call lexer.token.push
-        else if lexer.char is equ
-        al to " " then
+        else if lexer.char is equal to " " then
             if lexer.text? is equal to 0 then
                 # store current token in tokens vector
                 if lexer.token is not equal to "" then
