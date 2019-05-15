@@ -37,7 +37,7 @@ parser.key       is text
 parser.expect    is text
 
 parser.type      is number
-parser.arg       is number
+parser.child     is number
 
 parser.peek      is text
 parser.peek.n    is number
@@ -113,50 +113,31 @@ sub-procedure parser.type.identify
     call parser.error
 end sub-procedure
 
-# Uses the value of `parser.arg` to set c.Nodes:$id:arg
-sub-procedure parser.node.set-arg
-    in parser.key join c.Nodes* ":arg" parser.arg
+# Uses the value of `parser.child` to set c.Nodes:$id:$child
+sub-procedure parser.node.push-child
+    in parser.key join c.Nodes* ":" parser.child
     store parser.token in c.Nodes:parser.key
     join parser.key and ":type" in parser.key
     call parser.type.identify
     store parser.type in c.Nodes:parser.key
 end sub-procedure
 
-# sets the value of `parser.token` to c.Nodes:$id:arg0
-sub-procedure parser.node.set-arg0
-    join c.Nodes* and ":arg0" in parser.key
-    store parser.token in c.Nodes:parser.key
-    join parser.key and ":type" in parser.key
-    call parser.type.identify
-    store parser.type in c.Nodes:parser.key
+# sets the value of `parser.token` to c.Nodes:$id:0
+sub-procedure parser.node.push-child0
+    store 0 in parser.child
+    call parser.node.push-child
 end sub-procedure
-sub-procedure parser.node.set-arg1
-    join c.Nodes* and ":arg1" in parser.key
-    store parser.token in c.Nodes:parser.key
-    call parser.type.identify
-    join parser.key and ":type" in parser.key
-    store parser.type in c.Nodes:parser.key
+sub-procedure parser.node.push-child1
+    store 1 in parser.child
+    call parser.node.push-child
 end sub-procedure
-sub-procedure parser.node.set-arg2
-    join c.Nodes* and ":arg2" in parser.key
-    store parser.token in c.Nodes:parser.key
-    call parser.type.identify
-    join parser.key and ":type" in parser.key
-    store parser.type in c.Nodes:parser.key
+sub-procedure parser.node.push-child2
+    store 2 in parser.child
+    call parser.node.push-child
 end sub-procedure
-sub-procedure parser.node.set-arg3
-    join c.Nodes* and ":arg3" in parser.key
-    store parser.token in c.Nodes:parser.key
-    call parser.type.identify
-    join parser.key and ":type" in parser.key
-    store parser.type in c.Nodes:parser.key
-end sub-procedure
-sub-procedure parser.node.set-arg4
-    join c.Nodes* and ":arg4" in parser.key
-    store parser.token in c.Nodes:parser.key
-    call parser.type.identify
-    join parser.key and ":type" in parser.key
-    store parser.type in c.Nodes:parser.key
+sub-procedure parser.node.push-child3
+    store 3 in parser.child
+    call parser.node.push-child
 end sub-procedure
 
 # Parse procedure statement and create a node.
@@ -164,12 +145,9 @@ end sub-procedure
 #       parser.token
 # NODE:
 #   * $id       # node type
-#   * $id:x
-#   * $id:y
-#   * $id:z
-#   * $id:arg1...
-#   * $id:arg0
-#   * $id:argc
+#   * $id:0
+#   * $id:1
+#   * $id:2...
 sub-procedure parser.node.create
     if parser.token is equal to tokens.NEWLINE then
         return
@@ -179,29 +157,31 @@ sub-procedure parser.node.create
 
     if "STORE" is equal to parser.token then
         call parser.advance
-        call parser.node.set-arg0
+        call parser.node.push-child0
         store tokens.IN in parser.expect
         call parser.expect
         call parser.advance
-        call parser.node.set-arg1
+        call parser.node.push-child1
     else if "DISPLAY" is equal to parser.token then
         call parser.advance
-        call parser.node.set-arg0
+        call parser.node.push-child0
         # vargs...
-        store 1 in parser.arg
-        while parser.arg is less than 8 do
+        store 1 in parser.child
+        while parser.child is less than 8 do
             call parser.peek
             if parser.peek is equal to tokens.NEWLINE then
                 break
+            else if parser.peek is equal to "" then
+                break
             else
                 call parser.advance
-                call parser.node.set-arg
+                call parser.node.push-child
             end if
-            incr parser.arg
+            incr parser.child
         repeat
     else if "ACCEPT" is equal to parser.token then
         call parser.advance
-        call parser.node.set-arg0
+        call parser.node.push-child
     else if "TEMPLATE" is equal to parser.token then
         call parser.advance
     else
