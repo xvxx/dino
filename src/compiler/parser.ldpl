@@ -1,24 +1,21 @@
 # === PARSER =========================================================
-# The parser validates syntax and turns a text vector of tokens into
-# DATA and CODE nodes. CODE nodes all live in the c.Nodes vector and
-# fake a tree using these vector subindexes:
+# The parser validates syntax (kinda) and turns a text vector of
+# tokens into two vectors: code nodes and variables.
 #
-#   * $id            # node type (see nodes.* in compiler.ldpl)
-#   * $id:v          # node value
-#   * $id:0          # child node type
-#   * $id:0:v        # child node value
-#   * $id:1
-#   * $id:1:v...
-#   * $id:1:0        # 1st child of 2nd child...
+# The variables vector, c.Vars, is actually two vectors in one:
+#   - Number subindexes give you the name of a variable.
+#   - Text subindexes give the variable's $type.
+#
+# The code vector, cNodes, fakes a struct with the following key
+# structure:
+#   - $id      # node name
+#   - $id:0    # 1st argument
+#   - $id:0:t  # 1st argument's $type
+#   - $id:1    # 2nd argument...
+#   - $id:1:t  #
+# And so on.
 
 DATA:
-# USES:
-# c.Tokens       is text vector
-# c.Nodes        is text vector
-# c.Nodes*       is number
-# c.Vars         is text vector    # num index=names, txt index=type: 1=n,2=t,3=nv,4=tv
-# c.Vars*        is number
-
 # OUT:
 parser.mode      is number        # 1=data, 2=code
 parser.node      is number
@@ -37,7 +34,7 @@ parser.key       is text
 parser.expect    is text
 
 parser.type      is number
-parser.child     is number
+parser.arg       is number
 
 parser.peek      is text
 parser.peek.n    is number
@@ -92,13 +89,13 @@ sub-procedure parser.type.identify
     end if
     call digit?
     if digit? is equal to 1 then
-        store $TYPES:"NUM" in parser.type
+        store $TYPES:"NML" in parser.type
         return
     end if
 
     # text
     if parser.char is equal to "\"" then
-        store $TYPES:"TXT" in parser.type
+        store $TYPES:"TXL" in parser.type
         return
     end if
 
@@ -113,9 +110,9 @@ sub-procedure parser.type.identify
     call parser.error
 end sub-procedure
 
-# Uses the value of `parser.child` to set c.Nodes:$id:$child
-sub-procedure parser.node.push-child
-    in parser.key join c.Nodes* ":" parser.child
+# Uses the value of `parser.arg` to set c.Nodes:$id:$arg
+sub-procedure parser.node.set
+    in parser.key join c.Nodes* ":" parser.arg
     store parser.token in c.Nodes:parser.key
     join parser.key and ":type" in parser.key
     call parser.type.identify
@@ -123,21 +120,21 @@ sub-procedure parser.node.push-child
 end sub-procedure
 
 # sets the value of `parser.token` to c.Nodes:$id:0
-sub-procedure parser.node.push-child0
-    store 0 in parser.child
-    call parser.node.push-child
+sub-procedure parser.node.set0
+    store 0 in parser.arg
+    call parser.node.set
 end sub-procedure
-sub-procedure parser.node.push-child1
-    store 1 in parser.child
-    call parser.node.push-child
+sub-procedure parser.node.set1
+    store 1 in parser.arg
+    call parser.node.set
 end sub-procedure
-sub-procedure parser.node.push-child2
-    store 2 in parser.child
-    call parser.node.push-child
+sub-procedure parser.node.set2
+    store 2 in parser.arg
+    call parser.node.set
 end sub-procedure
-sub-procedure parser.node.push-child3
-    store 3 in parser.child
-    call parser.node.push-child
+sub-procedure parser.node.set3
+    store 3 in parser.arg
+    call parser.node.set
 end sub-procedure
 
 # Parse procedure statement and create a node.
@@ -157,14 +154,14 @@ sub-procedure parser.node.create
 
     if "STORE" is equal to parser.token then
         call parser.advance
-        call parser.node.push-child0
+        call parser.node.set0
         store tokens.IN in parser.expect
         call parser.expect
         call parser.advance
-        call parser.node.push-child1
+        call parser.node.set1
     else if "DISPLAY" is equal to parser.token then
         call parser.advance
-        call parser.node.push-child0
+        call parser.node.set0
         # vargs...
         store 1 in parser.child
         while parser.child is less than 8 do
@@ -175,13 +172,13 @@ sub-procedure parser.node.create
                 break
             else
                 call parser.advance
-                call parser.node.push-child
+                call parser.node.set
             end if
             incr parser.child
         repeat
     else if "ACCEPT" is equal to parser.token then
         call parser.advance
-        call parser.node.push-child
+        call parser.node.set
     else if "TEMPLATE" is equal to parser.token then
         call parser.advance
     else

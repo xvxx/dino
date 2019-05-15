@@ -68,12 +68,16 @@ store 16 in $MAX.ARGS
 
 store 1 in $TYPES:"NUM"
 store 2 in $TYPES:"TXT"
-store 3 in $TYPES:"NMV"
-store 4 in $TYPES:"TXV"
+store 3 in $TYPES:"NMV" # number vector
+store 4 in $TYPES:"TXV" # text vector
+store 5 in $TYPES:"NML" # number literal
+store 6 in $TYPES:"TXL" # text literal
 store "NUM" in $TYPES:1
 store "TXT" in $TYPES:2
 store "NMV" in $TYPES:3
 store "TXV" in $TYPES:4
+store "NML" in $TYPES:5
+store "TXL" in $TYPES:6
 
 # bytecode header
 store character code of "L" in $HEADER:0

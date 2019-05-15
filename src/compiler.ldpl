@@ -30,6 +30,8 @@ tokens.VECTOR   is text            # ...you get it
 tokens.NUMBER   is text
 tokens.TEXT     is text
 tokens.CRLF     is text
+tokens.STORE    is text
+tokens.DISPLAY  is text
 
 # AST NODES:
 nodes.NUMBER    is number  # 3.14
@@ -40,13 +42,17 @@ nodes.NUMVEC    is number  # list
 nodes.TEXTVEC   is number  # groceries
 nodes.IF        is number
 nodes.STORE     is number
+nodes.DISPLAY   is number
 
 PROCEDURE:
 # TODO: like opcodes
-store ":NL:"   in tokens.NEWLINE
-store "IS"     in tokens.IS
-store "IN"     in tokens.IN
-store "VECTOR" in tokens.VECTOR
-store "NUMBER" in tokens.NUMBER
-store "TEXT"   in tokens.TEXT
-store "CRLF"   in tokens.CRLF
+store ":NL:"    in tokens.NEWLINE
+store "IS"      in tokens.IS
+store "IN"      in tokens.IN
+store "VECTOR"  in tokens.VECTOR
+store "NUMBER"  in tokens.NUMBER
+store "TEXT"    in tokens.TEXT
+store "CRLF"    in tokens.CRLF
+store "STORE"   in tokens.STORE
+store "DISPLAY" in tokens.DISPLAY
+
