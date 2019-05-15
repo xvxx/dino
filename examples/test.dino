@@ -1,38 +1,33 @@
 ;; testing dino features
     SET %name, 69
     SET %neg, -100
-    DISPLAY %neg
-    DISPLAY "\n"
+    PRINL %neg
     ABS %neg
-    DISPLAY %neg
-    DISPLAY "\n"
+    PRINL %neg
 
     SET %Pi, 3.14
     CEIL %Pi
-    DISPLAY "3.14? I prefer "
-    DISPLAY %Pi
-    DISPLAY ". Or even "
+    PRINT "3.14? I prefer "
+    PRINT %Pi
+    PRINT ". Or even "
     SET %Pi, 3.14
     FLOOR %Pi
-    DISPLAY %Pi
-    DISPLAY ".\n"
+    PRINL %Pi
 
-    DISPLAY %name
-    DISPLAY "\n"
+    PRINL %name
     STORE %age, %name
-    DISPLAY "You're how old? "
-    DISPLAY %age
-    DISPLAY "\n"
+    PRINT "You're how old? "
+    PRINL %age
     SET %thousand 1000
     ADD %thousand, %age, %age
-    DISPLAY "Or are you "
-    DISPLAY %age
-    DISPLAY "?\n"
+    PRINT "Or are you "
+    PRINT %age
+    PRINL "?"
     SET %beer, 99
     SET %age, 100
-    DISPLAY "Oh wait... you're "
-    DISPLAY %age
-    DISPLAY " ?!?!\n"
+    PRINT "Oh wait... you're "
+    PRINT %age
+    PRINL " ?!?!"
     PRINT "I thought you were "
     RANDOM %age
     SET %ten, 100
@@ -41,7 +36,7 @@
     PRINL %age
 
     SET @file, "./examples/test.dino"
-    READ @file @file
+    READ @file, @file
     PRINL @file
 
     EXIT
