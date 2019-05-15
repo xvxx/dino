@@ -1,46 +1,32 @@
 # === CODE GENERATOR =================================================
-# The generator will eventually use the AT in c.Nodes to produce ASM.
-# For now, it loops through c.Tokens and emits DinoASM directly. 🤷
+# The generator loops through c.Nodes and emits assembly for each.
+# By "emit", we mean it puts it into c.Asm.
 
 DATA:
-# generator.Run
-gen.run.c is number
+# shared
 gen.token is text
+gen.key is text
 
-# gen.peek
-gen.peek is text
-gen.peek.i is number
+# generator.Run
+gen.node is number
+gen.node.type is number
+gen.run.n is number
+gen.run.type is number
 
 # gen.operand.emit
-gen.emit.char is text
+gen.operand is number
 gen.operand.type is number
-
+gen.emit.char is text
 
 PROCEDURE:
-# Emit an operand.
-# IN: gen.token
+# Emit operand 0 1 2 etc for current node based on `gen.operand`
+# IN: gen.operand.num
+#     gen.node
+#     c.Nodes
 sub-procedure gen.operand.emit
-    get character at 0 from gen.token in gen.emit.char
+    in gen.key join gen.node ":" gen.operand
+    store c.Nodes:gen.key in gen.operand.type
 
-    # text
-    if gen.emit.char is equal to "\"" then
-        display gen.token
-        return
-    end if
-
-    # number
-    if gen.emit.char is equal to "-" then
-        get character at 1 from gen.token in gen.emit.char
-    end if
-    store gen.emit.char in digit?.in
-    call digit?
-    if digit? is equal to 1 then
-        display gen.token
-        exit
-    end if
-
-    # variables
-    store c.Vars:gen.token in gen.operand.type
     if gen.operand.type is equal to 1 then
         display "@" gen.token
     else if gen.operand.type is equal to 2 then
@@ -59,46 +45,38 @@ sub-procedure gen.operand.emit
     # number variable
 end sub-procedure
 
-# Store the next token in gen.token
-# IN: gen.run.c
-sub-procedure gen.advance
-    incr gen.run.c
-    store c.Tokens:gen.run.c in gen.token
+# emit and advance
+sub-procedure gen.operand.emit0
+    store 0 in gen.operand
+    call gen.operand.emit
 end sub-procedure
 
-# Store the next token in gen.peek without advancing
-# IN: gen.run.c
-sub-procedure gen.peek
-    add gen.run.c and 1 in gen.peek.i
-    store c.Tokens:gen.peek.i in gen.peek
-end sub-procedure
-
-# IN: c.Tokens
+# IN: c.Nodes
 sub-procedure generator.Run
-    store 0 in gen.run.c
-    while gen.run.c is less than c.Tokens* do
-        store c.Tokens:gen.run.c in gen.token
+    store "" in c.Asm
+    store 0 in gen.node
+    while gen.node is less than c.Nodes* do
+        store c.Nodes:gen.node in gen.node.type
 
-        if tokens.NEWLINE is equal to gen.token then
-            # ignore newlines
-        else if tokens.STORE is equal to gen.token then
-            display $NAMES:$CODES:tokens.STORE " "
-            call gen.peek
-            while gen.peek is not equal to tokens.NEWLINE do
-                if gen.peek is equal to "" then
+        if nodes.STORE is equal to gen.node.type then
+            in c.Asm join c.Asm "STORE" " "
+            call gen.operand.emit0
+        else if nodes.DISPLAY is equal to gen.node.type then
+            in c.Asm join c.Asm "PRINT" " "
+            store 0 in gen.operand
+            while 0 is less than 1 do
+                in gen.key join gen.node ":" gen.run.n
+                store c.Nodes:gen.key in gen.operand.type
+                if gen.operand.type is equal to 0 then
                     break
                 end if
-                call gen.advance
                 call gen.operand.emit
-                call gen.peek
+                incr gen.operand
             repeat
-        else if tokens.DISPLAY is equal to gen.token then
-            display $NAMES:$CODES:tokens.DISPLAY
-            call gen.advance
         else
             # ?
         end if
 
-        incr gen.run.c
+        incr gen.node
     repeat
 end sub-procedure
