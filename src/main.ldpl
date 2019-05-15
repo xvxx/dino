@@ -101,7 +101,7 @@ sub-procedure main.parse
             in main.key join main.i ":" main.x
             if c.Nodes:main.key is not equal to "" then
                 join main.key and ":type" in main.tkey
-                display "    - a" main.x "(" $TYPES:c.Nodes:main.tkey "): " c.Nodes:main.key crlf
+                display "    - a" main.x "(" $TYPENAMES:c.Nodes:main.tkey "): " c.Nodes:main.key crlf
             end if
             incr main.x
         repeat
@@ -110,7 +110,7 @@ sub-procedure main.parse
     display "vars:\n"
     store 0 in main.i
     while main.i is less than c.Vars* do
-        display "  #<" $TYPES:c.Vars:c.Vars:main.i ": " c.Vars:main.i ">" crlf
+        display "  #<" $TYPENAMES:c.Vars:c.Vars:main.i ": " c.Vars:main.i ">" crlf
         incr main.i
     repeat
     display "\e[0m"

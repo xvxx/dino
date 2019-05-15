@@ -15,20 +15,42 @@ gen.operand is number
 gen.operand.type is number
 gen.operand.value is text
 gen.emit.char is text
+gen.op.a is text  # tmpvars
+gen.op.b is text
+gen.op.c is text
+
+gen.nvar is text
+gen.nvar.i is number
 
 # generator.Run
 gen.run.sep is text
 
 PROCEDURE:
+# Generate a unique number variable name for use in emitting.
+# OUT: gen.var
+sub-procedure gen.nvar
+    join "%var" and gen.nvar.i in gen.nvar
+    incr gen.nvar.i
+end sub-procedure
+
+# Use `gen.operand` to fill `gen.operand.value` and `gen.operand.type`
+#  IN: gen.operand
+#  IN: gen.node
+# OUT: gen.operand
+# OUT: gen.operand.type
+sub-procedure gen.operand.fetch
+    in gen.key join gen.node ":" gen.operand
+    store c.Nodes:gen.key in gen.operand.value
+    in gen.key join gen.key ":type"
+    store c.Nodes:gen.key in gen.operand.type
+end sub-procedure
+
 # Emit operand 0 1 2 etc for current node based on `gen.operand`
 # IN: gen.operand.num
 #     gen.node
 #     c.Nodes
 sub-procedure gen.operand.emit
-    in gen.key join gen.node ":" gen.operand
-    store c.Nodes:gen.key in gen.operand.value
-    in gen.key join gen.key ":type"
-    store c.Nodes:gen.key in gen.operand.type
+    call gen.operand.fetch
 
     if gen.operand.type is equal to 1 then
         display "%" gen.operand.value
@@ -94,11 +116,27 @@ sub-procedure generator.Run
                 incr gen.operand
             repeat
         else if nodes.ADD is equal to gen.node.type then
-            display "ADD "
-            call gen.operand.emit0
-            display ", "
-            call gen.operand.emit1
-            display ", "
+            store 0 in gen.operand
+            call gen.operand.fetch
+            if gen.operand.type is equal to $TYPES:"NML" then
+                call gen.nvar
+                display "SET " gen.nvar ", " gen.operand.value crlf
+                store gen.nvar in gen.op.a
+            else if gen.operand.type is equal to $TYPES:"NUM" then
+                join "%" and gen.operand.value in gen.op.a
+            end if
+
+            store 1 in gen.operand
+            call gen.operand.fetch
+            if gen.operand.type is equal to $TYPES:"NML" then
+                call gen.nvar
+                display "SET " gen.nvar ", " gen.operand.value crlf
+                store gen.nvar in gen.op.b
+            else if gen.operand.type is equal to $TYPES:"NUM" then
+                join "%" and gen.operand.value in gen.op.b
+            end if
+
+            display "ADD " gen.op.a ", " gen.op.b ", "
             call gen.operand.emit2
         else
             display "? " gen.node.type
