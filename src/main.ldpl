@@ -98,7 +98,7 @@ sub-procedure main.parse
         display "  " c.Nodes:main.i crlf
         store 0 in main.x
         while main.x is less than 8 do
-            in main.key join main.i ":arg" main.x
+            in main.key join main.i ":" main.x
             if c.Nodes:main.key is not equal to "" then
                 join main.key and ":type" in main.tkey
                 display "    - a" main.x "(" $TYPES:c.Nodes:main.tkey "): " c.Nodes:main.key crlf
