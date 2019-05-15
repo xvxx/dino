@@ -1,48 +1,104 @@
 # === CODE GENERATOR =================================================
-# The generator produces Dino assembly in c.Asm from c.Nodes.
+# The generator will eventually use the AT in c.Nodes to produce ASM.
+# For now, it loops through c.Tokens and emits DinoASM directly. 🤷
 
 DATA:
-gen.run.node is number
-gen.run.x is number
-gen.run.key is text
-gen.run.sep is text
-gen.run.indent is text
+# generator.Run
+gen.run.c is number
+gen.token is text
 
-gen.stmt is text
+# gen.peek
+gen.peek is text
+gen.peek.i is number
+
+# gen.operand.emit
+gen.emit.char is text
+gen.operand.type is number
+
 
 PROCEDURE:
-# emit a just an opcode
-# IN: gen.stmt
-sub-procedure gen.emit-opcode
-    if "STORE" is equal to gen.stmt then
-        display "STORE"
-    else if "DISPLAY" is equal to gen.stmt then
-        display "PRINT"
-    else
-        # dunno
+# Emit an operand.
+# IN: gen.token
+sub-procedure gen.operand.emit
+    get character at 0 from gen.token in gen.emit.char
+
+    # text
+    if gen.emit.char is equal to "\"" then
+        display gen.token
+        return
     end if
+
+    # number
+    if gen.emit.char is equal to "-" then
+        get character at 1 from gen.token in gen.emit.char
+    end if
+    store gen.emit.char in digit?.in
+    call digit?
+    if digit? is equal to 1 then
+        display gen.token
+        exit
+    end if
+
+    # variables
+    store c.Vars:gen.token in gen.operand.type
+    if gen.operand.type is equal to 1 then
+        display "@" gen.token
+    else if gen.operand.type is equal to 2 then
+        display "%" gen.token
+    else if gen.operand.type is equal to 3 then
+        display "UNIMPLEMENTED: number vector"
+        exit
+    else if gen.operand.type is equal to 4 then
+        display "UNIMPLEMENTED: text vector"
+        exit
+    else
+        display "bad operand type: " gen.operand.type " for " gen.token crlf
+        exit
+    end if
+
+    # number variable
 end sub-procedure
 
-sub-procedure generator.Run
-    store 0 in gen.run.node
-    while gen.run.node is less than c.Nodes* do
-        display "    "
-        store c.Nodes:gen.run.node in gen.stmt
-        call gen.emit-opcode
+# Store the next token in gen.token
+# IN: gen.run.c
+sub-procedure gen.advance
+    incr gen.run.c
+    store c.Tokens:gen.run.c in gen.token
+end sub-procedure
 
-        store 0 in gen.run.x
-        store "  " in gen.run.sep
-        while gen.run.x is less than 8 do
-            in gen.run.key join gen.run.node ":arg" gen.run.x
-            if c.Nodes:gen.run.key is not equal to "" then
-                display gen.run.sep c.Nodes:gen.run.key
-                store ", " in gen.run.sep
-            else
-                break
-            end if
-            incr gen.run.x
-        repeat
-        display crlf
-        incr gen.run.node
+# Store the next token in gen.peek without advancing
+# IN: gen.run.c
+sub-procedure gen.peek
+    add gen.run.c and 1 in gen.peek.i
+    store c.Tokens:gen.peek.i in gen.peek
+end sub-procedure
+
+# IN: c.Tokens
+sub-procedure generator.Run
+    store 0 in gen.run.c
+    while gen.run.c is less than c.Tokens* do
+        store c.Tokens:gen.run.c in gen.token
+
+        if tokens.NEWLINE is equal to gen.token then
+            # ignore newlines
+        else if tokens.STORE is equal to gen.token then
+            display $NAMES:$CODES:tokens.STORE " "
+            call gen.peek
+            while gen.peek is not equal to tokens.NEWLINE do
+                if gen.peek is equal to "" then
+                    break
+                end if
+                call gen.advance
+                call gen.operand.emit
+                call gen.peek
+            repeat
+        else if tokens.DISPLAY is equal to gen.token then
+            display $NAMES:$CODES:tokens.DISPLAY
+            call gen.advance
+        else
+            # ?
+        end if
+
+        incr gen.run.c
     repeat
 end sub-procedure
