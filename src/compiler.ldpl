@@ -35,16 +35,15 @@ tokens.STORE    is text
 tokens.DISPLAY  is text
 
 # AST NODES:
-nodes.NUMBER    is number  # 3.14
-nodes.TEXT      is number  # "Hiya"
-nodes.NUMVAR    is number  # i
-nodes.TEXTVAR   is number  # name
-nodes.NUMVEC    is number  # list
-nodes.TEXTVEC   is number  # groceries
-nodes.IF        is number
-nodes.STORE     is number
-nodes.DISPLAY   is number
-nodes.x         is number
+nodes.NUMBER    is text  # 3.14
+nodes.TEXT      is text  # "Hiya"
+nodes.NUMVAR    is text  # i
+nodes.TEXTVAR   is text  # name
+nodes.NUMVEC    is text  # list
+nodes.TEXTVEC   is text  # groceries
+nodes.IF        is text
+nodes.STORE     is text
+nodes.DISPLAY   is text
 
 PROCEDURE:
 # TODO: like opcodes
@@ -59,22 +58,12 @@ store "CRLF"    in tokens.CRLF
 store "STORE"   in tokens.STORE
 store "DISPLAY" in tokens.DISPLAY
 
-store 1 in nodes.x
-store nodes.x in nodes.NUMVAR
-incr nodes.x
-store nodes.x in nodes.TEXTVAR
-incr nodes.x
-store nodes.x in nodes.NUMVEC
-incr nodes.x
-store nodes.x in nodes.TEXTVEC
-incr nodes.x
-store nodes.x in nodes.NUMBER
-incr nodes.x
-store nodes.x in nodes.TEXT
-incr nodes.x
-store nodes.x in nodes.IF
-incr nodes.x
-store nodes.x in nodes.STORE
-incr nodes.x
-store nodes.x in nodes.DISPLAY
-incr nodes.x
+store "NUMVAR" in nodes.NUMVAR
+store "TEXTVAR" in nodes.TEXTVAR
+store "NUMVEC" in nodes.NUMVEC
+store "TEXTVEC" in nodes.TEXTVEC
+store "NUMBER" in nodes.NUMBER
+store "TEXT" in nodes.TEXT
+store "IF" in nodes.IF
+store "STORE" in nodes.STORE
+store "DISPLAY" in nodes.DISPLAY

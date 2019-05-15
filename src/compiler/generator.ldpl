@@ -4,18 +4,18 @@
 
 DATA:
 # shared
-gen.token is text
 gen.key is text
 
 # generator.Run
 gen.node is number
-gen.node.type is number
+gen.node.type is text
 gen.run.n is number
 gen.run.type is number
 
 # gen.operand.emit
 gen.operand is number
 gen.operand.type is number
+gen.operand.value is text
 gen.emit.char is text
 
 PROCEDURE:
@@ -25,29 +25,43 @@ PROCEDURE:
 #     c.Nodes
 sub-procedure gen.operand.emit
     in gen.key join gen.node ":" gen.operand
+    store c.Nodes:gen.key in gen.operand.value
+    in gen.key join gen.key ":type"
     store c.Nodes:gen.key in gen.operand.type
 
     if gen.operand.type is equal to 1 then
-        display "@" gen.token
+        display "%" gen.operand.value
     else if gen.operand.type is equal to 2 then
-        display "%" gen.token
+        display "@" gen.operand.value
     else if gen.operand.type is equal to 3 then
         display "UNIMPLEMENTED: number vector"
         exit
     else if gen.operand.type is equal to 4 then
         display "UNIMPLEMENTED: text vector"
         exit
+    else if gen.operand.type is equal to 5 then
+        display gen.operand.value
+    else if gen.operand.type is equal to 6 then
+        display gen.operand.value
     else
-        display "bad operand type: " gen.operand.type " for " gen.token crlf
+        display "bad operand type: " gen.operand.type " for " gen.operand.value crlf
         exit
     end if
 
     # number variable
 end sub-procedure
 
-# emit and advance
+# emit
 sub-procedure gen.operand.emit0
     store 0 in gen.operand
+    call gen.operand.emit
+end sub-procedure
+sub-procedure gen.operand.emit1
+    store 1 in gen.operand
+    call gen.operand.emit
+end sub-procedure
+sub-procedure gen.operand.emit2
+    store 2 in gen.operand
     call gen.operand.emit
 end sub-procedure
 
@@ -59,10 +73,12 @@ sub-procedure generator.Run
         store c.Nodes:gen.node in gen.node.type
 
         if nodes.STORE is equal to gen.node.type then
-            in c.Asm join c.Asm "STORE" " "
+            display "STORE" " "
+            call gen.operand.emit1
+            display ", "
             call gen.operand.emit0
         else if nodes.DISPLAY is equal to gen.node.type then
-            in c.Asm join c.Asm "PRINT" " "
+            display "PRINT" " "
             store 0 in gen.operand
             while 0 is less than 1 do
                 in gen.key join gen.node ":" gen.run.n
@@ -74,9 +90,10 @@ sub-procedure generator.Run
                 incr gen.operand
             repeat
         else
-            # ?
+            display "? "
         end if
 
+        display crlf
         incr gen.node
     repeat
 end sub-procedure
