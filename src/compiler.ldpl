@@ -10,9 +10,8 @@ c.Tokens*       is number
 # Tokens -> {Parser} -> Nodes & Vars
 c.Nodes         is text vector    # code
 c.Nodes*        is number
-c.Types         is number vector  # name -> type 1=n,2=t,3=nv,4=tv
-c.Vars          is text vector    #    # -> name
-c.Vars*         is number
+c.Vars          is text vector    # Vars is two vectors: name -> type OR num -> name
+c.Vars*         is number         # var types:1=n,2=t,3=nv,4=tv
 
 # Nodes -> {Generator} -> Assembly
 c.Asm           is text           # assembly source code
@@ -31,6 +30,16 @@ tokens.VECTOR   is text            # ...you get it
 tokens.NUMBER   is text
 tokens.TEXT     is text
 tokens.CRLF     is text
+
+# AST NODES:
+nodes.NUMBER    is number  # 3.14
+nodes.TEXT      is number  # "Hiya"
+nodes.NUMVAR    is number  # i
+nodes.TEXTVAR   is number  # name
+nodes.NUMVEC    is number  # list
+nodes.TEXTVEC   is number  # groceries
+nodes.IF        is number
+nodes.STORE     is number
 
 PROCEDURE:
 # TODO: like opcodes

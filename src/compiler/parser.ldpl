@@ -1,29 +1,25 @@
 # === PARSER =========================================================
 # The parser validates syntax and turns a text vector of tokens into
 # DATA and CODE nodes. CODE nodes all live in the c.Nodes vector and
-# fake a struct using these vector subindexes:
+# fake a tree using these vector subindexes:
 #
-#   * $id              # node type  1=n,2=t,3=nv,4=tv
-#   * $id:arg0         # 1st arg
-#   * $id:arg1
-#   * $id:arg2...
-#   * $id:arg7
-#   * $id:arg0:type    # type of 1st arg
-#   * $id:arg1:type    # ...
-#
-# Most nodes follow this format. Others may have other fields with
-# information unique to that node, such as IF.
+#   * $id            # node type (see nodes.* in compiler.ldpl)
+#   * $id:v          # node value
+#   * $id:0          # child node type
+#   * $id:0:v        # child node value
+#   * $id:1
+#   * $id:1:v...
+#   * $id:1:0        # 1st child of 2nd child...
 
 DATA:
 # USES:
 # c.Tokens       is text vector
 # c.Nodes        is text vector
 # c.Nodes*       is number
-# c.Types        is number vector  # variable types. 1=n,2=t,3=nv,4=tv
-# c.Vars         is text vector    # variable names
+# c.Vars         is text vector    # num index=names, txt index=type: 1=n,2=t,3=nv,4=tv
 # c.Vars*        is number
 
-# OUT:                            # 1=num,2=text,3=nv,4=tv
+# OUT:
 parser.mode      is number        # 1=data, 2=code
 parser.node      is number
 
@@ -51,7 +47,7 @@ PROCEDURE:
 sub-procedure parser.error
     display "parser.error: " parser.error crlf
     display "token " parser.i " of " c.Tokens* crlf
-    exit
+    # exit
 end sub-procedure
 
 # Stores next token in `parser.peek`
@@ -106,6 +102,15 @@ sub-procedure parser.type.identify
         return
     end if
 
+    # variable
+    store c.Vars:parser.token in parser.n
+    if parser.n is not equal to 0 then
+        store parser.n in parser.type
+        return
+    end if
+
+    in parser.error join "can't identify " parser.token
+    call parser.error
 end sub-procedure
 
 # Uses the value of `parser.arg` to set c.Nodes:$id:arg
@@ -208,7 +213,6 @@ end sub-procedure
 
 #  IN: c.Tokens
 # OUT: c.Nodes
-#      c.Types
 #      c.Vars
 sub-procedure parser.Run
     store 0 in parser.run.c
@@ -240,9 +244,9 @@ sub-procedure parser.Run
             add parser.run.c and 1 in parser.next
             if c.Tokens:parser.next is equal to tokens.vector then
                 if parser.t is equal to tokens.number then
-                    store 3 in c.Types:parser.var
+                    store 3 in c.Vars:parser.var
                 else if parser.t is equal to tokens.text then
-                    store 4 in c.Types:parser.var
+                    store 4 in c.Vars:parser.var
                 else
                     in parser.error join "bad token: " parser.token
                     call parser.error
@@ -250,9 +254,9 @@ sub-procedure parser.Run
                 incr parser.run.c
             else
                 if parser.t is equal to tokens.number then
-                    store 1 in c.Types:parser.var
+                    store 1 in c.Vars:parser.var
                 else if parser.t is equal to tokens.text then
-                    store 2 in c.Types:parser.var
+                    store 2 in c.Vars:parser.var
                 else
                     in parser.error join "bad token: " parser.token
                     call parser.error
