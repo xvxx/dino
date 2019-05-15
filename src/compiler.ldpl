@@ -44,6 +44,7 @@ nodes.TEXTVEC   is number  # groceries
 nodes.IF        is number
 nodes.STORE     is number
 nodes.DISPLAY   is number
+nodes.x         is number
 
 PROCEDURE:
 # TODO: like opcodes
@@ -58,3 +59,22 @@ store "CRLF"    in tokens.CRLF
 store "STORE"   in tokens.STORE
 store "DISPLAY" in tokens.DISPLAY
 
+store 1 in nodes.x
+store nodes.x in nodes.NUMVAR
+incr nodes.x
+store nodes.x in nodes.TEXTVAR
+incr nodes.x
+store nodes.x in nodes.NUMVEC
+incr nodes.x
+store nodes.x in nodes.TEXTVEC
+incr nodes.x
+store nodes.x in nodes.NUMBER
+incr nodes.x
+store nodes.x in nodes.TEXT
+incr nodes.x
+store nodes.x in nodes.IF
+incr nodes.x
+store nodes.x in nodes.STORE
+incr nodes.x
+store nodes.x in nodes.DISPLAY
+incr nodes.x
