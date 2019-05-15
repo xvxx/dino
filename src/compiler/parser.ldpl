@@ -25,7 +25,6 @@ parser.n         is number
 parser.i         is number
 parser.t         is text
 parser.token     is text
-parser.error     is text
 parser.char      is text
 parser.prev      is number
 parser.next      is number
@@ -39,12 +38,23 @@ parser.arg       is number
 parser.peek      is text
 parser.peek.n    is number
 
+parser.error     is text
+parser.error.i   is number
+
 PROCEDURE:
 # IN: parser.error
 sub-procedure parser.error
     display "parser.error: " parser.error crlf
-    display "token " parser.i " of " c.Tokens* crlf
-    # exit
+    display "token " parser.run.c " of " c.Tokens* crlf
+    while parser.error.i is less than c.Tokens* do
+        if parser.error.i is equal to parser.run.c then
+            display "\e[33;1m" c.Tokens:parser.error.i "\e[0m "
+        else
+            display c.Tokens:parser.error.i " "
+        end if
+        incr parser.error.i
+    repeat
+    exit
 end sub-procedure
 
 # Stores next token in `parser.peek`
@@ -184,9 +194,9 @@ sub-procedure parser.node.create
         call parser.expect
         call parser.advance
         call parser.node.set1
-        call parser.advance
         store tokens.IN in parser.expect
         call parser.expect
+        call parser.advance
         call parser.node.set2
     else if "ACCEPT" is equal to parser.token then
         call parser.advance
