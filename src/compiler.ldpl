@@ -27,6 +27,7 @@ tokens.NEWLINE  is text            # newline token
 tokens.IS       is text            # `is` token
 tokens.IN       is text            # `is` token
 tokens.VECTOR   is text            # ...you get it
+tokens.AND      is text
 tokens.NUMBER   is text
 tokens.TEXT     is text
 tokens.CRLF     is text
@@ -49,6 +50,7 @@ PROCEDURE:
 store ":NL:"    in tokens.NEWLINE
 store "IS"      in tokens.IS
 store "IN"      in tokens.IN
+store "AND"     in tokens.AND
 store "VECTOR"  in tokens.VECTOR
 store "NUMBER"  in tokens.NUMBER
 store "TEXT"    in tokens.TEXT
