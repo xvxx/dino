@@ -53,21 +53,21 @@ sub-procedure gen.operand.emit
     call gen.operand.fetch
 
     if gen.operand.type is equal to 1 then
-        display "%" gen.operand.value
+        in c.Asm join c.Asm "%" gen.operand.value
     else if gen.operand.type is equal to 2 then
-        display "@" gen.operand.value
+        in c.Asm join c.Asm "@" gen.operand.value
     else if gen.operand.type is equal to 3 then
-        display "UNIMPLEMENTED: number vector"
+        in c.Asm join c.Asm "UNIMPLEMENTED: number vector"
         exit
     else if gen.operand.type is equal to 4 then
-        display "UNIMPLEMENTED: text vector"
+        in c.Asm join c.Asm "UNIMPLEMENTED: text vector"
         exit
     else if gen.operand.type is equal to 5 then
-        display gen.operand.value
+        in c.Asm join c.Asm gen.operand.value
     else if gen.operand.type is equal to 6 then
-        display gen.operand.value
+        in c.Asm join c.Asm gen.operand.value
     else
-        display "bad operand type: " gen.operand.type " for " gen.operand.value crlf
+        in c.Asm join c.Asm "bad operand type: " gen.operand.type " for " gen.operand.value crlf
         exit
     end if
 
@@ -96,9 +96,9 @@ sub-procedure generator.Run
         store c.Nodes:gen.node in gen.node.type
 
         if nodes.STORE is equal to gen.node.type then
-            display "STORE" " "
+            in c.Asm join c.Asm "STORE" " "
             call gen.operand.emit1
-            display ", "
+            in c.Asm join c.Asm ", "
             call gen.operand.emit0
         else if nodes.DISPLAY is equal to gen.node.type then
             store 0 in gen.operand
@@ -109,9 +109,9 @@ sub-procedure generator.Run
                     break
                 end if
                 if gen.operand is greater than 0 then
-                    display crlf
+                    in c.Asm join c.Asm crlf
                 end if
-                display "PRINT "
+                in c.Asm join c.Asm "PRINT "
                 call gen.operand.emit
                 incr gen.operand
             repeat
@@ -120,7 +120,7 @@ sub-procedure generator.Run
             call gen.operand.fetch
             if gen.operand.type is equal to $TYPES:"NML" then
                 call gen.nvar
-                display "SET " gen.nvar ", " gen.operand.value crlf
+                in c.Asm join c.Asm "SET " gen.nvar ", " gen.operand.value crlf
                 store gen.nvar in gen.op.a
             else if gen.operand.type is equal to $TYPES:"NUM" then
                 join "%" and gen.operand.value in gen.op.a
@@ -130,21 +130,21 @@ sub-procedure generator.Run
             call gen.operand.fetch
             if gen.operand.type is equal to $TYPES:"NML" then
                 call gen.nvar
-                display "SET " gen.nvar ", " gen.operand.value crlf
+                in c.Asm join c.Asm "SET " gen.nvar ", " gen.operand.value crlf
                 store gen.nvar in gen.op.b
             else if gen.operand.type is equal to $TYPES:"NUM" then
                 join "%" and gen.operand.value in gen.op.b
             end if
 
-            display "ADD " gen.op.a ", " gen.op.b ", "
+            in c.Asm join c.Asm "ADD " gen.op.a ", " gen.op.b ", "
             call gen.operand.emit2
         else
-            display "? " gen.node.type
+            in c.Asm join c.Asm "? " gen.node.type
         end if
 
         incr gen.node
         if gen.node is less than c.Nodes* then
-            display crlf
+            in c.Asm join c.Asm crlf
         end if
     repeat
 end sub-procedure
