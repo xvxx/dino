@@ -8,11 +8,11 @@
 #
 # The code vector, cNodes, fakes a struct with the following key
 # structure:
-#   - $id      # node name
-#   - $id:0    # 1st argument
-#   - $id:0:t  # 1st argument's $type
-#   - $id:1    # 2nd argument...
-#   - $id:1:t  #
+#   - $id         # node name
+#   - $id:0       # 1st argument
+#   - $id:0:type  # 1st argument's $type
+#   - $id:1       # 2nd argument...
+#   - $id:1:type
 # And so on.
 
 DATA:
@@ -151,6 +151,7 @@ sub-procedure parser.node.create
     end if
 
     store parser.token in c.Nodes:c.Nodes*
+    store 0 in parser.arg
 
     if "STORE" is equal to parser.token then
         call parser.advance
@@ -163,8 +164,8 @@ sub-procedure parser.node.create
         call parser.advance
         call parser.node.set0
         # vargs...
-        store 1 in parser.child
-        while parser.child is less than 8 do
+        store 1 in parser.arg
+        while parser.arg is less than 8 do
             call parser.peek
             if parser.peek is equal to tokens.NEWLINE then
                 break
@@ -174,11 +175,22 @@ sub-procedure parser.node.create
                 call parser.advance
                 call parser.node.set
             end if
-            incr parser.child
+            incr parser.arg
         repeat
+    else if "ADD" is equal to parser.token then
+        call parser.advance
+        call parser.node.set0
+        store tokens.AND in parser.expect
+        call parser.expect
+        call parser.advance
+        call parser.node.set1
+        call parser.advance
+        store tokens.IN in parser.expect
+        call parser.expect
+        call parser.node.set2
     else if "ACCEPT" is equal to parser.token then
         call parser.advance
-        call parser.node.set
+        call parser.node.set0
     else if "TEMPLATE" is equal to parser.token then
         call parser.advance
     else
