@@ -9,14 +9,15 @@ gen.key is text
 # generator.Run
 gen.node is number
 gen.node.type is text
-gen.run.n is number
-gen.run.type is number
 
 # gen.operand.emit
 gen.operand is number
 gen.operand.type is number
 gen.operand.value is text
 gen.emit.char is text
+
+# generator.Run
+gen.run.sep is text
 
 PROCEDURE:
 # Emit operand 0 1 2 etc for current node based on `gen.operand`
@@ -78,19 +79,22 @@ sub-procedure generator.Run
             display ", "
             call gen.operand.emit0
         else if nodes.DISPLAY is equal to gen.node.type then
-            display "PRINT" " "
             store 0 in gen.operand
             while 0 is less than 1 do
-                in gen.key join gen.node ":" gen.run.n
+                in gen.key join gen.node ":" gen.operand ":type"
                 store c.Nodes:gen.key in gen.operand.type
                 if gen.operand.type is equal to 0 then
                     break
                 end if
+                if gen.operand is greater than 0 then
+                    display crlf
+                end if
+                display "PRINT "
                 call gen.operand.emit
                 incr gen.operand
             repeat
         else
-            display "? "
+            display "? " gen.node.type
         end if
 
         display crlf
