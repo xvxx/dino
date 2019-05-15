@@ -116,8 +116,8 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 +---+-----------+-----------------------------------------------------
 | = | ========= | COMPILER ===========================================
 | X | Lexer     | Operational
-| > | Parser    | in progress
-|   | Generator |
+| > | Parser    | Underway!
+| > | Generator | Underway!!
 | X | Assembler | Operational
 | = | ========= | VIRTUAL MACHINE ====================================
 | X | CPU       | Operational
@@ -140,7 +140,7 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
    * [x] lexer
    * [ ] parser
       * [ ] all nodes:
-         * [ ] STORE
+         * [x] STORE
          * [ ] IF
          * [ ] WHILE
          * [ ] BREAK
@@ -151,7 +151,7 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
          * [ ] WAIT
          * [ ] GOTO
          * [ ] LABEL
-         * [ ] ADD
+         * [x] ADD
          * [ ] SUB
          * [ ] MUL
          * [ ] DIV
@@ -183,7 +183,7 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
          * [ ] EXTENSIONS? CALL EXTERNAL?
    * [ ] generator
       * [ ] all nodes:
-         * [ ] STORE
+         * [x] STORE
          * [ ] IF
          * [ ] WHILE
          * [ ] BREAK
@@ -194,7 +194,7 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
          * [ ] WAIT
          * [ ] GOTO
          * [ ] LABEL
-         * [ ] ADD
+         * [x] ADD
          * [ ] SUB
          * [ ] MUL
          * [ ] DIV
