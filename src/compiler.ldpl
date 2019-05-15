@@ -44,6 +44,7 @@ nodes.TEXTVEC   is text  # groceries
 nodes.IF        is text
 nodes.STORE     is text
 nodes.DISPLAY   is text
+nodes.ADD       is text
 
 PROCEDURE:
 # TODO: like opcodes
@@ -67,3 +68,4 @@ store "TEXT" in nodes.TEXT
 store "IF" in nodes.IF
 store "STORE" in nodes.STORE
 store "DISPLAY" in nodes.DISPLAY
+store "ADD" in nodes.ADD

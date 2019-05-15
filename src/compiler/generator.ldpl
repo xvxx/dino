@@ -93,11 +93,20 @@ sub-procedure generator.Run
                 call gen.operand.emit
                 incr gen.operand
             repeat
+        else if nodes.ADD is equal to gen.node.type then
+            display "ADD "
+            call gen.operand.emit0
+            display ", "
+            call gen.operand.emit1
+            display ", "
+            call gen.operand.emit2
         else
             display "? " gen.node.type
         end if
 
-        display crlf
         incr gen.node
+        if gen.node is less than c.Nodes* then
+            display crlf
+        end if
     repeat
 end sub-procedure
