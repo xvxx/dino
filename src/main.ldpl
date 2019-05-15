@@ -119,8 +119,21 @@ end sub-procedure
 # --- RUN FILE -------------------------------------------------------
 # $ dino run file.ldpl
 sub-procedure main.run.ldpl
-    display "\e[1;31mNOT IMPLEMENTED\e[0m" crlf
-    exit
+    load file argv:1 in c.Input
+    if ERRORCODE is greater than 0 then
+        display ERRORTEXT crlf
+        exit
+    end if
+    call lexer.Run
+    call parser.Run
+    call generator.Run
+    call asm.Compile
+    call asm.To-dinocode
+    store asm.Dinocode in loader.input
+    call main.strip-args
+    call vm.Boot
+    call loader.Run
+    call cpu.Run
 end sub-procedure
 
 # $ dino run file.dino
