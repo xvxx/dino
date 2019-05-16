@@ -259,6 +259,18 @@ sub-procedure parser.node.create
     else if "CALL" is equal to parser.token then
         call parser.advance
         call parser.node.set0
+    else if "IF" is equal to parser.token then
+        call parser.advance
+        call parser.node.set0
+        store "IS" in parser.expect
+        call parser.expect
+        call parser.advance
+        store 1 in parser.arg
+        call parser.node.set-cond
+        call parser.node.set2
+        store "THEN" in parser.expect
+        call parser.expect
+        call parser.advance
     else if "WHILE" is equal to parser.token then
         call parser.advance
         call parser.node.set0
@@ -342,6 +354,9 @@ sub-procedure parser.node.create
         call parser.advance
         call parser.node.set0
     else if "ACCEPT" is equal to parser.token then
+        call parser.advance
+        call parser.node.set0
+    else if "WAIT" is equal to parser.token then
         call parser.advance
         call parser.node.set0
     else if "EXIT" is equal to parser.token then
