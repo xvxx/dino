@@ -283,6 +283,9 @@ sub-procedure parser.node.create
         repeat
     else if "CALL" is equal to parser.token then
         call parser.advance
+        if parser.token is equal to "SUB-PROCEDURE" then
+            call parser.advance
+        end if
         call parser.node.set0
     else if "ELSE" is equal to parser.token then
         call parser.peek
