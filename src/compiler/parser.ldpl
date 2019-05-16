@@ -265,7 +265,6 @@ sub-procedure parser.Run
         else if parser.mode is equal to 2 then # PROC: section
             call parser.node.create
         else if parser.token is equal to tokens.newline then
-            display "IGNNORING: " parser.token crlf
             # ignore rogue newlines
         else
             in parser.error join "unknown parser.mode: " parser.mode
