@@ -494,6 +494,60 @@ sub-procedure parser.node.create
             store "EOF" in parser.expect
             call parser.expect
         end if
+    else if "EXECUTE" is equal to parser.token then
+        call parser.advance
+        call parser.node.set0
+        call parser.peek
+        if parser.peek is equal to "AND" then
+            call parser.advance
+            store "STORE" in parser.expect
+            call parser.expect
+            call parser.peek
+            if "EXIT" is equal to parser.peek then
+                call parser.advance
+                store "CODE" in parser.expect
+                call parser.expect
+                store "IN" in parser.expect
+                call parser.expect
+                call parser.advance
+                call parser.node.set1
+            else if "OUTPUT" is equal to parser.peek then
+                call parser.advance
+                store "IN" in parser.expect
+                call parser.expect
+                call parser.advance
+                call parser.node.set1
+            else
+                store "EXIT or OUTPUT" in parser.expect
+                call parser.expect
+            end if
+    else if "LOAD" is equal to parser.token then
+        store "FILE" in parser.expect
+        call parser.expect
+        call parser.advance
+        call parser.node.set0
+        store "IN" in parser.expect
+        call parser.expect
+        call parser.advance
+        call parser.node.set1
+    else if "WRITE" is equal to parser.token then
+        call parser.advance
+        call parser.node.set0
+        store "TO" in parser.expect
+        call parser.expect
+        store "FILE" in parser.expect
+        call parser.expect
+        call parser.advance
+        call parser.node.set1
+    else if "APPEND" is equal to parser.token then
+        call parser.advance
+        call parser.node.set0
+        store "TO" in parser.expect
+        call parser.expect
+        store "FILE" in parser.expect
+        call parser.expect
+        call parser.advance
+        call parser.node.set1
     else if "WAIT" is equal to parser.token then
         call parser.advance
         call parser.node.set0
