@@ -96,7 +96,13 @@ sub-procedure generator.Run
         store c.Nodes:gen.node in gen.node.type
 
         if nodes.STORE is equal to gen.node.type then
-            in c.Asm join c.Asm "STORE" " "
+            store 0 in gen.operand
+            call gen.operand.fetch
+            if gen.operand.type is equal to $TYPES:"NML" then
+                in c.Asm join c.Asm "SET" " "
+            else
+                in c.Asm join c.Asm "STORE" " "
+            end if
             call gen.operand.emit1
             in c.Asm join c.Asm ", "
             call gen.operand.emit0
