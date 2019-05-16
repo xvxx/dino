@@ -129,6 +129,69 @@ sub-procedure parser.node.set
     store parser.type in c.Nodes:parser.key
 end sub-procedure
 
+# Turns a conditional like "less than" into a symbol "<" and sticks it
+# in c.Nodes:$id:$arg
+#  IN: parser.token
+#      parser.arg
+# OUT: c.Nodes
+sub-procedure parser.node.set-cond
+    in parser.key join c.Nodes* ":" parser.arg
+
+    if parser.token is equal to "EQUAL" then
+        store "TO" in parser.expect
+        call parser.expect
+        call parser.advance
+        store "==" in c.Nodes:parser.key
+    else if parser.token is equal to "NOT" then
+        store "EQUAL" in parser.expect
+        call parser.expect
+        call parser.advance
+        store "TO" in parser.expect
+        call parser.expect
+        call parser.advance
+        store "!=" in c.Nodes:parser.key
+    else if parser.token is equal to "LESS" then
+        store "THAN" in parser.expect
+        call parser.expect
+        call parser.advance
+        if parser.token is equal to "OR" then
+            store "OR" in parser.expect
+            call parser.expect
+            call parser.advance
+            store "EQUAL" in parser.expect
+            call parser.expect
+            call parser.advance
+            store "TO" in parser.expect
+            call parser.expect
+            call parser.advance
+            store "<=" in c.Nodes:parser.key
+        else
+            store "<" in c.Nodes:parser.key
+        end if
+    else if parser.token is equal to "GREATER" then
+        store "THAN" in parser.expect
+        call parser.expect
+        call parser.advance
+        if parser.token is equal to "OR" then
+            store "OR" in parser.expect
+            call parser.expect
+            call parser.advance
+            store "EQUAL" in parser.expect
+            call parser.expect
+            call parser.advance
+            store "TO" in parser.expect
+            call parser.expect
+            call parser.advance
+            store ">=" in c.Nodes:parser.key
+        else
+            store ">" in c.Nodes:parser.key
+        end if
+    else
+        join "not a conditional: " and parser.token in parser.error
+        call parser.error
+    end if
+end sub-procedure
+
 # sets the value of `parser.token` to c.Nodes:$id:0
 sub-procedure parser.node.set0
     store 0 in parser.arg
@@ -187,6 +250,18 @@ sub-procedure parser.node.create
             end if
             incr parser.arg
         repeat
+    else if "WHILE" is equal to parser.token then
+        call parser.advance
+        call parser.node.set0
+        store "IS" in parser.expect
+        call parser.expect
+        call parser.advance
+        store 1 in parser.arg
+        call parser.node.set-cond
+        call parser.node.set2
+        store "DO" in parser.expect
+        call parser.expect
+        call parser.advance
     else if "ADD" is equal to parser.token then
         call parser.advance
         call parser.node.set0
