@@ -143,39 +143,11 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
    * [x] lexer
    * [ ] parser
       * [ ] all nodes:
-         * [x] STORE
-         * [x] IF
-         * [x] WHILE
-         * [x] BREAK
-         * [x] CONTINUE
-         * [x] SUB-PROCEDURE
-         * [x] CALL
-         * [x] RETURN
-         * [x] EXIT
-         * [x] WAIT
-         * [x] GOTO
-         * [x] LABEL
-         * [x] ADD
-         * [x] SUB
-         * [x] MUL
-         * [x] DIV
-         * [x] MOD
-         * [x] ABS
-         * [x] RAND
-         * [x] FLOOR
-         * [x] CEIL
-         * [x] INCR
-         * [x] DECR
          * [ ] SOLVE
          * [ ] JOIN
          * [ ] GET CHAR
-         * [x] STORE LENGTH
-         * [x] STORE CHAR
-         * [x] STORE CHAR QUOTE
          * [ ] STORE QUOTE
          * [ ] IN JOIN
-         * [ ] DISPLAY
-         * [ ] ACCEPT
          * [ ] EXECUTE
          * [ ] EXECUTE AND STORE OUTPUT
          * [ ] EXECUTE AND STORE EXIT CODE
@@ -185,7 +157,7 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
          * [ ] APPEND FILE
          * [ ] EXTENSIONS? CALL EXTERNAL?
    * [ ] generator
-      * [ ] all nodes:
+      * [ ] all ldpl statements:
          * [x] STORE
          * [ ] IF
          * [ ] WHILE
