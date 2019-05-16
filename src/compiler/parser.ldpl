@@ -521,6 +521,7 @@ sub-procedure parser.node.create
                 store "EXIT or OUTPUT" in parser.expect
                 call parser.expect
             end if
+        end if
     else if "LOAD" is equal to parser.token then
         store "FILE" in parser.expect
         call parser.expect

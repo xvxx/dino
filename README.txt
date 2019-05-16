@@ -143,6 +143,7 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 * [ ] build each part separately
    * [x] lexer
    * [ ] parser
+      * [ ] \\ and \" in strings
       * [ ] nodes:
          * [ ] SOLVE
          * [ ] STORE QUOTE
