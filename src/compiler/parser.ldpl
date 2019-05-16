@@ -116,17 +116,12 @@ sub-procedure parser.type.identify
         return
     end if
 
+    # label
+    store $TYPES:"LBL" in parser.type
+    return
+
     in parser.error join "can't identify " parser.token
     call parser.error
-end sub-procedure
-
-# Uses the value of `parser.arg` to set c.Nodes:$id:$arg
-sub-procedure parser.node.set
-    in parser.key join c.Nodes* ":" parser.arg
-    store parser.token in c.Nodes:parser.key
-    join parser.key and ":type" in parser.key
-    call parser.type.identify
-    store parser.type in c.Nodes:parser.key
 end sub-procedure
 
 # Turns a conditional like "less than" into a symbol "<" and sticks it
@@ -194,6 +189,15 @@ sub-procedure parser.node.set-cond
     end if
 end sub-procedure
 
+# Uses the value of `parser.arg` to set c.Nodes:$id:$arg
+sub-procedure parser.node.set
+    in parser.key join c.Nodes* ":" parser.arg
+    store parser.token in c.Nodes:parser.key
+    join parser.key and ":type" in parser.key
+    call parser.type.identify
+    store parser.type in c.Nodes:parser.key
+end sub-procedure
+
 # sets the value of `parser.token` to c.Nodes:$id:0
 sub-procedure parser.node.set0
     store 0 in parser.arg
@@ -252,6 +256,9 @@ sub-procedure parser.node.create
             end if
             incr parser.arg
         repeat
+    else if "CALL" is equal to parser.token then
+        call parser.advance
+        call parser.node.set0
     else if "WHILE" is equal to parser.token then
         call parser.advance
         call parser.node.set0
@@ -335,6 +342,18 @@ sub-procedure parser.node.create
         call parser.advance
         call parser.node.set0
     else if "ACCEPT" is equal to parser.token then
+        call parser.advance
+        call parser.node.set0
+    else if "EXIT" is equal to parser.token then
+        call parser.advance
+    else if "CONTINUE" is equal to parser.token then
+        call parser.advance
+    else if "BREAK" is equal to parser.token then
+        call parser.advance
+    else if "GOTO" is equal to parser.token then
+        call parser.advance
+        call parser.node.set0
+    else if "LABEL" is equal to parser.token then
         call parser.advance
         call parser.node.set0
     else if "TEMPLATE" is equal to parser.token then
