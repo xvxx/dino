@@ -149,9 +149,8 @@ sub-procedure parser.node.set-cond
     else if parser.token is equal to "LESS" then
         store "THAN" in parser.expect
         call parser.expect
+        call parser.advance
         if parser.token is equal to "OR" then
-            store "OR" in parser.expect
-            call parser.expect
             store "EQUAL" in parser.expect
             call parser.expect
             store "TO" in parser.expect
@@ -160,22 +159,19 @@ sub-procedure parser.node.set-cond
         else
             store "<" in c.Nodes:parser.key
         end if
-        call parser.advance
     else if parser.token is equal to "GREATER" then
         store "THAN" in parser.expect
         call parser.expect
+        call parser.advance
         if parser.token is equal to "OR" then
-            store "OR" in parser.expect
-            call parser.expect
             store "EQUAL" in parser.expect
             call parser.expect
             store "TO" in parser.expect
-            call parser.advance
+            call parser.expect
             store ">=" in c.Nodes:parser.key
         else
             store ">" in c.Nodes:parser.key
         end if
-        call parser.advance
     else
         join "not a conditional: " and parser.token in parser.error
         call parser.error
