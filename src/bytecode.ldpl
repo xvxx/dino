@@ -73,12 +73,14 @@ store 3 in $TYPES:"NMV" # number vector
 store 4 in $TYPES:"TXV" # text vector
 store 5 in $TYPES:"NML" # number literal
 store 6 in $TYPES:"TXL" # text literal
+store 7 in $TYPES:"SYM" # symbol like > or >=
 store "NUM" in $TYPENAMES:$TYPES:"NUM"
 store "TXT" in $TYPENAMES:$TYPES:"TXT"
 store "NMV" in $TYPENAMES:$TYPES:"NMV"
 store "TXV" in $TYPENAMES:$TYPES:"TXV"
 store "NML" in $TYPENAMES:$TYPES:"NML"
 store "TXL" in $TYPENAMES:$TYPES:"TXL"
+store "SYM" in $TYPENAMES:$TYPES:"SYM"
 
 # bytecode header
 store character code of "L" in $HEADER:0

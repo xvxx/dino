@@ -135,6 +135,8 @@ end sub-procedure
 #      parser.arg
 # OUT: c.Nodes
 sub-procedure parser.node.set-cond
+    in parser.key join c.Nodes* ":" parser.arg ":type"
+    store $TYPES:"SYM" in c.Nodes:parser.key
     in parser.key join c.Nodes* ":" parser.arg
 
     if parser.token is equal to "EQUAL" then
