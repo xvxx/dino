@@ -58,6 +58,7 @@ Now then, we can start to properly explore Dino:
       bytes   compile .ldpl or .dino file to .dinocode bytecode
       dis     disassemble .dinocode file to .dino assembly
       lex     lex .ldpl file and print tokens
+      parse   parse .ldpl file and print nodes
       help    print help screen
       version print version number
 
