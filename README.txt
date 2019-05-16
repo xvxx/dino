@@ -154,6 +154,7 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
          * [x] STORE
          * [ ] IF
          * [ ] WHILE
+         * [ ] SUB-PROCEDURE
          * [ ] BREAK
          * [ ] CONTINUE
          * [ ] CALL
@@ -174,7 +175,6 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
          * [ ] INCR
          * [ ] DECR
          * [ ] SOLVE
-         * [ ] SOLVE
          * [ ] JOIN
          * [ ] GET CHAR
          * [ ] STORE LENGTH
@@ -184,14 +184,14 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
          * [ ] IN JOIN
          * [ ] DISPLAY
          * [ ] ACCEPT
+         * [ ] ACCEPT UNTIL EOF
          * [ ] EXECUTE
          * [ ] EXECUTE AND STORE OUTPUT
          * [ ] EXECUTE AND STORE EXIT CODE
-         * [ ] ACCEPT
          * [ ] LOAD FILE
          * [ ] WRITE FILE
          * [ ] APPEND FILE
-         * [ ] EXTENSIONS? CALL EXTERNAL?
+         * [ ] Extensions...
    * [x] assembler
    * [x] loader
    * [x] memory
