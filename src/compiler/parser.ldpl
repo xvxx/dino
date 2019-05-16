@@ -142,7 +142,6 @@ sub-procedure parser.node.set-cond
     else if parser.token is equal to "NOT" then
         store "EQUAL" in parser.expect
         call parser.expect
-        call parser.advance
         store "TO" in parser.expect
         call parser.expect
         call parser.advance
@@ -150,39 +149,33 @@ sub-procedure parser.node.set-cond
     else if parser.token is equal to "LESS" then
         store "THAN" in parser.expect
         call parser.expect
-        call parser.advance
         if parser.token is equal to "OR" then
             store "OR" in parser.expect
             call parser.expect
-            call parser.advance
             store "EQUAL" in parser.expect
             call parser.expect
-            call parser.advance
             store "TO" in parser.expect
             call parser.expect
-            call parser.advance
             store "<=" in c.Nodes:parser.key
         else
             store "<" in c.Nodes:parser.key
         end if
+        call parser.advance
     else if parser.token is equal to "GREATER" then
         store "THAN" in parser.expect
         call parser.expect
-        call parser.advance
         if parser.token is equal to "OR" then
             store "OR" in parser.expect
             call parser.expect
-            call parser.advance
             store "EQUAL" in parser.expect
             call parser.expect
-            call parser.advance
             store "TO" in parser.expect
-            call parser.expect
             call parser.advance
             store ">=" in c.Nodes:parser.key
         else
             store ">" in c.Nodes:parser.key
         end if
+        call parser.advance
     else
         join "not a conditional: " and parser.token in parser.error
         call parser.error
@@ -319,6 +312,10 @@ sub-procedure parser.node.create
         call parser.node.set2
         store "THEN" in parser.expect
         call parser.expect
+        call parser.advance
+    else if "SUB-PROCEDURE" is equal to parser.token then
+        call parser.advance
+        call parser.node.set0
         call parser.advance
     else if "END" is equal to parser.token then
         call parser.peek

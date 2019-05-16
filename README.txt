@@ -148,6 +148,7 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
          * [x] WHILE
          * [x] BREAK
          * [x] CONTINUE
+         * [ ] SUB-PROCEDURE
          * [x] CALL
          * [x] RETURN
          * [x] EXIT
