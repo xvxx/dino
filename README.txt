@@ -148,7 +148,7 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
          * [x] CALL
          * [x] RETURN
          * [x] EXIT
-         * [ ] WAIT
+         * [x] WAIT
          * [x] GOTO
          * [x] LABEL
          * [x] ADD
@@ -157,7 +157,7 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
          * [x] DIV
          * [x] MOD
          * [x] ABS
-         * [ ] RAND
+         * [x] RAND
          * [x] FLOOR
          * [x] CEIL
          * [x] INCR
@@ -165,9 +165,9 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
          * [ ] SOLVE
          * [ ] JOIN
          * [ ] GET CHAR
-         * [ ] STORE LENGTH
-         * [ ] STORE CHAR
-         * [ ] STORE CHAR QUOTE
+         * [x] STORE LENGTH
+         * [x] STORE CHAR
+         * [x] STORE CHAR QUOTE
          * [ ] STORE QUOTE
          * [ ] IN JOIN
          * [ ] DISPLAY

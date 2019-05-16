@@ -234,11 +234,39 @@ sub-procedure parser.node.create
 
     if "STORE" is equal to parser.token then
         call parser.advance
-        call parser.node.set0
-        store "IN" in parser.expect
-        call parser.expect
-        call parser.advance
-        call parser.node.set1
+        if parser.token is equal to "RANDOM" then
+            store "IN" in parser.expect
+            call parser.expect
+            call parser.advance
+            call parser.node.set0
+        else if parser.token is equal to "LENGTH" then
+            store "OF" in parser.expect
+            call parser.expect
+            call parser.advance
+            call parser.node.set0
+            store "IN" in parser.expect
+            call parser.expect
+            call parser.advance
+            call parser.node.set1
+        else if parser.token is equal to "CHARACTER" then
+            call parser.advance
+            if parser.token is equal to "CODE" then
+                store "OF" in parser.expect
+                call parser.expect
+                call parser.advance
+            end if
+            call parser.node.set0
+            store "IN" in parser.expect
+            call parser.expect
+            call parser.advance
+            call parser.node.set1
+        else
+            call parser.node.set0
+            store "IN" in parser.expect
+            call parser.expect
+            call parser.advance
+            call parser.node.set1
+        end if
     else if "DISPLAY" is equal to parser.token then
         call parser.advance
         call parser.node.set0
