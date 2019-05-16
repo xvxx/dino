@@ -143,26 +143,25 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
          * [x] STORE
          * [ ] IF
          * [ ] WHILE
-         * [ ] BREAK
-         * [ ] CONTINUE
-         * [ ] CALL
-         * [ ] RETURN
-         * [ ] EXIT
+         * [x] BREAK
+         * [x] CONTINUE
+         * [x] CALL
+         * [x] RETURN
+         * [x] EXIT
          * [ ] WAIT
-         * [ ] GOTO
-         * [ ] LABEL
+         * [x] GOTO
+         * [x] LABEL
          * [x] ADD
-         * [ ] SUB
-         * [ ] MUL
-         * [ ] DIV
-         * [ ] MOD
-         * [ ] ABS
+         * [x] SUB
+         * [x] MUL
+         * [x] DIV
+         * [x] MOD
+         * [x] ABS
          * [ ] RAND
-         * [ ] FLOOR
-         * [ ] CEIL
-         * [ ] INCR
-         * [ ] DECR
-         * [ ] SOLVE
+         * [x] FLOOR
+         * [x] CEIL
+         * [x] INCR
+         * [x] DECR
          * [ ] SOLVE
          * [ ] JOIN
          * [ ] GET CHAR
