@@ -143,20 +143,12 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 * [ ] build each part separately
    * [x] lexer
    * [ ] parser
-      * [ ] all nodes:
+      * [ ] nodes:
          * [ ] SOLVE
-         * [ ] JOIN
-         * [ ] GET CHAR
          * [ ] STORE QUOTE
-         * [ ] IN JOIN
-         * [ ] EXECUTE
-         * [ ] EXECUTE AND STORE OUTPUT
-         * [ ] EXECUTE AND STORE EXIT CODE
-         * [ ] ACCEPT
-         * [ ] LOAD FILE
-         * [ ] WRITE FILE
-         * [ ] APPEND FILE
-         * [ ] EXTENSIONS? CALL EXTERNAL?
+         * [ ] CALL EXTERNAL
+         * [ ] EXTERNAL SUB-PROCEDURE
+         * [ ] var is EXTERNAL data types
    * [ ] generator
       * [ ] all ldpl statements:
          * [x] STORE
