@@ -343,6 +343,18 @@ sub-procedure parser.node.create
         call parser.advance
     else if "RETURN" is equal to parser.token then
         call parser.advance
+    else if "EXIT" is equal to parser.token then
+        call parser.advance
+    else if "CONTINUE" is equal to parser.token then
+        call parser.advance
+    else if "BREAK" is equal to parser.token then
+        call parser.advance
+    else if "GOTO" is equal to parser.token then
+        call parser.advance
+        call parser.node.set0
+    else if "LABEL" is equal to parser.token then
+        call parser.advance
+        call parser.node.set0
     else if "ADD" is equal to parser.token then
         call parser.advance
         call parser.node.set0
@@ -423,18 +435,6 @@ sub-procedure parser.node.create
             call parser.expect
         end if
     else if "WAIT" is equal to parser.token then
-        call parser.advance
-        call parser.node.set0
-    else if "EXIT" is equal to parser.token then
-        call parser.advance
-    else if "CONTINUE" is equal to parser.token then
-        call parser.advance
-    else if "BREAK" is equal to parser.token then
-        call parser.advance
-    else if "GOTO" is equal to parser.token then
-        call parser.advance
-        call parser.node.set0
-    else if "LABEL" is equal to parser.token then
         call parser.advance
         call parser.node.set0
     else
