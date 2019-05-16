@@ -303,6 +303,17 @@ sub-procedure parser.node.create
         store "THEN" in parser.expect
         call parser.expect
         call parser.advance
+    else if "END" is equal to parser.token then
+        call parser.peek
+        if "SUB-PROCEDURE" is equal to parser.peek then
+            store "END SUB-PROCEDURE" in c.Nodes:c.Nodes*
+        else if "IF" is equal to parser.peek then
+            store "END IF" in c.Nodes:c.Nodes*
+        else
+            join "unexpected END token: " and parser.token in parser.error
+            call parser.error
+        end if
+        call parser.advance
     else if "WHILE" is equal to parser.token then
         call parser.advance
         call parser.node.set0
