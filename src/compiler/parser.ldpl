@@ -291,6 +291,23 @@ sub-procedure parser.node.create
     else if "CALL" is equal to parser.token then
         call parser.advance
         call parser.node.set0
+    else if "ELSE" is equal to parser.token then
+        call parser.peek
+        if parser.peek is equal to "IF" then
+            store "ELSE IF" in c.Nodes:c.Nodes*
+            call parser.advance
+            call parser.advance
+            call parser.node.set0
+            store "IS" in parser.expect
+            call parser.expect
+            call parser.advance
+            store 1 in parser.arg
+            call parser.node.set-cond
+            call parser.node.set2
+            store "THEN" in parser.expect
+            call parser.expect
+        end if
+        call parser.advance
     else if "IF" is equal to parser.token then
         call parser.advance
         call parser.node.set0
@@ -325,6 +342,8 @@ sub-procedure parser.node.create
         call parser.node.set2
         store "DO" in parser.expect
         call parser.expect
+        call parser.advance
+    else if "REPEAT" is equal to parser.token then
         call parser.advance
     else if "ADD" is equal to parser.token then
         call parser.advance
@@ -414,8 +433,6 @@ sub-procedure parser.node.create
     else if "LABEL" is equal to parser.token then
         call parser.advance
         call parser.node.set0
-    else if "TEMPLATE" is equal to parser.token then
-        call parser.advance
     else
         join "unknown token: " and parser.token in parser.error
         call parser.error

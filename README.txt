@@ -136,13 +136,16 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 
 === TODO =============================================================
 
+* [ ] 2nd pass TODO:
+   * [ ] validate syntax in parser, eg no ELSE before ELSE IF
+   * [ ] much better error messages. like rust's.
 * [ ] build each part separately
    * [x] lexer
    * [ ] parser
       * [ ] all nodes:
          * [x] STORE
-         * [ ] IF
-         * [ ] WHILE
+         * [x] IF
+         * [x] WHILE
          * [x] BREAK
          * [x] CONTINUE
          * [x] CALL
