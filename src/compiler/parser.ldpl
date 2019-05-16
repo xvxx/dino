@@ -286,6 +286,54 @@ sub-procedure parser.node.create
         call parser.expect
         call parser.advance
         call parser.node.set2
+    else if "MULTIPLY" is equal to parser.token then
+        call parser.advance
+        call parser.node.set0
+        store "BY" in parser.expect
+        call parser.expect
+        call parser.advance
+        call parser.node.set1
+        store "IN" in parser.expect
+        call parser.expect
+        call parser.advance
+        call parser.node.set2
+    else if "DIVIDE" is equal to parser.token then
+        call parser.advance
+        call parser.node.set0
+        store "BY" in parser.expect
+        call parser.expect
+        call parser.advance
+        call parser.node.set1
+        store "IN" in parser.expect
+        call parser.expect
+        call parser.advance
+        call parser.node.set2
+    else if "MODULO" is equal to parser.token then
+        call parser.advance
+        call parser.node.set0
+        store "BY" in parser.expect
+        call parser.expect
+        call parser.advance
+        call parser.node.set1
+        store "IN" in parser.expect
+        call parser.expect
+        call parser.advance
+        call parser.node.set2
+    else if "ABS" is equal to parser.token then
+        call parser.advance
+        call parser.node.set0
+    else if "FLOOR" is equal to parser.token then
+        call parser.advance
+        call parser.node.set0
+    else if "CEIL" is equal to parser.token then
+        call parser.advance
+        call parser.node.set0
+    else if "INCR" is equal to parser.token then
+        call parser.advance
+        call parser.node.set0
+    else if "DECR" is equal to parser.token then
+        call parser.advance
+        call parser.node.set0
     else if "ACCEPT" is equal to parser.token then
         call parser.advance
         call parser.node.set0
