@@ -63,9 +63,9 @@ Now then, we can start to properly explore Dino:
       version print version number
 
    Examples:
-      $ dino spark.ldpl 1 3 7 12 22 31  # run file with args
-      $ dino bytes gild.ldpl            # print bytecode
-      $ dino asm spacemines.ldpl        # print assembly code
+      $ dino run spark.ldpl 1 3 7 12 22 31  # run file with args
+      $ dino bytes gild.ldpl                # print bytecode
+      $ dino asm spacemines.ldpl            # print assembly code
 
 === OVERVIEW =========================================================
 
