@@ -201,11 +201,11 @@ sub-procedure parser.node.create
     else if "SUBTRACT" is equal to parser.token then
         call parser.advance
         call parser.node.set0
-        store "AND" in parser.expect
+        store "FROM" in parser.expect
         call parser.expect
         call parser.advance
         call parser.node.set1
-        store "FROM" in parser.expect
+        store "IN" in parser.expect
         call parser.expect
         call parser.advance
         call parser.node.set2
