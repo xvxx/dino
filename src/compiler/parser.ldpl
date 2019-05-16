@@ -292,7 +292,8 @@ sub-procedure parser.node.create
     else if "TEMPLATE" is equal to parser.token then
         call parser.advance
     else
-        # display "IGNORING: " parser.token crlf
+        join "unknown token: " and parser.token in parser.error
+        call parser.error
     end if
 
     incr c.Nodes*
