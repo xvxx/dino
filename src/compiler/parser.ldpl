@@ -205,6 +205,23 @@ sub-procedure parser.node.set3
     call parser.node.set
 end sub-procedure
 
+#  IN: parser.token
+sub-procedure parser.node.set-vargs
+    store 0 in parser.arg
+    while parser.arg is less than 8 do
+        call parser.peek
+        if parser.peek is equal to tokens.NEWLINE then
+            break
+        else if parser.peek is equal to "" then
+            break
+        else
+            call parser.advance
+            call parser.node.set
+        end if
+        incr parser.arg
+    repeat
+end sub-procedure
+
 # Parse procedure statement and create a node.
 #   IN: c.Nodes
 #       parser.token
@@ -261,22 +278,7 @@ sub-procedure parser.node.create
             call parser.node.set1
         end if
     else if "DISPLAY" is equal to parser.token then
-        call parser.advance
-        call parser.node.set0
-        # vargs...
-        store 1 in parser.arg
-        while parser.arg is less than 8 do
-            call parser.peek
-            if parser.peek is equal to tokens.NEWLINE then
-                break
-            else if parser.peek is equal to "" then
-                break
-            else
-                call parser.advance
-                call parser.node.set
-            end if
-            incr parser.arg
-        repeat
+        call parser.node.set-vargs
     else if "CALL" is equal to parser.token then
         call parser.advance
         if parser.token is equal to "SUB-PROCEDURE" then
@@ -425,6 +427,64 @@ sub-procedure parser.node.create
     else if "DECR" is equal to parser.token then
         call parser.advance
         call parser.node.set0
+    else if "JOIN" is equal to parser.token then
+        call parser.advance
+        call parser.node.set0
+        store "AND" in parser.expect
+        call parser.expect
+        call parser.advance
+        call parser.node.set1
+        store "IN" in parser.expect
+        call parser.expect
+        call parser.advance
+        call parser.node.set2
+    else if "REPLACE" is equal to parser.token then
+        call parser.advance
+        call parser.node.set0
+        store "FROM" in parser.expect
+        call parser.expect
+        call parser.advance
+        call parser.node.set1
+        store "WITH" in parser.expect
+        call parser.expect
+        call parser.advance
+        call parser.node.set2
+        store "IN" in parser.expect
+        call parser.expect
+        call parser.advance
+        call parser.node.set3
+    else if "SPLIT" is equal to parser.token then
+        call parser.advance
+        call parser.node.set0
+        store "BY" in parser.expect
+        call parser.expect
+        call parser.advance
+        call parser.node.set1
+        store "IN" in parser.expect
+        call parser.expect
+        call parser.advance
+        call parser.node.set2
+    else if "GET" is equal to parser.token then
+        store "CHARACTER" in parser.expect
+        call parser.expect
+        store "AT" in parser.expect
+        call parser.expect
+        call parser.advance
+        call parser.node.set0
+        store "FROM" in parser.expect
+        call parser.expect
+        call parser.advance
+        call parser.node.set1
+        store "IN" in parser.expect
+        call parser.expect
+        call parser.advance
+        call parser.node.set2
+    else if "IN" is equal to parser.token then
+        call parser.advance
+        call parser.node.set0
+        store "JOIN" in parser.expect
+        call parser.expect
+        call parser.node.set-vargs
     else if "ACCEPT" is equal to parser.token then
         call parser.advance
         call parser.node.set0
