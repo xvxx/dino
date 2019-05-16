@@ -20,13 +20,32 @@ lexer.comment?       is number       # are we lexing a comment?
 c.Tokens.i           is number       # for clearing the list
 c.Input*             is number       # input length
 
+lexer.error          is text
+lexer.error.i        is number
+
 PROCEDURE:
+# IN: lexer.error
+# IN: lexer.ci
+sub-procedure lexer.error
+    display "lexer.error: " lexer.error crlf
+    display "character " lexer.ci " of " c.Input* crlf
+    store 0 in lexer.error.i
+    while lexer.error.i is less than c.Tokens* do
+        if lexer.error.i is equal to lexer.ci then
+            display "\e[33;1m" c.Tokens:lexer.error.i "\e[0m "
+        else
+            display c.Tokens:lexer.error.i " "
+        end if
+        incr lexer.error.i
+    repeat
+    exit
+end sub-procedure
 
 # Adds `token.push` to c.Tokens and clears `lexer.token`
 #  IN: lexer.token
 # OUT: c.Tokens
 sub-procedure lexer.token.push
-    # TODo big ol' CRLF hack
+    # TODO big ol' CRLF hack
     if lexer.token is equal to tokens.CRLF then
         store "\"\\n\"" in lexer.token
     end if
