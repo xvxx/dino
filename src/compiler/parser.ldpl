@@ -235,11 +235,13 @@ sub-procedure parser.node.create
     if "STORE" is equal to parser.token then
         call parser.advance
         if parser.token is equal to "RANDOM" then
+            store parser.token in c.Nodes:c.Nodes*
             store "IN" in parser.expect
             call parser.expect
             call parser.advance
             call parser.node.set0
         else if parser.token is equal to "LENGTH" then
+            store parser.token in c.Nodes:c.Nodes*
             store "OF" in parser.expect
             call parser.expect
             call parser.advance
@@ -249,8 +251,10 @@ sub-procedure parser.node.create
             call parser.advance
             call parser.node.set1
         else if parser.token is equal to "CHARACTER" then
+            store parser.token in c.Nodes:c.Nodes*
             call parser.advance
             if parser.token is equal to "CODE" then
+                store "CHARACTER CODE" in c.Nodes:c.Nodes*
                 store "OF" in parser.expect
                 call parser.expect
                 call parser.advance
