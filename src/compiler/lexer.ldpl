@@ -12,6 +12,7 @@ lexer.chars          is text vector  # every letter
 # LOCAL:
 lexer.ci             is number       # current character index
 lexer.char           is text         # current character
+lexer.next           is number       # idx of next character
 lexer.prev           is number       # idx of previous character
 lexer.token          is text         # current token
 lexer.text?          is number       # are we lexing a string?
@@ -56,6 +57,23 @@ sub-procedure lexer.Run
             end if
             incr lexer.ci
             continue
+        else if lexer.text? is equal to 1 then
+            if lexer.char is equal to "\\" then
+                add lexer.ci and 1 in lexer.next
+                if lexer.chars:lexer.next is equal to "\\" then
+                    incr lexer.ci
+                    store "\\\\" in lexer.char
+                else if lexer.chars:lexer.next is equal to "\"" then
+                    incr lexer.ci
+                    store "\\\"" in lexer.char
+                end if
+            else if lexer.char is equal to "\"" then
+                store 0 in lexer.text?
+            end if
+
+            incr lexer.ci
+            join lexer.token and lexer.char in lexer.token
+            continue
         end if
 
         if lexer.char is equal to "\n" then
@@ -68,14 +86,9 @@ sub-procedure lexer.Run
             store tokens.NEWLINE in lexer.token
             call lexer.token.push
         else if lexer.char is equal to " " then
-            if lexer.text? is equal to 0 then
-                # store current token in tokens vector
-                if lexer.token is not equal to "" then
-                    call lexer.token.push
-                end if
-            else
-                # store string verbatum
-                join lexer.token and lexer.char in lexer.token
+            # store current token in tokens vector
+            if lexer.token is not equal to "" then
+                call lexer.token.push
             end if
         else if lexer.char is equal to "#" then
             if lexer.token is not equal to "" then
@@ -83,25 +96,14 @@ sub-procedure lexer.Run
             end if
             store 1 in lexer.comment?
         else if lexer.char is equal to "\"" then
-            if lexer.chars:lexer.prev is not equal to "\\" then
-                if lexer.text? is equal to 0 then
-                    # open string
-                    store 1 in lexer.text?
-                else
-                    # close string
-                    store 0 in lexer.text?
-                end if
-            end if
-
+            # open string
+            store 1 in lexer.text?
             join lexer.token and lexer.char in lexer.token
         else
-            # don't upcase text
-            if lexer.text? is equal to 0 then
-                # upcase letter
-                store lexer.char in upcase.letter
-                call upcase-letter
-                store upcase.letter in lexer.char
-            end if
+            # upcase letter
+            store lexer.char in upcase.letter
+            call upcase-letter
+            store upcase.letter in lexer.char
 
             # store char in current token
             join lexer.token and lexer.char in lexer.token
