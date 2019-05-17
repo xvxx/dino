@@ -311,8 +311,10 @@ sub-procedure generator.Run
         else if "WAIT" is equal to gen.node.type then
             store "WAIT" in gen.op
             call gen.op.emit
+        else if "RETURN" is equal to gen.node.type then
+            join gen.out and "\tRETURN" in gen.out
         else if "EXIT" is equal to gen.node.type then
-            join gen.out and "EXIT" in gen.out
+            join gen.out and "\tEXIT" in gen.out
         else if "CONTINUE" is equal to gen.node.type then
             join gen.out and "CONTINUE" in gen.out
         else if "BREAK" is equal to gen.node.type then
