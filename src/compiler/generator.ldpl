@@ -10,22 +10,36 @@ gen.key is text
 gen.node is number
 gen.node.type is text
 
-# gen.operand.emit
-gen.operand is number
-gen.operand.type is number
-gen.operand.value is text
+# gen.arg.emit
+gen.arg is number
+gen.arg.type is number
+gen.arg.value is text
 gen.emit.char is text
+
+gen.nvar is text
+gen.nvar.i is number
+
+# gen.op.fetch
+gen.op is text   # operation, like ADD
+gen.op.fetch is text
 gen.op.a is text  # tmpvars
 gen.op.b is text
 gen.op.c is text
 
-gen.nvar is text
-gen.nvar.i is number
+# gen.error
+gen.error is text
 
 # generator.Run
 gen.run.sep is text
 
 PROCEDURE:
+# IN : gen.error
+# OUT:
+sub-procedure gen.error
+    display "CODE GEN ERROR: " gen.error crlf
+    exit
+end sub-procedure
+
 # Generate a unique number variable name for use in emitting.
 # OUT: gen.var
 sub-procedure gen.nvar
@@ -33,41 +47,41 @@ sub-procedure gen.nvar
     incr gen.nvar.i
 end sub-procedure
 
-# Use `gen.operand` to fill `gen.operand.value` and `gen.operand.type`
-#  IN: gen.operand
+# Use `gen.arg` to fill `gen.arg.value` and `gen.arg.type`
+#  IN: gen.arg
 #  IN: gen.node
-# OUT: gen.operand
-# OUT: gen.operand.type
-sub-procedure gen.operand.fetch
-    in gen.key join gen.node ":" gen.operand
-    store c.Nodes:gen.key in gen.operand.value
+# OUT: gen.arg
+# OUT: gen.arg.type
+sub-procedure gen.arg.fetch
+    in gen.key join gen.node ":" gen.arg
+    store c.Nodes:gen.key in gen.arg.value
     in gen.key join gen.key ":type"
-    store c.Nodes:gen.key in gen.operand.type
+    store c.Nodes:gen.key in gen.arg.type
 end sub-procedure
 
-# Emit operand 0 1 2 etc for current node based on `gen.operand`
-# IN: gen.operand.num
+# Emit correct asm arg type for current node based on `gen.arg`
+# IN: gen.arg.num
 #     gen.node
 #     c.Nodes
-sub-procedure gen.operand.emit
-    call gen.operand.fetch
+sub-procedure gen.arg.emit
+    call gen.arg.fetch
 
-    if gen.operand.type is equal to 1 then
-        in c.Asm join c.Asm "%" gen.operand.value
-    else if gen.operand.type is equal to 2 then
-        in c.Asm join c.Asm "@" gen.operand.value
-    else if gen.operand.type is equal to 3 then
+    if gen.arg.type is equal to 1 then
+        in c.Asm join c.Asm "%" gen.arg.value
+    else if gen.arg.type is equal to 2 then
+        in c.Asm join c.Asm "@" gen.arg.value
+    else if gen.arg.type is equal to 3 then
         in c.Asm join c.Asm "UNIMPLEMENTED: number vector"
         exit
-    else if gen.operand.type is equal to 4 then
+    else if gen.arg.type is equal to 4 then
         in c.Asm join c.Asm "UNIMPLEMENTED: text vector"
         exit
-    else if gen.operand.type is equal to 5 then
-        in c.Asm join c.Asm gen.operand.value
-    else if gen.operand.type is equal to 6 then
-        in c.Asm join c.Asm gen.operand.value
+    else if gen.arg.type is equal to 5 then
+        in c.Asm join c.Asm gen.arg.value
+    else if gen.arg.type is equal to 6 then
+        in c.Asm join c.Asm gen.arg.value
     else
-        in c.Asm join c.Asm "bad operand type: " gen.operand.type " for " gen.operand.value crlf
+        in c.Asm join c.Asm "bad arg type: " gen.arg.type " for " gen.arg.value crlf
         exit
     end if
 
@@ -75,17 +89,58 @@ sub-procedure gen.operand.emit
 end sub-procedure
 
 # emit
-sub-procedure gen.operand.emit0
-    store 0 in gen.operand
-    call gen.operand.emit
+sub-procedure gen.arg.emit0
+    store 0 in gen.arg
+    call gen.arg.emit
 end sub-procedure
-sub-procedure gen.operand.emit1
-    store 1 in gen.operand
-    call gen.operand.emit
+sub-procedure gen.arg.emit1
+    store 1 in gen.arg
+    call gen.arg.emit
 end sub-procedure
-sub-procedure gen.operand.emit2
-    store 2 in gen.operand
-    call gen.operand.emit
+sub-procedure gen.arg.emit2
+    store 2 in gen.arg
+    call gen.arg.emit
+end sub-procedure
+
+# Call gen.arg.fetch and then puts ASM var name into gen.op.fetch.
+# Emits a SET first if num literal.
+# IN: gen.arg
+sub-procedure gen.op.fetch
+    call gen.arg.fetch
+    if gen.arg.type is equal to $TYPES:"NML" then
+        call gen.nvar
+        in c.Asm join c.Asm "SET " gen.nvar ", " gen.arg.value crlf
+        store gen.nvar in gen.op.fetch
+    else if gen.arg.type is equal to $TYPES:"NUM" then
+        join "%" and gen.arg.value in gen.op.fetch
+    else
+        join "gen.op.fetch: bad arg type: " and gen.arg.type in gen.error
+        call gen.error
+    end if
+end sub-procedure
+
+# emit a math operation with 1 arg, like CEIL
+# IN : gen.op    # should be something like CEIL or FLOOR
+sub-procedure gen.op.emit-math-1
+    store 0 in gen.arg
+    call gen.op.fetch
+    in c.Asm join c.Asm gen.op " " gen.op.fetch
+end sub-procedure
+
+# emit a math operation with 2 args, like ADD
+# IN : gen.op    # should be something like ADD or SUB
+sub-procedure gen.op.emit-math-2
+    store 0 in gen.arg
+    call gen.op.fetch
+    store gen.op.fetch in gen.op.a
+
+    store 1 in gen.arg
+    call gen.op.fetch
+    store gen.op.fetch in gen.op.b
+
+    # make sure to flip the order, since LDPL is "backwards"
+    in c.Asm join c.Asm gen.op " " gen.op.b ", " gen.op.a ", "
+    call gen.arg.emit2
 end sub-procedure
 
 # IN: c.Nodes
@@ -96,54 +151,64 @@ sub-procedure generator.Run
         store c.Nodes:gen.node in gen.node.type
 
         if nodes.STORE is equal to gen.node.type then
-            store 0 in gen.operand
-            call gen.operand.fetch
-            if gen.operand.type is equal to $TYPES:"NML" then
+            store 0 in gen.arg
+            call gen.arg.fetch
+            if gen.arg.type is equal to $TYPES:"NML" then
                 in c.Asm join c.Asm "SET" " "
             else
                 in c.Asm join c.Asm "STORE" " "
             end if
-            call gen.operand.emit1
+            call gen.arg.emit1
             in c.Asm join c.Asm ", "
-            call gen.operand.emit0
+            call gen.arg.emit0
         else if nodes.DISPLAY is equal to gen.node.type then
-            store 0 in gen.operand
+            store 0 in gen.arg
             while 0 is less than 1 do
-                in gen.key join gen.node ":" gen.operand ":type"
-                store c.Nodes:gen.key in gen.operand.type
-                if gen.operand.type is equal to 0 then
+                in gen.key join gen.node ":" gen.arg ":type"
+                store c.Nodes:gen.key in gen.arg.type
+                if gen.arg.type is equal to 0 then
                     break
                 end if
-                if gen.operand is greater than 0 then
+                if gen.arg is greater than 0 then
                     in c.Asm join c.Asm crlf
                 end if
                 in c.Asm join c.Asm "PRINT "
-                call gen.operand.emit
-                incr gen.operand
+                call gen.arg.emit
+                incr gen.arg
             repeat
         else if nodes.ADD is equal to gen.node.type then
-            store 0 in gen.operand
-            call gen.operand.fetch
-            if gen.operand.type is equal to $TYPES:"NML" then
-                call gen.nvar
-                in c.Asm join c.Asm "SET " gen.nvar ", " gen.operand.value crlf
-                store gen.nvar in gen.op.a
-            else if gen.operand.type is equal to $TYPES:"NUM" then
-                join "%" and gen.operand.value in gen.op.a
-            end if
-
-            store 1 in gen.operand
-            call gen.operand.fetch
-            if gen.operand.type is equal to $TYPES:"NML" then
-                call gen.nvar
-                in c.Asm join c.Asm "SET " gen.nvar ", " gen.operand.value crlf
-                store gen.nvar in gen.op.b
-            else if gen.operand.type is equal to $TYPES:"NUM" then
-                join "%" and gen.operand.value in gen.op.b
-            end if
-
-            in c.Asm join c.Asm "ADD " gen.op.a ", " gen.op.b ", "
-            call gen.operand.emit2
+            store "ADD" in gen.op
+            call gen.op.emit-math-2
+        else if "SUBTRACT" is equal to gen.node.type then
+            store "SUB" in gen.op
+            call gen.op.emit-math-2
+        else if "MULTIPLY" is equal to gen.node.type then
+            store "MUL" in gen.op
+            call gen.op.emit-math-2
+        else if "DIVIDE" is equal to gen.node.type then
+            store "DIV" in gen.op
+            call gen.op.emit-math-2
+        else if "MODULO" is equal to gen.node.type then
+            store "MOD" in gen.op
+            call gen.op.emit-math-2
+        else if "ABS" is equal to gen.node.type then
+            store "ABS" in gen.op
+            call gen.op.emit-math-1
+        else if "CEIL" is equal to gen.node.type then
+            store "CEIL" in gen.op
+            call gen.op.emit-math-1
+        else if "FLOOR" is equal to gen.node.type then
+            store "FLOOR" in gen.op
+            call gen.op.emit-math-1
+        else if "RANDOM" is equal to gen.node.type then
+            store "RANDOM" in gen.op
+            call gen.op.emit-math-1
+        else if "INCR" is equal to gen.node.type then
+            store "INCR" in gen.op
+            call gen.op.emit-math-1
+        else if "DECR" is equal to gen.node.type then
+            store "DECR" in gen.op
+            call gen.op.emit-math-1
         else
             in c.Asm join c.Asm "? " gen.node.type
         end if
