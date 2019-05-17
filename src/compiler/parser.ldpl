@@ -155,6 +155,7 @@ sub-procedure parser.node.set-cond
             call parser.expect
             store "TO" in parser.expect
             call parser.expect
+            call parser.advance
             store "<=" in c.Nodes:parser.key
         else
             store "<" in c.Nodes:parser.key
@@ -168,6 +169,7 @@ sub-procedure parser.node.set-cond
             call parser.expect
             store "TO" in parser.expect
             call parser.expect
+            call parser.advance
             store ">=" in c.Nodes:parser.key
         else
             store ">" in c.Nodes:parser.key
