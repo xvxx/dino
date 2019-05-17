@@ -193,7 +193,7 @@ sub-procedure gen.op.emit-math-2
     store gen.op.fetch in gen.op.b
 
     # make sure to flip the order, since LDPL is "backwards"
-    in gen.out join gen.out "\t" gen.op " " gen.op.b ", " gen.op.a ", "
+    in gen.out join gen.out "\t" gen.op " " gen.op.a ", " gen.op.b ", "
     call gen.arg.emit2
 end sub-procedure
 
