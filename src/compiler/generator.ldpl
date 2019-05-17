@@ -232,14 +232,14 @@ sub-procedure generator.Run
             call gen.op.emit-cond
 
             # emit jump (JIF end_while_001)
-            in c.Asm join c.Asm "JIF while_" gen.whiles crlf
+            in c.Asm join c.Asm "JIF while_" gen.whiles
 
         else if "REPEAT" is equal to gen.node.type then
             # emit jump (JUMP while_001)
             in c.Asm join c.Asm "JUMP while_" gen.whiles crlf
 
             # emit label (end_while_001:)
-            in c.Asm join c.Asm "end_while_" gen.whiles ":" crlf
+            in c.Asm join c.Asm "end_while_" gen.whiles ":"
 
             # pop off stack
             decr gen.whiles
