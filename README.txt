@@ -156,14 +156,14 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
          * [ ] IF
          * [ ] WHILE
          * [ ] SUB-PROCEDURE
-         * [ ] BREAK
-         * [ ] CONTINUE
-         * [ ] CALL
-         * [ ] RETURN
-         * [ ] EXIT
-         * [ ] WAIT
-         * [ ] GOTO
-         * [ ] LABEL
+         * [x] BREAK
+         * [x] CONTINUE
+         * [x] CALL
+         * [x] RETURN
+         * [x] EXIT
+         * [x] WAIT
+         * [x] GOTO
+         * [x] LABEL
          * [x] ADD
          * [x] SUB
          * [x] MUL

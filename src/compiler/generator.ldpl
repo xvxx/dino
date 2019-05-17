@@ -111,12 +111,26 @@ sub-procedure gen.op.fetch
         call gen.nvar
         in c.Asm join c.Asm "SET " gen.nvar ", " gen.arg.value crlf
         store gen.nvar in gen.op.fetch
+    else if gen.arg.type is equal to $TYPES:"TXL" then
+        store gen.arg.value in gen.op.fetch
+    else if gen.arg.type is equal to $TYPES:"TXT" then
+        join "@" and gen.arg.value in gen.op.fetch
     else if gen.arg.type is equal to $TYPES:"NUM" then
         join "%" and gen.arg.value in gen.op.fetch
+    else if gen.arg.type is equal to $TYPES:"LBL" then
+        store gen.arg.value in gen.op.fetch
     else
         join "gen.op.fetch: bad arg type: " and gen.arg.type in gen.error
         call gen.error
     end if
+end sub-procedure
+
+# emit an instruction with 1 arg, like CALL
+# IN : gen.op    # should be something like CALL or GOTO
+sub-procedure gen.op.emit
+    store 0 in gen.arg
+    call gen.op.fetch
+    in c.Asm join c.Asm gen.op " " gen.op.fetch
 end sub-procedure
 
 # emit a math operation with 1 arg, like CEIL
@@ -176,7 +190,25 @@ sub-procedure generator.Run
                 call gen.arg.emit
                 incr gen.arg
             repeat
-        else if nodes.ADD is equal to gen.node.type then
+        else if "CALL" is equal to gen.node.type then
+            store "CALL" in gen.op
+            call gen.op.emit
+        else if "GOTO" is equal to gen.node.type then
+            store "GOTO" in gen.op
+            call gen.op.emit
+        else if "LABEL" is equal to gen.node.type then
+            store "LABEL" in gen.op
+            call gen.op.emit
+        else if "WAIT" is equal to gen.node.type then
+            store "WAIT" in gen.op
+            call gen.op.emit
+        else if "EXIT" is equal to gen.node.type then
+            join c.Asm and "EXIT" in c.Asm
+        else if "CONTINUE" is equal to gen.node.type then
+            join c.Asm and "CONTINUE" in c.Asm
+        else if "BREAK" is equal to gen.node.type then
+            join c.Asm and "BREAK" in c.Asm
+        else if "ADD" is equal to gen.node.type then
             store "ADD" in gen.op
             call gen.op.emit-math-2
         else if "SUBTRACT" is equal to gen.node.type then
