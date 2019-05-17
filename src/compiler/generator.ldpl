@@ -316,9 +316,13 @@ sub-procedure generator.Run
         else if "EXIT" is equal to gen.node.type then
             join gen.out and "\tEXIT" in gen.out
         else if "CONTINUE" is equal to gen.node.type then
-            join gen.out and "CONTINUE" in gen.out
+            subtract 1 from gen.blocks* in gen.while
+            store gen.blocks:gen.while in gen.while
+            in gen.out join gen.out "\tJUMP while_" gen.while
         else if "BREAK" is equal to gen.node.type then
-            join gen.out and "BREAK" in gen.out
+            subtract 1 from gen.blocks* in gen.while
+            store gen.blocks:gen.while in gen.while
+            in gen.out join gen.out "\tJUMP end_while_" gen.while
         else if "ADD" is equal to gen.node.type then
             store "ADD" in gen.op
             call gen.op.emit-math-2
