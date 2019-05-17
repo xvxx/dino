@@ -185,63 +185,73 @@ store 33 in $CODES:$opname
 store 3 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
 
-store "LT" in $opname
-store 34 in $CODES:$opname
-store 3 in $SIZES:$CODES:$opname
-store $opname in $NAMES:$CODES:$opname
-
-store "ADD" in $opname
+store "GTE" in $opname
 store 35 in $CODES:$opname
 store 3 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
 
-store "SUB" in $opname
+store "LT" in $opname
 store 36 in $CODES:$opname
 store 3 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
 
-store "MUL" in $opname
+store "LTE" in $opname
 store 37 in $CODES:$opname
 store 3 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
 
-store "DIV" in $opname
+store "ADD" in $opname
 store 38 in $CODES:$opname
 store 3 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
 
-store "MOD" in $opname
+store "SUB" in $opname
 store 39 in $CODES:$opname
 store 3 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
 
-store "ABS" in $opname
+store "MUL" in $opname
 store 40 in $CODES:$opname
-store 1 in $SIZES:$CODES:$opname
+store 3 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
 
-store "CEIL" in $opname
+store "DIV" in $opname
 store 41 in $CODES:$opname
-store 1 in $SIZES:$CODES:$opname
+store 3 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
 
-store "FLOOR" in $opname
+store "MOD" in $opname
 store 42 in $CODES:$opname
-store 1 in $SIZES:$CODES:$opname
+store 3 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
 
-store "RANDOM" in $opname
+store "ABS" in $opname
 store 43 in $CODES:$opname
 store 1 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
 
-store "INCR" in $opname
+store "CEIL" in $opname
 store 44 in $CODES:$opname
 store 1 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
 
-store "DECR" in $opname
+store "FLOOR" in $opname
 store 45 in $CODES:$opname
+store 1 in $SIZES:$CODES:$opname
+store $opname in $NAMES:$CODES:$opname
+
+store "RANDOM" in $opname
+store 46 in $CODES:$opname
+store 1 in $SIZES:$CODES:$opname
+store $opname in $NAMES:$CODES:$opname
+
+store "INCR" in $opname
+store 47 in $CODES:$opname
+store 1 in $SIZES:$CODES:$opname
+store $opname in $NAMES:$CODES:$opname
+
+store "DECR" in $opname
+store 48 in $CODES:$opname
 store 1 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
 

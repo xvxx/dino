@@ -352,20 +352,22 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 |  13  | PUSH $x           | Push $x onto the stack.
 |  14  | POP $a            | Pop off the stack into $a.
 | ==== | ================= | ARITHMETIC ==============================
-|  21  | GT $x $y $a       | Set $a=1 if $x > $y
 |  20  | EQ $x $y $a       | Set $a=1 if $x == $y
-|  22  | LT $x $y $a       | Set $a=1 if $x < $y
-|  23  | ADD $x $y $a      | Put sum of registers $x and $y in $a
-|  24  | SUB $x $y $a      | Subtract value of $y from $x and put in $a.
-|  25  | MUL $x $y $a      | Multiplication
-|  26  | DIV $x $y $a      | Division. $e will be set to 1 if $y is 0.
-|  27  | MOD $x $y $a      | Modulo
-|  28  | ABS $x            | Convert $x to its absolute value.
-|  29  | CEIL $x           | Round $x to next whole number.
-|  2A  | FLOOR $x          | Round $x to previous whole number.
-|  2B  | RANDOM $a         | Put random number in $a.
-|  2C  | INCR $x           | Add 1 to $x.
-|  2D  | DECR $x           | Subtract 1 from $x.
+|  21  | GT $x $y $a       | Set $a=1 if $x > $y
+|  22  | GTE $x $y $a       | Set $a=1 if $x > $y
+|  23  | LT $x $y $a       | Set $a=1 if $x < $y
+|  24  | LTE $x $y $a       | Set $a=1 if $x < $y
+|  25  | ADD $x $y $a      | Put sum of registers $x and $y in $a
+|  26  | SUB $x $y $a      | Subtract value of $y from $x and put in $a.
+|  27  | MUL $x $y $a      | Multiplication
+|  28  | DIV $x $y $a      | Division. $e will be set to 1 if $y is 0.
+|  29  | MOD $x $y $a      | Modulo
+|  2A  | ABS $x            | Convert $x to its absolute value.
+|  2B  | CEIL $x           | Round $x to next whole number.
+|  2C  | FLOOR $x          | Round $x to previous whole number.
+|  2D  | RANDOM $a         | Put random number in $a.
+|  2E  | INCR $x           | Add 1 to $x.
+|  2F  | DECR $x           | Subtract 1 from $x.
 | ==== | ================= | I/O COMMANDS ============================
 |  30  | PRINT $x          | Print content of register $x
 |  31  | PRINL $x          | Print content of register $x and newline.
