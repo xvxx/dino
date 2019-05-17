@@ -209,7 +209,7 @@ sub-procedure main.ldpl-to-asm
     call lexer.Run
     call parser.Run
     call generator.Run
-    display c.Asm crlf
+    display c.Asm
 end sub-procedure
 
 # --- CONVERT LDPL TO BYTECODE ---------------------------------------

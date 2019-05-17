@@ -12,6 +12,9 @@ gen.while        is number
 gen.ifs          is number
 gen.if           is number
 gen.else         is number
+gen.out          is text
+gen.subs         is text  # sub-procedure definitions
+gen.sub?         is number
 
 # generator.Run
 gen.node is number
@@ -83,25 +86,23 @@ sub-procedure gen.arg.emit
     call gen.arg.fetch
 
     if gen.arg.type is equal to 1 then
-        in c.Asm join c.Asm "%" gen.arg.value
+        in gen.out join gen.out "%" gen.arg.value
     else if gen.arg.type is equal to 2 then
-        in c.Asm join c.Asm "@" gen.arg.value
+        in gen.out join gen.out "@" gen.arg.value
     else if gen.arg.type is equal to 3 then
-        in c.Asm join c.Asm "UNIMPLEMENTED: number vector"
+        in gen.out join gen.out "UNIMPLEMENTED: number vector"
         exit
     else if gen.arg.type is equal to 4 then
-        in c.Asm join c.Asm "UNIMPLEMENTED: text vector"
+        in gen.out join gen.out "UNIMPLEMENTED: text vector"
         exit
     else if gen.arg.type is equal to 5 then
-        in c.Asm join c.Asm gen.arg.value
+        in gen.out join gen.out gen.arg.value
     else if gen.arg.type is equal to 6 then
-        in c.Asm join c.Asm gen.arg.value
+        in gen.out join gen.out gen.arg.value
     else
-        in c.Asm join c.Asm "bad arg type: " gen.arg.type " for " gen.arg.value crlf
+        in gen.out join gen.out "bad arg type: " gen.arg.type " for " gen.arg.value crlf
         exit
     end if
-
-    # number variable
 end sub-procedure
 
 # emit
@@ -125,7 +126,7 @@ sub-procedure gen.op.fetch
     call gen.arg.fetch
     if gen.arg.type is equal to $TYPES:"NML" then
         call gen.nvar
-        in c.Asm join c.Asm "\tSET " gen.nvar ", " gen.arg.value crlf
+        in gen.out join gen.out "\tSET " gen.nvar ", " gen.arg.value crlf
         store gen.nvar in gen.op.fetch
     else if gen.arg.type is equal to $TYPES:"TXL" then
         store gen.arg.value in gen.op.fetch
@@ -148,7 +149,7 @@ end sub-procedure
 sub-procedure gen.op.emit
     store 0 in gen.arg
     call gen.op.fetch
-    in c.Asm join c.Asm "\t" gen.op " " gen.op.fetch
+    in gen.out join gen.out "\t" gen.op " " gen.op.fetch
 end sub-procedure
 
 # emit a math operation with 1 arg, like CEIL
@@ -156,7 +157,7 @@ end sub-procedure
 sub-procedure gen.op.emit-math-1
     store 0 in gen.arg
     call gen.op.fetch
-    in c.Asm join c.Asm "\t" gen.op " " gen.op.fetch
+    in gen.out join gen.out "\t" gen.op " " gen.op.fetch
 end sub-procedure
 
 # emit a math operation with 2 args, like ADD
@@ -171,7 +172,7 @@ sub-procedure gen.op.emit-math-2
     store gen.op.fetch in gen.op.b
 
     # make sure to flip the order, since LDPL is "backwards"
-    in c.Asm join c.Asm "\t" gen.op " " gen.op.b ", " gen.op.a ", "
+    in gen.out join gen.out "\t" gen.op " " gen.op.b ", " gen.op.a ", "
     call gen.arg.emit2
 end sub-procedure
 
@@ -192,7 +193,7 @@ sub-procedure gen.op.emit-cond
     store gen.op.fetch in gen.op.b
 
     store gen.op.syms:gen.op.t in gen.op
-    in c.Asm join c.Asm "\t" gen.op " " gen.op.a ", " gen.op.b ", $a" crlf
+    in gen.out join gen.out "\t" gen.op " " gen.op.a ", " gen.op.b ", $a" crlf
 end sub-procedure
 
 # IN: c.Nodes
@@ -201,17 +202,18 @@ sub-procedure generator.Run
     store 0 in gen.node
     while gen.node is less than c.Nodes* do
         store c.Nodes:gen.node in gen.node.type
+        store "" in gen.out
 
         if "STORE" is equal to gen.node.type then
             store 0 in gen.arg
             call gen.arg.fetch
             if gen.arg.type is equal to $TYPES:"NML" then
-                in c.Asm join c.Asm "\tSET" " "
+                in gen.out join gen.out "\tSET" " "
             else
-                in c.Asm join c.Asm "\tSTORE" " "
+                in gen.out join gen.out "\tSTORE" " "
             end if
             call gen.arg.emit1
-            in c.Asm join c.Asm ", "
+            in gen.out join gen.out ", "
             call gen.arg.emit0
         else if "DISPLAY" is equal to gen.node.type then
             store 0 in gen.arg
@@ -222,9 +224,9 @@ sub-procedure generator.Run
                     break
                 end if
                 if gen.arg is greater than 0 then
-                    in c.Asm join c.Asm crlf
+                    in gen.out join gen.out crlf
                 end if
-                in c.Asm join c.Asm "\tPRINT "
+                in gen.out join gen.out "\tPRINT "
                 call gen.arg.emit
                 incr gen.arg
             repeat
@@ -236,26 +238,26 @@ sub-procedure generator.Run
             # emit test (GT x y z)
             call gen.op.emit-cond
             # emit jump (JIF end_if_001)
-            in c.Asm join c.Asm "\tJIF end_if_" gen.ifs
+            in gen.out join gen.out "\tJIF end_if_" gen.ifs
         else if "ELSE IF" is equal to gen.node.type then
             decr gen.blocks*
             store gen.blocks:gen.blocks* in gen.if
-            in c.Asm join c.Asm "\tJUMP end_else_" gen.else crlf
+            in gen.out join gen.out "\tJUMP end_else_" gen.else crlf
             # emit label (end_if_001:)
-            in c.Asm join c.Asm "end_if_" gen.if ":" crlf
+            in gen.out join gen.out "end_if_" gen.if ":" crlf
             incr gen.ifs
             store gen.ifs in gen.blocks:gen.blocks*
             incr gen.blocks*
             # emit test (GT x y z)
             call gen.op.emit-cond
             # emit jump (JIF end_if_001)
-            in c.Asm join c.Asm "\tJIF end_if_" gen.ifs
+            in gen.out join gen.out "\tJIF end_if_" gen.ifs
         else if "ELSE" is equal to gen.node.type then
             decr gen.blocks*
             store gen.blocks:gen.blocks* in gen.if
-            in c.Asm join c.Asm "\tJUMP end_else_" gen.else crlf
+            in gen.out join gen.out "\tJUMP end_else_" gen.else crlf
             # emit label (end_if_001:)
-            in c.Asm join c.Asm "end_if_" gen.if ":"
+            in gen.out join gen.out "end_if_" gen.if ":"
             incr gen.ifs
             store gen.ifs in gen.blocks:gen.blocks*
             incr gen.blocks*
@@ -263,26 +265,34 @@ sub-procedure generator.Run
             decr gen.blocks*
             store gen.blocks:gen.blocks* in gen.if
             # emit label (end_if_001:)
-            in c.Asm join c.Asm "end_if_" gen.if ":" crlf
-            in c.Asm join c.Asm "end_else_" gen.else ":"
-            decr gen.else
+            in gen.out join gen.out "end_if_" gen.if ":" crlf
+            in gen.out join gen.out "end_else_" gen.else ":"
         else if "WHILE" is equal to gen.node.type then
             incr gen.whiles
             store gen.whiles in gen.blocks:gen.blocks*
             incr gen.blocks*
             # emit label (while_001:)
-            in c.Asm join c.Asm "while_" gen.whiles ":" crlf
+            in gen.out join gen.out "while_" gen.whiles ":" crlf
             # emit test (GT x y z)
             call gen.op.emit-cond
             # emit jump (JIF end_while_001)
-            in c.Asm join c.Asm "\tJIF end_while_" gen.whiles
+            in gen.out join gen.out "\tJIF end_while_" gen.whiles
         else if "REPEAT" is equal to gen.node.type then
             decr gen.blocks*
             store gen.blocks:gen.blocks* in gen.while
             # emit jump (JUMP while_001)
-            in c.Asm join c.Asm "\tJUMP while_" gen.while crlf
+            in gen.out join gen.out "\tJUMP while_" gen.while crlf
             # emit label (end_while_001:)
-            in c.Asm join c.Asm "end_while_" gen.while ":"
+            in gen.out join gen.out "end_while_" gen.while ":"
+        else if "SUB-PROCEDURE" is equal to gen.node.type then
+            store 1 in gen.sub?
+            store 0 in gen.arg
+            call gen.arg.fetch
+            in gen.out join gen.out gen.arg.value ":"
+        else if "END SUB-PROCEDURE" is equal to gen.node.type then
+            in gen.subs join gen.subs "\tRETURN\n"
+            store 0 in gen.sub?
+            store "" in gen.out
         else if "CALL" is equal to gen.node.type then
             store "CALL" in gen.op
             call gen.op.emit
@@ -296,11 +306,11 @@ sub-procedure generator.Run
             store "WAIT" in gen.op
             call gen.op.emit
         else if "EXIT" is equal to gen.node.type then
-            join c.Asm and "EXIT" in c.Asm
+            join gen.out and "EXIT" in gen.out
         else if "CONTINUE" is equal to gen.node.type then
-            join c.Asm and "CONTINUE" in c.Asm
+            join gen.out and "CONTINUE" in gen.out
         else if "BREAK" is equal to gen.node.type then
-            join c.Asm and "BREAK" in c.Asm
+            join gen.out and "BREAK" in gen.out
         else if "ADD" is equal to gen.node.type then
             store "ADD" in gen.op
             call gen.op.emit-math-2
@@ -335,15 +345,21 @@ sub-procedure generator.Run
             store "DECR" in gen.op
             call gen.op.emit-math-1
         else
-            in c.Asm join c.Asm "? " gen.node.type
+            in gen.out join gen.out "? " gen.node.type
         end if
 
         incr gen.node
-        if gen.node is less than c.Nodes* then
-            in c.Asm join c.Asm crlf
+        if gen.out is not equal to "" then
+            join gen.out and crlf in gen.out
+        end if
+
+        if gen.sub? is equal to 1 then
+            join gen.subs and gen.out in gen.subs
+        else
+            join c.Asm and gen.out in c.Asm
         end if
     repeat
 
     # wrap it up
-    in c.Asm join c.Asm crlf "\tEXIT"
+    in c.Asm join c.Asm "\tEXIT" crlf crlf gen.subs
 end sub-procedure
