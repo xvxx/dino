@@ -165,16 +165,16 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
          * [ ] GOTO
          * [ ] LABEL
          * [x] ADD
-         * [ ] SUB
-         * [ ] MUL
-         * [ ] DIV
-         * [ ] MOD
-         * [ ] ABS
-         * [ ] RAND
-         * [ ] FLOOR
-         * [ ] CEIL
-         * [ ] INCR
-         * [ ] DECR
+         * [x] SUB
+         * [x] MUL
+         * [x] DIV
+         * [x] MOD
+         * [x] ABS
+         * [x] RAND
+         * [x] FLOOR
+         * [x] CEIL
+         * [x] INCR
+         * [x] DECR
          * [ ] SOLVE
          * [ ] JOIN
          * [ ] GET CHAR
