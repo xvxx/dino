@@ -197,6 +197,12 @@ store 3 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
 incr $opnum
 
+store "NEQ" in $opname
+store $opnum in $CODES:$opname
+store 3 in $SIZES:$CODES:$opname
+store $opname in $NAMES:$CODES:$opname
+incr $opnum
+
 store "GT" in $opname
 store $opnum in $CODES:$opname
 store 3 in $SIZES:$CODES:$opname
