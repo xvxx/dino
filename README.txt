@@ -117,8 +117,8 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 +---+-----------+-----------------------------------------------------
 | = | ========= | COMPILER ===========================================
 | X | Lexer     | Operational
-| > | Parser    | Underway!
-| > | Generator | Underway!!
+| X | Parser    | Operational
+| > | Generator | Underway!! Missing: sub-procedure
 | X | Assembler | Operational
 | = | ========= | VIRTUAL MACHINE ====================================
 | X | CPU       | Operational
@@ -153,8 +153,8 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
    * [ ] generator
       * [ ] all ldpl statements:
          * [x] STORE
-         * [ ] IF
-         * [ ] WHILE
+         * [x] IF
+         * [x] WHILE
          * [ ] SUB-PROCEDURE
          * [x] BREAK
          * [x] CONTINUE
@@ -183,7 +183,7 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
          * [ ] STORE CHAR QUOTE
          * [ ] STORE QUOTE
          * [ ] IN JOIN
-         * [ ] DISPLAY
+         * [x] DISPLAY
          * [ ] ACCEPT
          * [ ] ACCEPT UNTIL EOF
          * [ ] EXECUTE
