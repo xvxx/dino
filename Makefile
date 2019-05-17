@@ -6,8 +6,8 @@ dino: src/*.ldpl src/**/*.ldpl
 	ldpl $(LDPL_FILES) src/main.ldpl -o=dino #-f=-O3; true
 	@git checkout src/version.ldpl
 
-test: dino
-	@./dino run 99.dinocode
+ldpltest:
+	git clone https://github.com/lartu/ldpltest
 
 # remember to escape $ in the text
 define VERSIONLDPL
