@@ -81,8 +81,8 @@ store "NMV" in $TYPENAMES:$TYPES:"NMV"
 store "TXV" in $TYPENAMES:$TYPES:"TXV"
 store "NML" in $TYPENAMES:$TYPES:"NML"
 store "TXL" in $TYPENAMES:$TYPES:"TXL"
-store "SYM" in $TYPENAMES:$TYPES:"SYM"
 store "LBL" in $TYPENAMES:$TYPES:"LBL"
+store "SYM" in $TYPENAMES:$TYPES:"SYM"
 
 # bytecode header
 store character code of "L" in $HEADER:0

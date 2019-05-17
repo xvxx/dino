@@ -6,6 +6,8 @@ DATA:
 # shared
 gen.key is text
 
+gen.whiles is number # how many open while blocks
+
 # generator.Run
 gen.node is number
 gen.node.type is text
@@ -25,6 +27,8 @@ gen.op.fetch is text
 gen.op.a is text  # tmpvars
 gen.op.b is text
 gen.op.c is text
+gen.op.t is text
+gen.op.syms is text vector
 
 # gen.error
 gen.error is text
@@ -33,6 +37,13 @@ gen.error is text
 gen.run.sep is text
 
 PROCEDURE:
+store  "GT" in gen.op.syms:">"
+store "GTE" in gen.op.syms:">="
+store  "LT" in gen.op.syms:"<"
+store "LTE" in gen.op.syms:"<="
+store  "EQ" in gen.op.syms:"=="
+store "NEQ" in gen.op.syms:"!="
+
 # IN : gen.error
 # OUT:
 sub-procedure gen.error
@@ -119,6 +130,8 @@ sub-procedure gen.op.fetch
         join "%" and gen.arg.value in gen.op.fetch
     else if gen.arg.type is equal to $TYPES:"LBL" then
         store gen.arg.value in gen.op.fetch
+    else if gen.arg.type is equal to $TYPES:"SYM" then
+        store gen.arg.value in gen.op.fetch
     else
         join "gen.op.fetch: bad arg type: " and gen.arg.type in gen.error
         call gen.error
@@ -157,6 +170,26 @@ sub-procedure gen.op.emit-math-2
     call gen.arg.emit2
 end sub-procedure
 
+# emit a conditional like GT from a WHILE or IF node
+# IN : gen.node
+# IN : c.Nodes
+sub-procedure gen.op.emit-cond
+    store 0 in gen.arg
+    call gen.op.fetch
+    store gen.op.fetch in gen.op.a
+
+    store 1 in gen.arg
+    call gen.op.fetch
+    store gen.op.fetch in gen.op.t
+
+    store 2 in gen.arg
+    call gen.op.fetch
+    store gen.op.fetch in gen.op.b
+
+    store gen.op.syms:gen.op.t in gen.op
+    in c.Asm join c.Asm gen.op " " gen.op.a ", " gen.op.b ", $a" crlf
+end sub-procedure
+
 # IN: c.Nodes
 sub-procedure generator.Run
     store "" in c.Asm
@@ -190,6 +223,27 @@ sub-procedure generator.Run
                 call gen.arg.emit
                 incr gen.arg
             repeat
+        else if "WHILE" is equal to gen.node.type then
+            # emit label (while_001:)
+            incr gen.whiles
+            in c.Asm join c.Asm "while_" gen.whiles ":" crlf
+
+            # emit test (GT x y z)
+            call gen.op.emit-cond
+
+            # emit jump (JIF end_while_001)
+            in c.Asm join c.Asm "JIF while_" gen.whiles crlf
+
+        else if "REPEAT" is equal to gen.node.type then
+            # emit jump (JUMP while_001)
+            in c.Asm join c.Asm "JUMP while_" gen.whiles crlf
+
+            # emit label (end_while_001:)
+            in c.Asm join c.Asm "end_while_" gen.whiles ":" crlf
+
+            # pop off stack
+            decr gen.whiles
+
         else if "CALL" is equal to gen.node.type then
             store "CALL" in gen.op
             call gen.op.emit
