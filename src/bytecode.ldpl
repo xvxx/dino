@@ -48,6 +48,7 @@ $AC            is number
 
 # private
 $opname        is text
+$opnum         is number
 
 PROCEDURE:
 # bytecode format version
@@ -112,212 +113,256 @@ add @X and 1 in @Y
 add @Y and 1 in @T
 add @T and 1 in @E
 
+
+store 1 in $opnum # make it easy to shuffle codes around for now
+
 # === CONTROL FLOW ===================================================
 store "JUMP" in $opname
-store 1 in $CODES:$opname
+store $opnum in $CODES:$opname
 store 1 in $SIZES:$CODES:$opname
 store "JMP" in $NAMES:$CODES:$opname
 
+incr $opnum
 store "JIF" in $opname
-store 2 in $CODES:$opname
+store $opnum in $CODES:$opname
 store 1 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
+incr $opnum
 
 store "JIT" in $opname
-store 3 in $CODES:$opname
+store $opnum in $CODES:$opname
 store 1 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
+incr $opnum
 
 store "CALL" in $opname
-store 4 in $CODES:$opname
+store $opnum in $CODES:$opname
 store 1 in $SIZES:$CODES:$opname
 store "CLL" in $NAMES:$CODES:$opname
+incr $opnum
 
 store "RETURN" in $opname
-store 5 in $CODES:$opname
+store $opnum in $CODES:$opname
 store 0 in $SIZES:$CODES:$opname
 store "RET" in $NAMES:$CODES:$opname
+incr $opnum
 
 store "EXIT" in $opname
-store 6 in $CODES:$opname
+store $opnum in $CODES:$opname
 store 0 in $SIZES:$CODES:$opname
 store "EXT" in $NAMES:$CODES:$opname
+incr $opnum
 
 store "WAIT" in $opname
-store 7 in $CODES:$opname
+store $opnum in $CODES:$opname
 store 1 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
+incr $opnum
 
 # === MEMORY COMMANDS ===============================================
 store "STORE" in $opname
-store 16 in $CODES:$opname
+store $opnum in $CODES:$opname
 store 2 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
+incr $opnum
 
 store "SET" in $opname
-store 17 in $CODES:$opname
+store $opnum in $CODES:$opname
 store 2 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
+incr $opnum
 
 store "FETCH" in $opname
-store 18 in $CODES:$opname
+store $opnum in $CODES:$opname
 store 2 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
+incr $opnum
 
 store "PUSH" in $opname
-store 19 in $CODES:$opname
+store $opnum in $CODES:$opname
 store 1 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
+incr $opnum
 
 store "POP" in $opname
-store 20 in $CODES:$opname
+store $opnum in $CODES:$opname
 store 1 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
+incr $opnum
 
 # === ARITHMETIC =====================================================
 store "EQ" in $opname
-store 32 in $CODES:$opname
+store $opnum in $CODES:$opname
 store 3 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
+incr $opnum
 
 store "GT" in $opname
-store 33 in $CODES:$opname
+store $opnum in $CODES:$opname
 store 3 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
+incr $opnum
 
 store "GTE" in $opname
-store 35 in $CODES:$opname
+store $opnum in $CODES:$opname
 store 3 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
+incr $opnum
 
 store "LT" in $opname
-store 36 in $CODES:$opname
+store $opnum in $CODES:$opname
 store 3 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
+incr $opnum
 
 store "LTE" in $opname
-store 37 in $CODES:$opname
+store $opnum in $CODES:$opname
 store 3 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
+incr $opnum
 
 store "ADD" in $opname
-store 38 in $CODES:$opname
+store $opnum in $CODES:$opname
 store 3 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
+incr $opnum
 
 store "SUB" in $opname
-store 39 in $CODES:$opname
+store $opnum in $CODES:$opname
 store 3 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
+incr $opnum
 
 store "MUL" in $opname
-store 40 in $CODES:$opname
+store $opnum in $CODES:$opname
 store 3 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
+incr $opnum
 
 store "DIV" in $opname
-store 41 in $CODES:$opname
+store $opnum in $CODES:$opname
 store 3 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
+incr $opnum
 
 store "MOD" in $opname
-store 42 in $CODES:$opname
+store $opnum in $CODES:$opname
 store 3 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
+incr $opnum
 
 store "ABS" in $opname
-store 43 in $CODES:$opname
+store $opnum in $CODES:$opname
 store 1 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
+incr $opnum
 
 store "CEIL" in $opname
-store 44 in $CODES:$opname
+store $opnum in $CODES:$opname
 store 1 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
+incr $opnum
 
 store "FLOOR" in $opname
-store 45 in $CODES:$opname
+store $opnum in $CODES:$opname
 store 1 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
+incr $opnum
 
 store "RANDOM" in $opname
-store 46 in $CODES:$opname
+store $opnum in $CODES:$opname
 store 1 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
+incr $opnum
 
 store "INCR" in $opname
-store 47 in $CODES:$opname
+store $opnum in $CODES:$opname
 store 1 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
+incr $opnum
 
 store "DECR" in $opname
-store 48 in $CODES:$opname
+store $opnum in $CODES:$opname
 store 1 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
+incr $opnum
 
 # === I/O COMMANDS ==================================================
 store "PRINT" in $opname
-store 48 in $CODES:$opname
+store $opnum in $CODES:$opname
 store 1 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
+incr $opnum
 
 store "PRINL" in $opname
-store 49 in $CODES:$opname
+store $opnum in $CODES:$opname
 store 1 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
+incr $opnum
 
 store "ACCEPT" in $opname
-store 50 in $CODES:$opname
+store $opnum in $CODES:$opname
 store 1 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
+incr $opnum
 
 store "EXEC" in $opname
-store 51 in $CODES:$opname
+store $opnum in $CODES:$opname
 store 2 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
+incr $opnum
 
 store "EXECC" in $opname
-store 52 in $CODES:$opname
+store $opnum in $CODES:$opname
 store 2 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
+incr $opnum
 
 store "READ" in $opname
-store 53 in $CODES:$opname
+store $opnum in $CODES:$opname
 store 2 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
+incr $opnum
 
 store "WRITE" in $opname
-store 54 in $CODES:$opname
+store $opnum in $CODES:$opname
 store 2 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
+incr $opnum
 
 store "APPEND" in $opname
-store 55 in $CODES:$opname
+store $opnum in $CODES:$opname
 store 2 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
+incr $opnum
 
 # === TEXT OPERATIONS ===============================================
 store "LEN" in $opname
-store 64 in $CODES:$opname
+store $opnum in $CODES:$opname
 store 2 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
+incr $opnum
 
 store "JOIN" in $opname
-store 65 in $CODES:$opname
+store $opnum in $CODES:$opname
 store 3 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
+incr $opnum
 
 store "GETC" in $opname
-store 66 in $CODES:$opname
+store $opnum in $CODES:$opname
 store 3 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
+incr $opnum
 
 store "GETCC" in $opname
-store 67 in $CODES:$opname
+store $opnum in $CODES:$opname
 store 2 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
+incr $opnum
 
 store "PUTCC" in $opname
-store 68 in $CODES:$opname
+store $opnum in $CODES:$opname
 store 2 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
+incr $opnum
