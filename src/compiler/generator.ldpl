@@ -318,11 +318,12 @@ sub-procedure generator.Run
             store "CALL" in gen.op
             call gen.op.emit
         else if "GOTO" is equal to gen.node.type then
-            store "GOTO" in gen.op
+            store "JUMP" in gen.op
             call gen.op.emit
         else if "LABEL" is equal to gen.node.type then
-            store "LABEL" in gen.op
-            call gen.op.emit
+            store 0 in gen.arg
+            call gen.arg.fetch
+            in gen.out join gen.out gen.arg.value ":"
         else if "WAIT" is equal to gen.node.type then
             store "WAIT" in gen.op
             call gen.op.emit
