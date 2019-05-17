@@ -25,13 +25,13 @@
 		"keywords": {
 			"patterns": [{
 				"name": "keyword.control.dinoasm",
-				"match": "(?<=^|[\\s:])((?i)JUMP|JIF|JIT|CALL|RETURN|EXIT|WAIT|STORE|SET|EQ|GT|LT|ADD|SUB|MUL|DIV|MOD|ABS|CEIL|FLOOR|RANDOM|PRINT|PRINL|ACCEPT|EXEC|READ|WRITE|APPEND|LEN|JOIN|GETC|GETCC|PUTC|PUSH|POP|INCR|DECR)(?=\\s|$)"
+				"match": "(?<=^|[\\s:])((?i)JUMP|JIF|JIT|CALL|RETURN|EXIT|WAIT|STORE|SET|N?EQ|GTE?|LTE?|ADD|SUB|MUL|DIV|MOD|ABS|CEIL|FLOOR|RANDOM|PRINT|PRINL|ACCEPT|EXEC|READ|WRITE|APPEND|LEN|JOIN|GETC|GETCC|PUTC|PUSH|POP|INCR|DECR)(?=\\s|$)"
 			}]
 		},
 		"variables": {
 			"patterns": [
 				{
-					"match": "(?<=^|[\\s\\b,])((%|\\$)\\w+)(?=\\s|,|$)",
+					"match": "(?<=^|[\\s\\b,])((%|\\$|@)[\\w\\-.]+)(?=\\s|,|$)",
 					"name": "entity.name.function.dinoasm"
 				}
 			]
