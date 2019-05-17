@@ -137,44 +137,43 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 
 === TODO =============================================================
 
-* [ ] 2nd pass TODO:
-   * [ ] validate syntax in parser, eg no ELSE before ELSE IF
-   * [ ] much better error messages. like rust's.
-* [ ] build each part separately
-   * [x] lexer
-   * [ ] parser
-      * [x] \\ and \" in strings
-      * [ ] nodes:
-         * [ ] SOLVE
-         * [ ] STORE QUOTE
-         * [ ] CALL EXTERNAL
-         * [ ] EXTERNAL SUB-PROCEDURE
-         * [ ] var is EXTERNAL data types
-   * [ ] generator
-      * [ ] all ldpl statements:
-         * [?] MOD
-         * [ ] SOLVE
-         * [ ] STORE QUOTE
-         * [ ] IN JOIN
-         * [ ] Extensions...
-   * [x] assembler
-   * [x] loader
-   * [x] memory
-   * [x] cpu
-   * [x] vscode for dinoasm
-* [x] assembly -> bytecode $ dino bytes examples/99.dino
-   * [x] strip comments
-   * [x] trim line
-   * [x] tokenize file
-   * [x] support strings
-   * [-] :newline: token  (don't need)
-   * [x] accept file from command line
-   * [x] tokens -> bytecode
-   * [x] print raw bytecode
+* [ ] LDPL Test Battery:
+   * [ ] basicar.ldpl
+      * [ ] SOLVE
+   * [ ] basictx.ldpl
+      * [ ] IN - JOIN
+      * [ ] STORE QUOTE
+   * [X] conflow.ldpl
+   * [ ] exec.ldpl
+   * [ ] explode.ldpl
+      * [ ] STORE QUOTE
+   * [X] fibo.ldpl
+   * [ ] file.ldpl
+      * [ ] IN - JOIN
+   * [ ] quine.ldpl
+      * [ ] NUMBER VECTOR
+   * [ ] sqrt.ldpl
+      * [ ] fix DIVIDE
+      * [ ] fix MODULO
+   * [ ] vector.ldpl
+      * [ ] text vector
+      * [ ] number vector
+* [ ] parser nodes:
+   * [ ] SOLVE
+   * [ ] STORE QUOTE
+   * [ ] CALL EXTERNAL
+   * [ ] EXTERNAL SUB-PROCEDURE
+   * [ ] var is EXTERNAL data types
+* [ ] generator:
+   * [?] MOD
+   * [ ] SOLVE
+   * [ ] STORE QUOTE
+   * [ ] IN JOIN
+   * [ ] Extensions...
+* [ ] assembly -> bytecode $ dino bytes examples/99.dino
    * [ ] error checking:
       * [ ] arity
       * [ ] labels?
-   * [x] relative jumps
 * [ ] REPL
    * [ ] >> input
    * [ ] == output
@@ -182,55 +181,19 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
    * [ ] history
    * [ ] multi-lines
    * [ ] asm mode
-* [x] bytecode -> assembly $ dino dis file.dinocode
-   * [x] load bytecode from file
 * [ ] RAM
-   * [ ] vectors?
+   * [ ] vectors
 * [ ] CPU
-   * [x] load bytecode from file
-   * [x] run bytecode
-   * [ ] vectors?
-   * [x] Instructions:
-      * [x] JUMP
-      * [x] JIF
-      * [x] JIT
-      * [x] CALL
-      * [x] RETURN
-      * [x] EXIT
-      * [x] WAIT
-      * [x] STORE
-      * [x] SET
-      * [x] EQ
-      * [x] GT
-      * [x] LT
-      * [x] ADD
-      * [x] SUB
-      * [x] MUL
-      * [x] DIV
-      * [x] MOD
-      * [x] ABS
-      * [x] CEIL
-      * [x] FLOOR
-      * [x] RANDOM
-      * [x] PRINT
-      * [x] ACCEPT
-      * [x] EXEC
-      * [x] READ
-      * [x] WRITE
-      * [x] APPEND
-      * [x] LEN
-      * [x] JOIN
-      * [x] GETC
-      * [x] GETCC
-      * [x] PUTC
-      * [x] PUSH
-      * [x] POP
-      * [x] INCR
-      * [x] DECR
+   * [ ] vectors
+   * [ ] Instructions:
       * [ ] AND
       * [ ] OR
       * [ ] XOR
       * [ ] NOT
+
+* [ ] 2nd pass TODO:
+   * [ ] validate syntax in parser, eg no ELSE before ELSE IF
+   * [ ] much better error messages. like rust's.
 
 === APPENDIX =========================================================
 
