@@ -120,7 +120,7 @@ sub-procedure gen.op.fetch
     call gen.arg.fetch
     if gen.arg.type is equal to $TYPES:"NML" then
         call gen.nvar
-        in c.Asm join c.Asm "SET " gen.nvar ", " gen.arg.value crlf
+        in c.Asm join c.Asm "\tSET " gen.nvar ", " gen.arg.value crlf
         store gen.nvar in gen.op.fetch
     else if gen.arg.type is equal to $TYPES:"TXL" then
         store gen.arg.value in gen.op.fetch
@@ -143,7 +143,7 @@ end sub-procedure
 sub-procedure gen.op.emit
     store 0 in gen.arg
     call gen.op.fetch
-    in c.Asm join c.Asm gen.op " " gen.op.fetch
+    in c.Asm join c.Asm "\t" gen.op " " gen.op.fetch
 end sub-procedure
 
 # emit a math operation with 1 arg, like CEIL
@@ -151,7 +151,7 @@ end sub-procedure
 sub-procedure gen.op.emit-math-1
     store 0 in gen.arg
     call gen.op.fetch
-    in c.Asm join c.Asm gen.op " " gen.op.fetch
+    in c.Asm join c.Asm "\t" gen.op " " gen.op.fetch
 end sub-procedure
 
 # emit a math operation with 2 args, like ADD
@@ -166,7 +166,7 @@ sub-procedure gen.op.emit-math-2
     store gen.op.fetch in gen.op.b
 
     # make sure to flip the order, since LDPL is "backwards"
-    in c.Asm join c.Asm gen.op " " gen.op.b ", " gen.op.a ", "
+    in c.Asm join c.Asm "\t" gen.op " " gen.op.b ", " gen.op.a ", "
     call gen.arg.emit2
 end sub-procedure
 
@@ -187,7 +187,7 @@ sub-procedure gen.op.emit-cond
     store gen.op.fetch in gen.op.b
 
     store gen.op.syms:gen.op.t in gen.op
-    in c.Asm join c.Asm gen.op " " gen.op.a ", " gen.op.b ", $a" crlf
+    in c.Asm join c.Asm "\t" gen.op " " gen.op.a ", " gen.op.b ", $a" crlf
 end sub-procedure
 
 # IN: c.Nodes
@@ -201,9 +201,9 @@ sub-procedure generator.Run
             store 0 in gen.arg
             call gen.arg.fetch
             if gen.arg.type is equal to $TYPES:"NML" then
-                in c.Asm join c.Asm "SET" " "
+                in c.Asm join c.Asm "\tSET" " "
             else
-                in c.Asm join c.Asm "STORE" " "
+                in c.Asm join c.Asm "\tSTORE" " "
             end if
             call gen.arg.emit1
             in c.Asm join c.Asm ", "
@@ -219,7 +219,7 @@ sub-procedure generator.Run
                 if gen.arg is greater than 0 then
                     in c.Asm join c.Asm crlf
                 end if
-                in c.Asm join c.Asm "PRINT "
+                in c.Asm join c.Asm "\tPRINT "
                 call gen.arg.emit
                 incr gen.arg
             repeat
@@ -232,11 +232,11 @@ sub-procedure generator.Run
             call gen.op.emit-cond
 
             # emit jump (JIF end_while_001)
-            in c.Asm join c.Asm "JIF while_" gen.whiles
+            in c.Asm join c.Asm "\tJIF while_" gen.whiles
 
         else if "REPEAT" is equal to gen.node.type then
             # emit jump (JUMP while_001)
-            in c.Asm join c.Asm "JUMP while_" gen.whiles crlf
+            in c.Asm join c.Asm "\tJUMP while_" gen.whiles crlf
 
             # emit label (end_while_001:)
             in c.Asm join c.Asm "end_while_" gen.whiles ":"
@@ -304,4 +304,7 @@ sub-procedure generator.Run
             in c.Asm join c.Asm crlf
         end if
     repeat
+
+    # wrap it up
+    in c.Asm join c.Asm crlf "\tEXIT"
 end sub-procedure
