@@ -4,14 +4,15 @@
 
 DATA:
 # shared
-gen.key is text
-
+gen.key          is text
 gen.blocks       is number vector # open if/while blocks
 gen.blocks*      is number
 gen.whiles       is number
 gen.while        is number
 gen.ifs          is number
 gen.if           is number
+gen.elses        is number
+gen.else         is number
 
 # generator.Run
 gen.node is number
@@ -230,6 +231,7 @@ sub-procedure generator.Run
             repeat
         else if "IF" is equal to gen.node.type then
             incr gen.ifs
+            incr gen.else
             store gen.ifs in gen.blocks:gen.blocks*
             incr gen.blocks*
             # emit test (GT x y z)
@@ -239,6 +241,7 @@ sub-procedure generator.Run
         else if "ELSE IF" is equal to gen.node.type then
             decr gen.blocks*
             store gen.blocks:gen.blocks* in gen.if
+            in c.Asm join c.Asm "\tJUMP end_else_" gen.else crlf
             # emit label (end_if_001:)
             in c.Asm join c.Asm "end_if_" gen.if ":" crlf
             incr gen.ifs
@@ -251,6 +254,7 @@ sub-procedure generator.Run
         else if "ELSE" is equal to gen.node.type then
             decr gen.blocks*
             store gen.blocks:gen.blocks* in gen.if
+            in c.Asm join c.Asm "\tJUMP end_else_" gen.else crlf
             # emit label (end_if_001:)
             in c.Asm join c.Asm "end_if_" gen.if ":"
             incr gen.ifs
@@ -260,7 +264,9 @@ sub-procedure generator.Run
             decr gen.blocks*
             store gen.blocks:gen.blocks* in gen.if
             # emit label (end_if_001:)
-            in c.Asm join c.Asm "end_if_" gen.if ":"
+            in c.Asm join c.Asm "end_if_" gen.if ":" crlf
+            in c.Asm join c.Asm "end_else_" gen.else ":"
+            decr gen.else
         else if "WHILE" is equal to gen.node.type then
             incr gen.whiles
             store gen.whiles in gen.blocks:gen.blocks*
