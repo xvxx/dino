@@ -168,6 +168,19 @@ sub-procedure cpu.Run
                 store 0 in vm.R:vm.Code:cpu.pc
                 store 1 in vm.R:$z
             end if
+        else if $CODES:"NEQ" is equal to cpu.code then
+            add 1 and cpu.pc in cpu.pc
+            store vm.R:vm.Code:cpu.pc in cpu.x
+            add 1 and cpu.pc in cpu.pc
+            store vm.R:vm.Code:cpu.pc in cpu.y
+            add 1 and cpu.pc in cpu.pc
+            if cpu.x is not equal to cpu.y then
+                store 1 in vm.R:vm.Code:cpu.pc
+                store 0 in vm.R:$z
+            else
+                store 0 in vm.R:vm.Code:cpu.pc
+                store 1 in vm.R:$z
+            end if
         else if $CODES:"GT" is equal to cpu.code then
             add 1 and cpu.pc in cpu.pc
             store vm.R:vm.Code:cpu.pc in cpu.x
