@@ -6,7 +6,7 @@
 #   - Number subindexes give you the name of a variable.
 #   - Text subindexes give the variable's $type.
 #
-# The code vector, cNodes, fakes a struct with the following key
+# The code vector, c.Nodes, fakes a struct with the following key
 # structure:
 #   - $id         # node name
 #   - $id:0       # 1st argument
@@ -482,9 +482,25 @@ sub-procedure parser.node.create
     else if "IN" is equal to parser.token then
         call parser.advance
         call parser.node.set0
-        store "JOIN" in parser.expect
-        call parser.expect
-        call parser.node.set-vargs
+        call parser.peek
+        if "SOLVE" is equal to parser.peek then
+            # coming soon
+            in parser.key join c.Nodes* ":" parser.arg
+            store 0 in c.Nodes:parser.key
+            join parser.key and ":type" in parser.key
+            store $TYPES:"NUM" in c.Nodes:parser.key
+            # skip past equation
+            while parser.token is not equal to tokens.NEWLINE do
+                call parser.advance
+                if parser.token is equal to "" then
+                    break
+                end if
+            repeat
+        else
+            store "JOIN" in parser.expect
+            call parser.expect
+            call parser.node.set-vargs
+        end if
     else if "ACCEPT" is equal to parser.token then
         call parser.advance
         call parser.node.set0
