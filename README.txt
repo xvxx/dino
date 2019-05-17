@@ -154,22 +154,8 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
       * [ ] all ldpl statements:
          * [?] MOD
          * [ ] SOLVE
-         * [ ] JOIN
-         * [x] GET CHAR
-         * [x] STORE LENGTH
-         * [x] STORE CHAR
-         * [x] STORE CHAR CODE
          * [ ] STORE QUOTE
          * [ ] IN JOIN
-         * [x] DISPLAY
-         * [x] ACCEPT
-         * [x] ACCEPT UNTIL EOF
-         * [x] EXECUTE
-         * [x] EXECUTE AND STORE OUTPUT
-         * [x] EXECUTE AND STORE EXIT CODE
-         * [x] LOAD FILE
-         * [x] WRITE FILE
-         * [x] APPEND FILE
          * [ ] Extensions...
    * [x] assembler
    * [x] loader

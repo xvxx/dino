@@ -399,6 +399,9 @@ sub-procedure generator.Run
         else if "LENGTH" is equal to gen.node.type then
             store "LEN" in gen.op
             call gen.op.emit-2
+        else if "JOIN" is equal to gen.node.type then
+            store "JOIN" in gen.op
+            call gen.op.emit-3
         else if "GET" is equal to gen.node.type then
             store "GETC" in gen.op
             call gen.op.emit-3
