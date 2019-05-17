@@ -11,7 +11,6 @@ gen.whiles       is number
 gen.while        is number
 gen.ifs          is number
 gen.if           is number
-gen.elses        is number
 gen.else         is number
 
 # generator.Run

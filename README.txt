@@ -211,7 +211,6 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
       * [ ] arity
       * [ ] labels?
    * [x] relative jumps
-   * [ ] save bytecode to file
 * [ ] REPL
    * [ ] >> input
    * [ ] == output
@@ -264,6 +263,10 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
       * [x] POP
       * [x] INCR
       * [x] DECR
+      * [ ] AND
+      * [ ] OR
+      * [ ] XOR
+      * [ ] NOT
 
 === APPENDIX =========================================================
 
