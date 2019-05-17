@@ -26,30 +26,7 @@ c.Text*         is number
 tokens.NEWLINE  is text            # newline token
 tokens.CRLF     is text
 
-# AST NODES:
-nodes.NUMBER    is text  # 3.14
-nodes.TEXT      is text  # "Hiya"
-nodes.NUMVAR    is text  # i
-nodes.TEXTVAR   is text  # name
-nodes.NUMVEC    is text  # list
-nodes.TEXTVEC   is text  # groceries
-nodes.IF        is text
-nodes.STORE     is text
-nodes.DISPLAY   is text
-nodes.ADD       is text
-
 PROCEDURE:
 # TODO: like opcodes
 store ":NL:"    in tokens.NEWLINE
 store "CRLF"    in tokens.CRLF
-
-store "NUMVAR" in nodes.NUMVAR
-store "TEXTVAR" in nodes.TEXTVAR
-store "NUMVEC" in nodes.NUMVEC
-store "TEXTVEC" in nodes.TEXTVEC
-store "NUMBER" in nodes.NUMBER
-store "TEXT" in nodes.TEXT
-store "IF" in nodes.IF
-store "STORE" in nodes.STORE
-store "DISPLAY" in nodes.DISPLAY
-store "ADD" in nodes.ADD

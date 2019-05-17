@@ -164,7 +164,7 @@ sub-procedure generator.Run
     while gen.node is less than c.Nodes* do
         store c.Nodes:gen.node in gen.node.type
 
-        if nodes.STORE is equal to gen.node.type then
+        if "STORE" is equal to gen.node.type then
             store 0 in gen.arg
             call gen.arg.fetch
             if gen.arg.type is equal to $TYPES:"NML" then
@@ -175,7 +175,7 @@ sub-procedure generator.Run
             call gen.arg.emit1
             in c.Asm join c.Asm ", "
             call gen.arg.emit0
-        else if nodes.DISPLAY is equal to gen.node.type then
+        else if "DISPLAY" is equal to gen.node.type then
             store 0 in gen.arg
             while 0 is less than 1 do
                 in gen.key join gen.node ":" gen.arg ":type"
