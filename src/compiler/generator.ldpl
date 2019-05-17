@@ -344,6 +344,9 @@ sub-procedure generator.Run
         else if "DECR" is equal to gen.node.type then
             store "DECR" in gen.op
             call gen.op.emit-math-1
+        else if "ACCEPT" is equal to gen.node.type then
+            store "ACCEPT" in gen.op
+            call gen.op.emit
         else
             in gen.out join gen.out "? " gen.node.type
         end if
