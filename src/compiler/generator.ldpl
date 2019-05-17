@@ -232,7 +232,7 @@ sub-procedure generator.Run
             call gen.op.emit-cond
 
             # emit jump (JIF end_while_001)
-            in c.Asm join c.Asm "\tJIF while_" gen.whiles
+            in c.Asm join c.Asm "\tJIF end_while_" gen.whiles
 
         else if "REPEAT" is equal to gen.node.type then
             # emit jump (JUMP while_001)

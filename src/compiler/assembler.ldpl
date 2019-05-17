@@ -290,17 +290,13 @@ sub-procedure c.Input.to-tokens
             # ignore comments
             store 1 in asm.comment?
         else if asm.char is equal to " " then
-            # squash spaces
-            if asm.prev is not equal to " " then
-                if asm.newline:asm.prev is not equal to 1 then
-                    # save token
-                    if asm.token is not equal to "" then
-                        store asm.token in asm.tokens:asm.tokens*
-                        add 1 and asm.tokens* in asm.tokens*
-                        store "" in asm.token
-                    end if
-                end if
+            if asm.token is not equal to "" then
+                store asm.token in asm.tokens:asm.tokens*
+                incr asm.tokens*
+                store "" in asm.token
             end if
+        else if asm.char is equal to "\t" then
+            # ignore whitespace
         else if asm.comment? is equal to 0 then
             # all tokens are UPPER case
             store asm.char in upcase.letter
