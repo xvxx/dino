@@ -391,7 +391,7 @@ sub-procedure cpu.Run
             join cpu.tx and cpu.ty in vm.Text:vm.Code:cpu.pc
         else if $CODES:"GETC" is equal to cpu.code then
             incr cpu.pc
-            store vm.Code:cpu.pc in cpu.x
+            store vm.R:vm.Code:cpu.pc in cpu.x
             incr cpu.pc
             store vm.Text:vm.Code:cpu.pc in cpu.t
             incr cpu.pc
@@ -414,7 +414,7 @@ sub-procedure cpu.Run
             end if
         else if $CODES:"PUTCC" is equal to cpu.code then
             incr cpu.pc
-            store vm.Code:cpu.pc in cpu.x
+            store vm.R:vm.Code:cpu.pc in cpu.x
             incr cpu.pc
             store character cpu.x in vm.Text:vm.Code:cpu.pc
         else

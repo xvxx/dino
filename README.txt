@@ -42,7 +42,7 @@ For extra protection, run the official ldpltests:
    make test
 
 Once again, you should see a "success" message if everything is
-working properly. If not, please kindly report an issue at this URL:
+working properly. If not, kindly report an issue at this URL:
 
    https://github.com/dvkt/dino/issues
 
@@ -105,7 +105,7 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 * 0xFFFF words of memory
 * 11 numeric registers (A, X, Y, Z, E, C, I, J, SP, PC, AC)
 * 5 text registers (A, X, Y, T, E)
-* Registers, variables, and constants share a logical address space:
+* Registers, variables, and constants share a logical address space.
 * Two types: numeric and text. Address determines type.
 * Instructions are 1-4 words: One opcode and 0-3 operands.
 * ...?
@@ -152,35 +152,13 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
          * [ ] var is EXTERNAL data types
    * [ ] generator
       * [ ] all ldpl statements:
-         * [x] STORE
-         * [x] IF
-         * [x] WHILE
-         * [x] SUB-PROCEDURE
-         * [x] BREAK
-         * [x] CONTINUE
-         * [x] CALL
-         * [x] RETURN
-         * [x] EXIT
-         * [x] WAIT
-         * [x] GOTO
-         * [x] LABEL
-         * [x] ADD
-         * [x] SUB
-         * [x] MUL
-         * [x] DIV
-         * [x] MOD
-         * [x] ABS
-         * [x] RAND
-         * [x] FLOOR
-         * [x] CEIL
-         * [x] INCR
-         * [x] DECR
+         * [?] MOD
          * [ ] SOLVE
          * [ ] JOIN
-         * [ ] GET CHAR
-         * [ ] STORE LENGTH
-         * [ ] STORE CHAR
-         * [ ] STORE CHAR QUOTE
+         * [x] GET CHAR
+         * [x] STORE LENGTH
+         * [x] STORE CHAR
+         * [x] STORE CHAR CODE
          * [ ] STORE QUOTE
          * [ ] IN JOIN
          * [x] DISPLAY
@@ -357,9 +335,9 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 | ==== | ================= | ARITHMETIC ==============================
 |  20  | EQ $x $y $a       | Set $a=1 if $x == $y
 |  21  | GT $x $y $a       | Set $a=1 if $x > $y
-|  22  | GTE $x $y $a       | Set $a=1 if $x > $y
+|  22  | GTE $x $y $a      | Set $a=1 if $x > $y
 |  23  | LT $x $y $a       | Set $a=1 if $x < $y
-|  24  | LTE $x $y $a       | Set $a=1 if $x < $y
+|  24  | LTE $x $y $a      | Set $a=1 if $x < $y
 |  25  | ADD $x $y $a      | Put sum of registers $x and $y in $a
 |  26  | SUB $x $y $a      | Subtract value of $y from $x and put in $a.
 |  27  | MUL $x $y $a      | Multiplication
@@ -384,6 +362,6 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 | ==== | ================  | TEXT OPERATIONS ========================
 |  40  | LEN @x $a         | Get length of string in @x.
 |  41  | JOIN @x @y @a     | Concatenate text in registers into @a.
-|  42  | GETC n @str @a    | Get character in @str at n and put into @a.
+|  42  | GETC $x @str @a   | Get character in @str at $x and put into @a.
 |  43  | GETCC @str $a     | Get character code of @str and put into @a.
-|  44  | PUTCC n @a        | Put ascii character with code n into @a.
+|  44  | PUTCC $x @a       | Put ascii character with code $x into @a.

@@ -166,6 +166,21 @@ sub-procedure gen.op.emit-2
     in gen.out join gen.out "\t" gen.op " " gen.op.a ", " gen.op.b
 end sub-procedure
 
+# emit an instruction with 3 args, like GETC
+# IN : gen.op    # should be something like GETC
+sub-procedure gen.op.emit-3
+    store 0 in gen.arg
+    call gen.op.fetch
+    store gen.op.fetch in gen.op.a
+    store 1 in gen.arg
+    call gen.op.fetch
+    store gen.op.fetch in gen.op.b
+    store 2 in gen.arg
+    call gen.op.fetch
+    store gen.op.fetch in gen.op.c
+    in gen.out join gen.out "\t" gen.op " " gen.op.a ", " gen.op.b ", " gen.op.c
+end sub-procedure
+
 # emit a math operation with 2 args, like ADD
 # IN : gen.op    # should be something like ADD or SUB
 sub-procedure gen.op.emit-math-2
@@ -359,7 +374,7 @@ sub-procedure generator.Run
         else if "ACCEPT" is equal to gen.node.type then
             store "ACCEPT" in gen.op
             call gen.op.emit
-        else if "ACCEOF" is equal to gen.node.type then
+        else if "ACCEPT UNTIL EOF" is equal to gen.node.type then
             store "ACCEOF" in gen.op
             call gen.op.emit
         else if "EXECUTE" is equal to gen.node.type then
@@ -380,6 +395,18 @@ sub-procedure generator.Run
             call gen.op.emit-2
         else if "APPEND" is equal to gen.node.type then
             store "APPEND" in gen.op
+            call gen.op.emit-2
+        else if "LENGTH" is equal to gen.node.type then
+            store "LEN" in gen.op
+            call gen.op.emit-2
+        else if "GET" is equal to gen.node.type then
+            store "GETC" in gen.op
+            call gen.op.emit-3
+        else if "CHARACTER CODE" is equal to gen.node.type then
+            store "GETCC" in gen.op
+            call gen.op.emit-2
+        else if "CHARACTER" is equal to gen.node.type then
+            store "PUTC" in gen.op
             call gen.op.emit-2
         else
             in gen.out join gen.out "? " gen.node.type
