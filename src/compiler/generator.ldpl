@@ -6,7 +6,12 @@ DATA:
 # shared
 gen.key is text
 
-gen.whiles is number # how many open while blocks
+gen.blocks       is number vector # open if/while blocks
+gen.blocks*      is number
+gen.whiles       is number
+gen.while        is number
+gen.ifs          is number
+gen.if           is number
 
 # generator.Run
 gen.node is number
@@ -223,27 +228,56 @@ sub-procedure generator.Run
                 call gen.arg.emit
                 incr gen.arg
             repeat
-        else if "WHILE" is equal to gen.node.type then
-            # emit label (while_001:)
-            incr gen.whiles
-            in c.Asm join c.Asm "while_" gen.whiles ":" crlf
-
+        else if "IF" is equal to gen.node.type then
+            incr gen.ifs
+            store gen.ifs in gen.blocks:gen.blocks*
+            incr gen.blocks*
             # emit test (GT x y z)
             call gen.op.emit-cond
-
+            # emit jump (JIF end_if_001)
+            in c.Asm join c.Asm "\tJIF end_if_" gen.ifs
+        else if "ELSE IF" is equal to gen.node.type then
+            decr gen.blocks*
+            store gen.blocks:gen.blocks* in gen.if
+            # emit label (end_if_001:)
+            in c.Asm join c.Asm "end_if_" gen.if ":" crlf
+            incr gen.ifs
+            store gen.ifs in gen.blocks:gen.blocks*
+            incr gen.blocks*
+            # emit test (GT x y z)
+            call gen.op.emit-cond
+            # emit jump (JIF end_if_001)
+            in c.Asm join c.Asm "\tJIF end_if_" gen.ifs
+        else if "ELSE" is equal to gen.node.type then
+            decr gen.blocks*
+            store gen.blocks:gen.blocks* in gen.if
+            # emit label (end_if_001:)
+            in c.Asm join c.Asm "end_if_" gen.if ":"
+            incr gen.ifs
+            store gen.ifs in gen.blocks:gen.blocks*
+            incr gen.blocks*
+        else if "END IF" is equal to gen.node.type then
+            decr gen.blocks*
+            store gen.blocks:gen.blocks* in gen.if
+            # emit label (end_if_001:)
+            in c.Asm join c.Asm "end_if_" gen.if ":"
+        else if "WHILE" is equal to gen.node.type then
+            incr gen.whiles
+            store gen.whiles in gen.blocks:gen.blocks*
+            incr gen.blocks*
+            # emit label (while_001:)
+            in c.Asm join c.Asm "while_" gen.whiles ":" crlf
+            # emit test (GT x y z)
+            call gen.op.emit-cond
             # emit jump (JIF end_while_001)
             in c.Asm join c.Asm "\tJIF end_while_" gen.whiles
-
         else if "REPEAT" is equal to gen.node.type then
+            decr gen.blocks*
+            store gen.blocks:gen.blocks* in gen.while
             # emit jump (JUMP while_001)
-            in c.Asm join c.Asm "\tJUMP while_" gen.whiles crlf
-
+            in c.Asm join c.Asm "\tJUMP while_" gen.while crlf
             # emit label (end_while_001:)
-            in c.Asm join c.Asm "end_while_" gen.whiles ":"
-
-            # pop off stack
-            decr gen.whiles
-
+            in c.Asm join c.Asm "end_while_" gen.while ":"
         else if "CALL" is equal to gen.node.type then
             store "CALL" in gen.op
             call gen.op.emit
