@@ -508,6 +508,7 @@ sub-procedure parser.node.create
         call parser.node.set0
         call parser.peek
         if parser.peek is equal to "UNTIL" then
+            store "ACCEOF" in c.Nodes:c.Nodes*
             call parser.advance
             store "EOF" in parser.expect
             call parser.expect
@@ -522,6 +523,7 @@ sub-procedure parser.node.create
             call parser.expect
             call parser.peek
             if "EXIT" is equal to parser.peek then
+                store "EXECODE" in c.Nodes:c.Nodes*
                 call parser.advance
                 store "CODE" in parser.expect
                 call parser.expect
@@ -530,6 +532,7 @@ sub-procedure parser.node.create
                 call parser.advance
                 call parser.node.set1
             else if "OUTPUT" is equal to parser.peek then
+                store "EXECOUT" in c.Nodes:c.Nodes*
                 call parser.advance
                 store "IN" in parser.expect
                 call parser.expect

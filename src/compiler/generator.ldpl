@@ -152,12 +152,18 @@ sub-procedure gen.op.emit
     in gen.out join gen.out "\t" gen.op " " gen.op.fetch
 end sub-procedure
 
-# emit a math operation with 1 arg, like CEIL
-# IN : gen.op    # should be something like CEIL or FLOOR
-sub-procedure gen.op.emit-math-1
+# emit an instruction with 2 args, like EXEC
+# IN : gen.op    # should be something like EXEC
+sub-procedure gen.op.emit-2
     store 0 in gen.arg
     call gen.op.fetch
-    in gen.out join gen.out "\t" gen.op " " gen.op.fetch
+    store gen.op.fetch in gen.op.a
+
+    store 1 in gen.arg
+    call gen.op.fetch
+    store gen.op.fetch in gen.op.b
+
+    in gen.out join gen.out "\t" gen.op " " gen.op.a ", " gen.op.b
 end sub-procedure
 
 # emit a math operation with 2 args, like ADD
@@ -328,25 +334,47 @@ sub-procedure generator.Run
             call gen.op.emit-math-2
         else if "ABS" is equal to gen.node.type then
             store "ABS" in gen.op
-            call gen.op.emit-math-1
+            call gen.op.emit
         else if "CEIL" is equal to gen.node.type then
             store "CEIL" in gen.op
-            call gen.op.emit-math-1
+            call gen.op.emit
         else if "FLOOR" is equal to gen.node.type then
             store "FLOOR" in gen.op
-            call gen.op.emit-math-1
+            call gen.op.emit
         else if "RANDOM" is equal to gen.node.type then
             store "RANDOM" in gen.op
-            call gen.op.emit-math-1
+            call gen.op.emit
         else if "INCR" is equal to gen.node.type then
             store "INCR" in gen.op
-            call gen.op.emit-math-1
+            call gen.op.emit
         else if "DECR" is equal to gen.node.type then
             store "DECR" in gen.op
-            call gen.op.emit-math-1
+            call gen.op.emit
         else if "ACCEPT" is equal to gen.node.type then
             store "ACCEPT" in gen.op
             call gen.op.emit
+        else if "ACCEOF" is equal to gen.node.type then
+            store "ACCEOF" in gen.op
+            call gen.op.emit
+        else if "EXECUTE" is equal to gen.node.type then
+            store "EXEC" in gen.op
+            call gen.op.emit
+            in gen.out join gen.out ", @a"
+        else if "EXECODE" is equal to gen.node.type then
+            store "EXECC" in gen.op
+            call gen.op.emit-2
+        else if "EXECOUT" is equal to gen.node.type then
+            store "EXEC" in gen.op
+            call gen.op.emit-2
+        else if "LOAD" is equal to gen.node.type then
+            store "READ" in gen.op
+            call gen.op.emit-2
+        else if "WRITE" is equal to gen.node.type then
+            store "WRITE" in gen.op
+            call gen.op.emit-2
+        else if "APPEND" is equal to gen.node.type then
+            store "APPEND" in gen.op
+            call gen.op.emit-2
         else
             in gen.out join gen.out "? " gen.node.type
         end if

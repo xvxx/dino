@@ -155,7 +155,7 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
          * [x] STORE
          * [x] IF
          * [x] WHILE
-         * [ ] SUB-PROCEDURE
+         * [x] SUB-PROCEDURE
          * [x] BREAK
          * [x] CONTINUE
          * [x] CALL
@@ -184,14 +184,14 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
          * [ ] STORE QUOTE
          * [ ] IN JOIN
          * [x] DISPLAY
-         * [ ] ACCEPT
-         * [ ] ACCEPT UNTIL EOF
-         * [ ] EXECUTE
-         * [ ] EXECUTE AND STORE OUTPUT
-         * [ ] EXECUTE AND STORE EXIT CODE
-         * [ ] LOAD FILE
-         * [ ] WRITE FILE
-         * [ ] APPEND FILE
+         * [x] ACCEPT
+         * [x] ACCEPT UNTIL EOF
+         * [x] EXECUTE
+         * [x] EXECUTE AND STORE OUTPUT
+         * [x] EXECUTE AND STORE EXIT CODE
+         * [x] LOAD FILE
+         * [x] WRITE FILE
+         * [x] APPEND FILE
          * [ ] Extensions...
    * [x] assembler
    * [x] loader
@@ -375,6 +375,7 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 |  30  | PRINT $x          | Print content of register $x
 |  31  | PRINL $x          | Print content of register $x and newline.
 |  32  | ACCEPT $x         | Accept user input into num or text var.
+|  32  | ACCEOF $x         | Accept user input until EOF.
 |  33  | EXEC @x @a        | Run @x and put output in @a.
 |  34  | EXECC @x $a       | Run @x and put exit code in $a.
 |  35  | READ @x @a        | Read file at path @x into @a. Sets $e, @e
