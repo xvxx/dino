@@ -181,6 +181,19 @@ sub-procedure cpu.Run
                 store 0 in vm.R:vm.Code:cpu.pc
                 store 1 in vm.R:$z
             end if
+        else if $CODES:"GTE" is equal to cpu.code then
+            add 1 and cpu.pc in cpu.pc
+            store vm.R:vm.Code:cpu.pc in cpu.x
+            add 1 and cpu.pc in cpu.pc
+            store vm.R:vm.Code:cpu.pc in cpu.y
+            add 1 and cpu.pc in cpu.pc
+            if cpu.x is greater than or equal to cpu.y then
+                store 1 in vm.R:vm.Code:cpu.pc
+                store 0 in vm.R:$z
+            else
+                store 0 in vm.R:vm.Code:cpu.pc
+                store 1 in vm.R:$z
+            end if
         else if $CODES:"LT" is equal to cpu.code then
             add 1 and cpu.pc in cpu.pc
             store vm.R:vm.Code:cpu.pc in cpu.x
@@ -188,6 +201,19 @@ sub-procedure cpu.Run
             store vm.R:vm.Code:cpu.pc in cpu.y
             add 1 and cpu.pc in cpu.pc
             if cpu.x is less than cpu.y then
+                store 1 in vm.R:vm.Code:cpu.pc
+                store 0 in vm.R:$z
+            else
+                store 0 in vm.R:vm.Code:cpu.pc
+                store 1 in vm.R:$z
+            end if
+        else if $CODES:"LTE" is equal to cpu.code then
+            add 1 and cpu.pc in cpu.pc
+            store vm.R:vm.Code:cpu.pc in cpu.x
+            add 1 and cpu.pc in cpu.pc
+            store vm.R:vm.Code:cpu.pc in cpu.y
+            add 1 and cpu.pc in cpu.pc
+            if cpu.x is less than or equal to cpu.y then
                 store 1 in vm.R:vm.Code:cpu.pc
                 store 0 in vm.R:$z
             else
