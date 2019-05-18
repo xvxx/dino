@@ -305,10 +305,12 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 |  07  | WAIT $r           | Pause for milliseconds in register.
 | ==== | ================= | MEMORY COMMANDS =========================
 |  10  | STORE %var $r     | %r = value of $r
-|  11  | SET $r 314        | $r = literal number value
-|  12  | FETCH $r $x       | $r = value of memory at address in $x. Like a pointer.
+|  11  | SET $r 314        | Set $r to a literal number value
+|  12  | FETCH $r $x       | Set $r to the value at address in $x. Like a pointer.
 |  13  | PUSH $x           | Push $x onto the stack.
 |  14  | POP $a            | Pop off the stack into $a.
+|  15  | STOREV %vec $r %v | Set %vec:$r to value of %v. %vec:@t and @v work too.
+|  16  | PUTV %vec $r %a   | Put %vec:$r into %a. %vec:@t and @v work too.
 | ==== | ================= | ARITHMETIC ==============================
 |  20  | EQ $x $y $a       | Set $a=1 if $x == $y
 |  21  | GT $x $y $a       | Set $a=1 if $x > $y
