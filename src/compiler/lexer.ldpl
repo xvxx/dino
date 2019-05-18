@@ -20,8 +20,6 @@ lexer.comment?       is number        # are we lexing a comment?
 lexer.quote?         is number        # are we lexing STORE QUOTE?
 lexer.chars          is text vector   # every letter
 lexer.end-quote?     is number        # call lexer.end-quote?
-lexer.peek           is text          # next character
-lexer.peek.i         is number        # tmpvar
 lexer.check.i        is number        # tmpvar
 lexer.check.z        is number        # tmpvar
 lexer.check.t        is text          # tmpvar
@@ -59,9 +57,51 @@ sub-procedure lexer.token.push
         store "\"\\r\\n\"" in lexer.token
     end if
 
+    # STORE QUOTE special casing
+    if lexer.token is equal to "QUOTE" then
+        subtract 1 from c.Tokens* in lexer.prev
+        if c.Tokens:lexer.prev is equal to "STORE" then
+            store 1 in lexer.quote?
+            store "STORE QUOTE" in lexer.token
+        end if
+    end if
+
     store lexer.token in c.Tokens:c.Tokens*
     incr c.Tokens*
     store "" in lexer.token
+end sub-procedure
+
+# Determine whether a STORE QUOTE is ending.
+#    IN: lexer.ci
+#    IN: lexer.char
+#   OUT: lexer.end-quote?
+# SETUP:
+split "END QUOTE" by "" in lexer.check.tuchars  # 9 chars
+split "end quote" by "" in lexer.check.tlchars
+while lexer.check.i is less than 9 do
+    store lexer.check.tuchars:lexer.check.i in lexer.check.t
+    store 1 in lexer.check.chars:lexer.check.t
+    store lexer.check.tlchars:lexer.check.i in lexer.check.t
+    store 1 in lexer.check.chars:lexer.check.t
+    incr lexer.check.i
+repeat
+sub-procedure lexer.end-quote?
+    store 0 in lexer.end-quote?
+    store 0 in lexer.check.i
+    store "" in lexer.check.t
+    while lexer.check.i is less than 9 do
+        incr lexer.check.i
+        add lexer.check.i and lexer.ci in lexer.check.z
+        if lexer.check.chars:lexer.chars:lexer.check.z is equal to 0 then
+            return
+        end if
+        join lexer.check.t and lexer.chars:lexer.check.z in lexer.check.t
+    repeat
+    store lexer.check.t in upcase.word
+    call upcase-word
+    if upcase.word is equal to "END QUOTE" then
+        store 1 in lexer.end-quote?
+    end if
 end sub-procedure
 
 #  IN: c.Input
@@ -79,7 +119,21 @@ sub-procedure lexer.Run
         subtract 1 from lexer.ci in lexer.prev
         store lexer.chars:lexer.ci in lexer.char
 
-        if lexer.comment? is equal to 1 then
+        if lexer.quote? is equal to 1 then
+            if lexer.char is not equal to "\n" then
+                join lexer.token and lexer.char in lexer.token
+            else
+                call lexer.end-quote?
+                if lexer.end-quote? is equal to 1 then
+                    store 0 in lexer.quote?
+                    call lexer.token.push
+                else
+                    join lexer.token and lexer.char in lexer.token
+                end if
+            end if
+            incr lexer.ci
+            continue
+        else if lexer.comment? is equal to 1 then
             if lexer.char is equal to "\n" then
                 store 0 in lexer.comment?
                 store tokens.NEWLINE in lexer.token
