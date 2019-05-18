@@ -155,6 +155,7 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
    * [x] exec.ldpl
    * [ ] explode.ldpl
       * [ ] STORE QUOTE
+      * [ ] text vector
    * [X] fibo.ldpl
    * [x] file.ldpl
       * [x] IN - JOIN
@@ -166,6 +167,26 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
    * [ ] vector.ldpl
       * [ ] text vector
       * [ ] number vector
+* [ ] LDPL Examples:
+   * [x] 99bottles.ldpl
+   * [ ] brainfuck.ldpl
+   * [x] disancount.ldpl
+   * [x] euler.ldpl
+   * [ ] explode.ldpl
+      * [ ] text vector
+   * [x] factorial.ldpl
+   * [x] fibonacci.ldpl
+   * [x] helloworld.ldpl
+   * [ ] quine.ldpl
+      * [ ] number vector
+   * [x] sqrt.ldpl
+* [ ] LDPL Programs:
+   * [ ] spark
+   * [ ] space mines
+   * [ ] lisp
+   * [ ] gild
+   * [ ] lartu's br*nfuck interpreter
+   * [ ] lartu's flash cards thing
 * [ ] parser nodes:
    * [ ] SOLVE
    * [ ] STORE QUOTE
