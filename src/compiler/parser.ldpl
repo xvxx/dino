@@ -17,29 +17,31 @@
 
 DATA:
 # OUT:
-parser.mode      is number        # 1=data, 2=code
-parser.node      is number
+parser.mode          is number        # 1=data, 2=code
+parser.node          is number
 
-parser.run.c     is number        # main iterator
-parser.n         is number
-parser.i         is number
-parser.t         is text
-parser.token     is text
-parser.char      is text
-parser.prev      is number
-parser.next      is number
-parser.var       is text
-parser.key       is text
-parser.expect    is text
+parser.run.c         is number        # main iterator
+parser.n             is number
+parser.i             is number
+parser.t             is text
+parser.token         is text
+parser.char          is text
+parser.prev          is number
+parser.next          is number
+parser.var           is text
+parser.key           is text
+parser.expect        is text
 
-parser.type      is number
-parser.arg       is number
+parser.type          is number
+parser.type.parts    is text vector
+parser.arg           is number
 
-parser.peek      is text
-parser.peek.n    is number
+parser.peek          is text
+parser.peek.n        is number
 
-parser.error     is text
-parser.error.i   is number
+parser.error         is text
+parser.error.i       is number
+parser.token.vector? is number
 
 PROCEDURE:
 # IN: parser.error
@@ -55,6 +57,17 @@ sub-procedure parser.error
         incr parser.error.i
     repeat
     exit
+end sub-procedure
+
+#  IN: parser.token
+# OUT: parser.token.vector?
+sub-procedure parser.token.vector?
+    get index of ":" from parser.token in parser.token.vector?
+    if parser.token.vector? is greater than -1 then
+        store 1 in parser.token.vector?
+    else
+        store 0 in parser.token.vector?
+    end if
 end sub-procedure
 
 # Stores next token in `parser.peek`
@@ -113,6 +126,14 @@ sub-procedure parser.type.identify
     store c.Vars:parser.token in parser.n
     if parser.n is not equal to 0 then
         store parser.n in parser.type
+        return
+    end if
+
+    # vector
+    call parser.token.vector?
+    if parser.token.vector? is equal to 1 then
+        split parser.token by ":" in parser.type.parts
+        store c.Vars:parser.type.parts:0 in parser.type
         return
     end if
 
