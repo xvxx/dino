@@ -148,7 +148,7 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
    * [ ] basicar.ldpl
       * [ ] SOLVE
    * [ ] basictx.ldpl
-      * [ ] IN - JOIN
+      * [x] IN - JOIN
       * [ ] STORE QUOTE
       * [ ] text vector
    * [X] conflow.ldpl
@@ -157,7 +157,7 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
       * [ ] STORE QUOTE
    * [X] fibo.ldpl
    * [ ] file.ldpl
-      * [ ] IN - JOIN
+      * [x] IN - JOIN
    * [ ] quine.ldpl
       * [ ] NUMBER VECTOR
    * [x] sqrt.ldpl
@@ -176,7 +176,7 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
    * [?] MOD
    * [ ] SOLVE
    * [ ] STORE QUOTE
-   * [ ] IN JOIN
+   * [x] IN JOIN
    * [ ] Extensions...
 * [ ] assembly -> bytecode $ dino bytes examples/99.dino
    * [ ] error checking:
