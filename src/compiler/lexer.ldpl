@@ -73,6 +73,8 @@ sub-procedure lexer.Run
         if lexer.comment? is equal to 1 then
             if lexer.char is equal to "\n" then
                 store 0 in lexer.comment?
+                store tokens.NEWLINE in lexer.token
+                call lexer.token.push
             end if
             incr lexer.ci
             continue
