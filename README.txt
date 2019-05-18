@@ -208,7 +208,7 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 # --- ADDRESS SYNTAX -------------------------------------------------
 | NAME            | SYNTAX
 +-----------------+---------------------------------------------------
-| Number Register | $z, $pc
+| Number Register | $a, $pc
 | Number Variable | %bufsize, %Users
 | Text Variable   | @name, @City
 | Text Literal    | "heya", "LDPL rox!"
@@ -230,7 +230,7 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 | 0000 | $A   | Accumulator
 | 0001 | $X   | Parameter
 | 0002 | $Y   | Parameter
-| 0003 | $Z   | $a = 0?
+| 0003 | $Z   | Parameter
 | 0004 | $E   | Non-zero error code
 | 0005 | $C   | Carry
 | 0006 | $I   | Incrementor

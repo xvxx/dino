@@ -70,7 +70,7 @@ sub-procedure cpu.Run
             add vm.Code:cpu.pc and cpu.pc in cpu.pc
         else if $CODES:"JIF" is equal to cpu.code then
             incr cpu.pc
-            if vm.R:$z is equal to 1 then
+            if vm.R:$a is equal to 0 then
                 add vm.Code:cpu.pc and cpu.pc in cpu.pc
             end if
         else if $CODES:"JIT" is equal to cpu.code then
@@ -149,7 +149,6 @@ sub-procedure cpu.Run
                 store cpu.stack:vm.R:$sp in vm.R:vm.Code:cpu.pc
             else
                 store 0 in vm.R:vm.Code:cpu.pc
-                store 0 in vm.R:$z
                 store 1 in vm.R:$e
                 store "can't pop empty stack" in vm.Text:@e
             end if
@@ -166,20 +165,16 @@ sub-procedure cpu.Run
                 store vm.Text:cpu.y in cpu.ty
                 if cpu.tx is equal to cpu.ty then
                     store 1 in vm.R:vm.Code:cpu.pc
-                    store 0 in vm.R:$z
                 else
                     store 0 in vm.R:vm.Code:cpu.pc
-                    store 1 in vm.R:$z
                 end if
             else
                 store vm.R:cpu.x in cpu.x
                 store vm.R:cpu.y in cpu.y
                 if cpu.x is equal to cpu.y then
                     store 1 in vm.R:vm.Code:cpu.pc
-                    store 0 in vm.R:$z
                 else
                     store 0 in vm.R:vm.Code:cpu.pc
-                    store 1 in vm.R:$z
                 end if
             end if
         else if $CODES:"GT" is equal to cpu.code then
@@ -190,10 +185,8 @@ sub-procedure cpu.Run
             incr cpu.pc
             if cpu.x is greater than cpu.y then
                 store 1 in vm.R:vm.Code:cpu.pc
-                store 0 in vm.R:$z
             else
                 store 0 in vm.R:vm.Code:cpu.pc
-                store 1 in vm.R:$z
             end if
         else if $CODES:"GTE" is equal to cpu.code then
             incr cpu.pc
@@ -203,10 +196,8 @@ sub-procedure cpu.Run
             incr cpu.pc
             if cpu.x is greater than or equal to cpu.y then
                 store 1 in vm.R:vm.Code:cpu.pc
-                store 0 in vm.R:$z
             else
                 store 0 in vm.R:vm.Code:cpu.pc
-                store 1 in vm.R:$z
             end if
         else if $CODES:"LT" is equal to cpu.code then
             incr cpu.pc
@@ -216,10 +207,8 @@ sub-procedure cpu.Run
             incr cpu.pc
             if cpu.x is less than cpu.y then
                 store 1 in vm.R:vm.Code:cpu.pc
-                store 0 in vm.R:$z
             else
                 store 0 in vm.R:vm.Code:cpu.pc
-                store 1 in vm.R:$z
             end if
         else if $CODES:"LTE" is equal to cpu.code then
             incr cpu.pc
@@ -229,10 +218,8 @@ sub-procedure cpu.Run
             incr cpu.pc
             if cpu.x is less than or equal to cpu.y then
                 store 1 in vm.R:vm.Code:cpu.pc
-                store 0 in vm.R:$z
             else
                 store 0 in vm.R:vm.Code:cpu.pc
-                store 1 in vm.R:$z
             end if
         else if $CODES:"ADD" is equal to cpu.code then
             incr cpu.pc
@@ -284,19 +271,9 @@ sub-procedure cpu.Run
         else if $CODES:"INCR" is equal to cpu.code then
             incr cpu.pc
             incr vm.R:vm.Code:cpu.pc
-            if vm.R:vm.Code:cpu.pc is equal to 0 then
-                store 1 in vm.R:$z
-            else
-                store 0 in vm.R:$z
-            end if
         else if $CODES:"DECR" is equal to cpu.code then
             incr cpu.pc
             decr vm.R:vm.Code:cpu.pc
-            if vm.R:vm.Code:cpu.pc is equal to 0 then
-                store 1 in vm.R:$z
-            else
-                store 0 in vm.R:$z
-            end if
 
         # --- I/O COMMANDS -------------------------------------------
         else if $CODES:"PRINT" is equal to cpu.code then
@@ -378,11 +355,6 @@ sub-procedure cpu.Run
             store vm.Text:vm.Code:cpu.pc in cpu.t
             incr cpu.pc
             store length of cpu.t in vm.R:vm.Code:cpu.pc
-            if vm.R:$A is equal to 0 then
-                store 1 in vm.R:$Z
-            else
-                store 0 in vm.R:$Z
-            end if
         else if $CODES:"JOIN" is equal to cpu.code then
             incr cpu.pc
             store vm.Text:vm.Code:cpu.pc in cpu.tx
@@ -404,11 +376,6 @@ sub-procedure cpu.Run
             store character code of cpu.t in vm.R:vm.Code:cpu.pc
             if ERRORCODE is not equal to 0 then
                 store 0 in vm.R:$e
-                if vm.R:vm.Code:cpu.pc is equal to 0 then
-                    store 1 in vm.R:$z
-                else
-                    store 0 in vm.R:$z
-                end if
             else
                 store ERRORCODE in vm.R:$e
                 store ERRORTEXT in vm.Text:@e
