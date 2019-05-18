@@ -47,7 +47,7 @@ end sub-procedure
 sub-procedure lexer.token.push
     # TODO big ol' CRLF hack
     if lexer.token is equal to tokens.CRLF then
-        store "\"\\n\"" in lexer.token
+        store "\"\\r\\n\"" in lexer.token
     end if
 
     store lexer.token in c.Tokens:c.Tokens*
