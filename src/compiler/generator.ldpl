@@ -53,7 +53,6 @@ store "GTE" in gen.op.syms:">="
 store  "LT" in gen.op.syms:"<"
 store "LTE" in gen.op.syms:"<="
 store  "EQ" in gen.op.syms:"=="
-store "NEQ" in gen.op.syms:"!="
 
 # IN : gen.error
 # OUT:
@@ -217,6 +216,13 @@ sub-procedure gen.op.emit-cond
     store gen.op.fetch in gen.op.b
 
     store gen.op.syms:gen.op.t in gen.op
+    if gen.op.t is equal to "!=" then
+        store "EQ" in gen.op
+        in gen.out join gen.out "\tEQ " gen.op.a ", " gen.op.b ", $a" crlf
+        in gen.out join gen.out "\tSET $t, 0" crlf
+        store "$a" in gen.op.a
+        store "$t" in gen.op.b
+    end if
     in gen.out join gen.out "\t" gen.op " " gen.op.a ", " gen.op.b ", $a" crlf
 end sub-procedure
 
