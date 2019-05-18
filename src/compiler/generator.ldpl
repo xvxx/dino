@@ -391,10 +391,10 @@ sub-procedure generator.Run
             store "EXEC" in gen.op
             call gen.op.emit
             in gen.out join gen.out ", @a"
-        else if "EXECODE" is equal to gen.node.type then
+        else if "EXEC CODE" is equal to gen.node.type then
             store "EXECC" in gen.op
             call gen.op.emit-2
-        else if "EXECOUT" is equal to gen.node.type then
+        else if "EXEC OUT" is equal to gen.node.type then
             store "EXEC" in gen.op
             call gen.op.emit-2
         else if "LOAD" is equal to gen.node.type then

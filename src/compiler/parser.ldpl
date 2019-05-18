@@ -532,7 +532,7 @@ sub-procedure parser.node.create
             call parser.expect
             call parser.peek
             if "EXIT" is equal to parser.peek then
-                store "EXECODE" in c.Nodes:c.Nodes*
+                store "EXEC CODE" in c.Nodes:c.Nodes*
                 call parser.advance
                 store "CODE" in parser.expect
                 call parser.expect
@@ -541,7 +541,7 @@ sub-procedure parser.node.create
                 call parser.advance
                 call parser.node.set1
             else if "OUTPUT" is equal to parser.peek then
-                store "EXECOUT" in c.Nodes:c.Nodes*
+                store "EXEC OUT" in c.Nodes:c.Nodes*
                 call parser.advance
                 store "IN" in parser.expect
                 call parser.expect
