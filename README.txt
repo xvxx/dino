@@ -152,9 +152,9 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
       * [ ] IN - JOIN
    * [ ] quine.ldpl
       * [ ] NUMBER VECTOR
-   * [ ] sqrt.ldpl
-      * [ ] fix DIVIDE
-      * [ ] fix MODULO
+   * [x] sqrt.ldpl
+      * [x] fix DIVIDE
+      * [x] fix MODULO
    * [ ] vector.ldpl
       * [ ] text vector
       * [ ] number vector
