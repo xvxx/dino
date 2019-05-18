@@ -149,18 +149,18 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
       * [ ] SOLVE
    * [ ] basictx.ldpl
       * [x] IN - JOIN
-      * [ ] STORE QUOTE
+      * [x] STORE QUOTE
       * [ ] text vector
    * [X] conflow.ldpl
    * [x] exec.ldpl
    * [ ] explode.ldpl
-      * [ ] STORE QUOTE
+      * [x] STORE QUOTE
       * [ ] text vector
    * [X] fibo.ldpl
    * [x] file.ldpl
       * [x] IN - JOIN
    * [ ] quine.ldpl
-      * [ ] NUMBER VECTOR
+      * [ ] number vector
    * [x] sqrt.ldpl
       * [x] fix DIVIDE
       * [x] fix MODULO
@@ -189,14 +189,14 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
    * [ ] lartu's flash cards thing
 * [ ] parser nodes:
    * [ ] SOLVE
-   * [ ] STORE QUOTE
+   * [x] STORE QUOTE
    * [ ] CALL EXTERNAL
    * [ ] EXTERNAL SUB-PROCEDURE
    * [ ] var is EXTERNAL data types
 * [ ] generator:
-   * [?] MOD
+   * [x] MOD
    * [ ] SOLVE
-   * [ ] STORE QUOTE
+   * [x] STORE QUOTE
    * [x] IN JOIN
    * [ ] Extensions...
 * [ ] assembly -> bytecode $ dino bytes examples/99.dino
@@ -219,7 +219,6 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
       * [ ] OR
       * [ ] XOR
       * [ ] NOT
-
 * [ ] 2nd pass TODO:
    * [ ] validate syntax in parser, eg no ELSE before ELSE IF
    * [ ] much better error messages. like rust's.
