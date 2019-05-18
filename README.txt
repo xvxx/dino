@@ -137,12 +137,20 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 
 === TODO =============================================================
 
+* [ ] Newest commits to ldpl/master:
+   * [ ] REPLACE
+   * [ ] SPLIT
+   * [ ] TRIM
+   * [ ] GET INDEX OF
+   * [ ] COUNT
+   * [ ] SUBSTRING
 * [ ] LDPL Test Battery:
    * [ ] basicar.ldpl
       * [ ] SOLVE
    * [ ] basictx.ldpl
       * [ ] IN - JOIN
       * [ ] STORE QUOTE
+      * [ ] text vector
    * [X] conflow.ldpl
    * [ ] exec.ldpl
    * [ ] explode.ldpl
