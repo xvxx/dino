@@ -62,7 +62,7 @@ sub-procedure gen.error
 end sub-procedure
 
 # Generate a unique number variable name for use in emitting.
-# OUT: gen.var
+# OUT: gen.nvar
 sub-procedure gen.nvar
     join "%var" and gen.nvar.i in gen.nvar
     incr gen.nvar.i
@@ -422,6 +422,7 @@ sub-procedure generator.Run
             store "PUTCC" in gen.op
             call gen.op.emit-2
         else if "IN JOIN" is equal to gen.node.type then
+            store 0 in gen.arg
             call gen.op.fetch
             store gen.op.fetch in gen.var
             in gen.out join gen.out "\tSET @A, \"\""
