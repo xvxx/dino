@@ -18,6 +18,7 @@ lexer.token          is text          # current token
 lexer.text?          is number        # are we lexing a string?
 lexer.comment?       is number        # are we lexing a comment?
 lexer.quote?         is number        # are we lexing STORE QUOTE?
+lexer.quote??        is number        # deciding whether to STORE QUOTE?
 lexer.chars          is text vector   # every letter
 lexer.end-quote?     is number        # call lexer.end-quote?
 lexer.check.i        is number        # tmpvar
@@ -58,11 +59,16 @@ sub-procedure lexer.token.push
     end if
 
     # STORE QUOTE special casing
-    if lexer.token is equal to "QUOTE" then
+    if lexer.quote?? is equal to 1 then
+        store 0 in lexer.quote??
+        store 1 in lexer.quote?
+    else if lexer.token is equal to "IN" then
         subtract 1 from c.Tokens* in lexer.prev
-        if c.Tokens:lexer.prev is equal to "STORE" then
-            store 1 in lexer.quote?
-            store "STORE QUOTE" in lexer.token
+        if c.Tokens:lexer.prev is equal to "QUOTE" then
+            subtract 1 from lexer.prev in lexer.prev
+            if c.Tokens:lexer.prev is equal to "STORE" then
+                store 1 in lexer.quote??
+            end if
         end if
     end if
 
@@ -111,6 +117,8 @@ sub-procedure lexer.Run
     split c.Input by "" in lexer.chars
     store 0 in lexer.comment?
     store 0 in lexer.text?
+    store 0 in lexer.quote?
+    store 0 in lexer.quote??
     store 0 in lexer.ci
     store 0 in c.Tokens*
     store "" in lexer.char
@@ -127,11 +135,15 @@ sub-procedure lexer.Run
                 if lexer.end-quote? is equal to 1 then
                     store 0 in lexer.quote?
                     call lexer.token.push
+                    store "END QUOTE" in lexer.token
+                    call lexer.token.push
+                    add lexer.ci and 10 in lexer.ci # END QUOTE chars
+                    continue
                 else
                     join lexer.token and lexer.char in lexer.token
                 end if
             end if
-            incr lexer.ci
+             incr lexer.ci
             continue
         else if lexer.comment? is equal to 1 then
             if lexer.char is equal to "\n" then
