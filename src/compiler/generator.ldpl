@@ -41,6 +41,16 @@ gen.op.c is text
 gen.op.t is text
 gen.op.syms is text vector
 
+# gen.escape-quotes
+gen.escape-quotes is text
+gen.escape.i      is number
+gen.escape.x      is number
+gen.escape.c      is text
+gen.escape.t      is text
+gen.escape.token  is text
+gen.escape.prev   is number
+gen.escape.chars  is text vector
+
 # gen.error
 gen.error is text
 
@@ -59,6 +69,31 @@ store  "EQ" in gen.op.syms:"=="
 sub-procedure gen.error
     display "CODE GEN ERROR: " gen.error crlf
     exit
+end sub-procedure
+
+# turn " into \" within a TEXT
+#  IN: gen.escape-quotes
+# OUT: gen.escape-quotes
+sub-procedure gen.escape-quotes
+    store 0 in gen.escape.i
+    store 0 in gen.escape.x
+    store "" in gen.escape.token
+    split gen.escape-quotes by "" in gen.escape.chars
+    store gen.escape.chars:0 in gen.escape.c
+    while gen.escape.c is not equal to "" do
+        if gen.escape.c is equal to "\"" then
+            subtract 1 from gen.escape.i in gen.escape.prev
+            if gen.escape.chars:gen.escape.prev is equal to "\\" then
+                join gen.escape.token and "\\\\" in gen.escape.token
+            else
+                join gen.escape.token and "\\" in gen.escape.token
+            end if
+        end if
+        join gen.escape.token and gen.escape.c in gen.escape.token
+        incr gen.escape.i
+        get character at gen.escape.i from gen.escape-quotes in gen.escape.c
+    repeat
+    store gen.escape.token in gen.escape-quotes
 end sub-procedure
 
 # Generate a unique number variable name for use in emitting.
@@ -440,7 +475,16 @@ sub-procedure generator.Run
                 in gen.out join gen.out "\tJOIN @A, " gen.op.fetch ", @A"
                 incr gen.arg
             repeat
-            in gen.out join gen.out crlf "\tSTORE " gen.var ", @A"
+                in gen.out join gen.out crlf "\tSTORE " gen.var ", @A"
+        else if "QUOTE" is equal to gen.node.type then
+            store 0 in gen.arg
+            call gen.op.fetch
+            store gen.op.fetch in gen.var
+            incr gen.arg
+            call gen.op.fetch
+            store gen.op.fetch in gen.escape-quotes
+            call gen.escape-quotes
+            in gen.out join gen.out crlf "\tSTORE " gen.var ", \"" gen.escape-quotes "\""
         else
             in gen.out join gen.out "? " gen.node.type
         end if
