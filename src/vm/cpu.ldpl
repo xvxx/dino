@@ -157,29 +157,57 @@ sub-procedure cpu.Run
         # --- ARITHMETIC ---------------------------------------------
         else if $CODES:"EQ" is equal to cpu.code then
             incr cpu.pc
-            store vm.R:vm.Code:cpu.pc in cpu.x
+            store vm.Code:cpu.pc in cpu.x
             incr cpu.pc
-            store vm.R:vm.Code:cpu.pc in cpu.y
+            store vm.Code:cpu.pc in cpu.y
             incr cpu.pc
-            if cpu.x is equal to cpu.y then
-                store 1 in vm.R:vm.Code:cpu.pc
-                store 0 in vm.R:$z
+            if cpu.x is greater than or equal to $OFFSET.TEXT then
+                store vm.Text:cpu.x in cpu.tx
+                store vm.Text:cpu.y in cpu.ty
+                if cpu.tx is equal to cpu.ty then
+                    store 1 in vm.R:vm.Code:cpu.pc
+                    store 0 in vm.R:$z
+                else
+                    store 0 in vm.R:vm.Code:cpu.pc
+                    store 1 in vm.R:$z
+                end if
             else
-                store 0 in vm.R:vm.Code:cpu.pc
-                store 1 in vm.R:$z
+                store vm.R:cpu.x in cpu.x
+                store vm.R:cpu.y in cpu.y
+                if cpu.x is equal to cpu.y then
+                    store 1 in vm.R:vm.Code:cpu.pc
+                    store 0 in vm.R:$z
+                else
+                    store 0 in vm.R:vm.Code:cpu.pc
+                    store 1 in vm.R:$z
+                end if
             end if
         else if $CODES:"NEQ" is equal to cpu.code then
             incr cpu.pc
-            store vm.R:vm.Code:cpu.pc in cpu.x
+            store vm.Code:cpu.pc in cpu.x
             incr cpu.pc
-            store vm.R:vm.Code:cpu.pc in cpu.y
+            store vm.Code:cpu.pc in cpu.y
             incr cpu.pc
-            if cpu.x is not equal to cpu.y then
-                store 1 in vm.R:vm.Code:cpu.pc
-                store 0 in vm.R:$z
+            if cpu.x is greater than or equal to $OFFSET.TEXT then
+                store vm.Text:cpu.x in cpu.tx
+                store vm.Text:cpu.y in cpu.ty
+                if cpu.tx is not equal to cpu.ty then
+                    store 1 in vm.R:vm.Code:cpu.pc
+                    store 0 in vm.R:$z
+                else
+                    store 0 in vm.R:vm.Code:cpu.pc
+                    store 1 in vm.R:$z
+                end if
             else
-                store 0 in vm.R:vm.Code:cpu.pc
-                store 1 in vm.R:$z
+                store vm.R:cpu.x in cpu.x
+                store vm.R:cpu.y in cpu.y
+                if cpu.x is not equal to cpu.y then
+                    store 1 in vm.R:vm.Code:cpu.pc
+                    store 0 in vm.R:$z
+                else
+                    store 0 in vm.R:vm.Code:cpu.pc
+                    store 1 in vm.R:$z
+                end if
             end if
         else if $CODES:"GT" is equal to cpu.code then
             incr cpu.pc
