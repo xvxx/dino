@@ -4,22 +4,31 @@ DATA:
 # USES:
 # c.Input
 
-# IN:
-
-# OUT:
-lexer.chars          is text vector  # every letter
-
 # LOCAL:
-lexer.ci             is number       # current character index
-lexer.char           is text         # current character
-lexer.next           is number       # idx of next character
-lexer.prev           is number       # idx of previous character
-lexer.token          is text         # current token
-lexer.text?          is number       # are we lexing a string?
-lexer.comment?       is number       # are we lexing a comment?
-c.Tokens.i           is number       # for clearing the list
-c.Input*             is number       # input length
+c.Tokens.i           is number        # for clearing the list
+c.Input*             is number        # input length
+lexer.t              is text          # temp var
 
+# SHARED:
+lexer.ci             is number        # current character index
+lexer.char           is text          # current character
+lexer.next           is number        # idx of next character
+lexer.prev           is number        # idx of previous character
+lexer.token          is text          # current token
+lexer.text?          is number        # are we lexing a string?
+lexer.comment?       is number        # are we lexing a comment?
+lexer.quote?         is number        # are we lexing STORE QUOTE?
+lexer.chars          is text vector   # every letter
+lexer.end-quote?     is number        # call lexer.end-quote?
+lexer.peek           is text          # next character
+lexer.peek.i         is number        # tmpvar
+lexer.check.i        is number        # tmpvar
+lexer.check.z        is number        # tmpvar
+lexer.check.t        is text          # tmpvar
+lexer.check.c        is text          # tmpvar
+lexer.check.chars    is number vector # tmpvar
+lexer.check.tlchars  is text vector   # text lowercase chars
+lexer.check.tuchars  is text vector   # text uppercase chars
 lexer.error          is text
 lexer.error.i        is number
 
