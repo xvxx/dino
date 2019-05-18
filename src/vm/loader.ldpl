@@ -45,7 +45,7 @@ sub-procedure loader.Run
                 else if loader.char is equal to "r" then
                     join loader.token and "\r" in loader.token
                 else
-                    display "bad escape char: " loader.char crlf
+                    display "loader: bad escape char: " loader.char crlf
                     exit
                 end if
                 add 1 and loader.i in loader.i
