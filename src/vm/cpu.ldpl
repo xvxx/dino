@@ -328,24 +328,24 @@ sub-procedure cpu.Run
             store ERRORTEXT in vm.Text:@E
         else if $CODES:"WRITE" is equal to cpu.code then
             incr cpu.pc
-            store vm.Text:vm.Code:cpu.pc in cpu.t
-            incr cpu.pc
             if vm.Code:cpu.pc is greater than or equal to $OFFSET.TEXT then
-                write vm.Text:vm.Code:cpu.pc to file cpu.t
+                store vm.Text:vm.Code:cpu.pc in cpu.t
             else
-                write vm.R:vm.Code:cpu.pc to file cpu.t
+                store vm.R:vm.Code:cpu.pc in cpu.t
             end if
+            incr cpu.pc
+            write cpu.t to file vm.Text:vm.Code:cpu.pc
             store ERRORCODE in vm.R:$E
             store ERRORTEXT in vm.Text:@E
         else if $CODES:"APPEND" is equal to cpu.code then
             incr cpu.pc
-            store vm.Text:vm.Code:cpu.pc in cpu.t
-            incr cpu.pc
             if vm.Code:cpu.pc is greater than or equal to $OFFSET.TEXT then
-                append vm.Text:vm.Code:cpu.pc to file cpu.t
+                store vm.Text:vm.Code:cpu.pc in cpu.t
             else
-                append vm.R:vm.Code:cpu.pc to file cpu.t
+                store vm.R:vm.Code:cpu.pc in cpu.t
             end if
+            incr cpu.pc
+            append cpu.t to file vm.Text:vm.Code:cpu.pc
             store ERRORCODE in vm.R:$E
             store ERRORTEXT in vm.Text:@E
 

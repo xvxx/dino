@@ -314,8 +314,8 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 |  33  | EXEC @x @a        | Run @x and put output in @a.
 |  34  | EXECC @x $a       | Run @x and put exit code in $a.
 |  35  | READ @x @a        | Read file at path @x into @a. Sets $e, @e
-|  36  | WRITE @x @y       | Write @y to file at path @x.
-|  37  | APPEND @x @y      | Append @y to file at path @x.
+|  36  | WRITE @x @y       | Write @x to file at path @y.
+|  37  | APPEND @x @y      | Append @x to file at path @y.
 | ==== | ================  | TEXT OPERATIONS ========================
 |  40  | LEN @x $a         | Get length of string in @x.
 |  41  | JOIN @x @y @a     | Concatenate text in registers into @a.
