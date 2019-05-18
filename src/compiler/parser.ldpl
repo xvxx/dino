@@ -208,9 +208,9 @@ sub-procedure parser.node.set3
 end sub-procedure
 
 #  IN: parser.token
+#      parser.arg
 sub-procedure parser.node.set-vargs
-    store 0 in parser.arg
-    while parser.arg is less than 8 do
+    while parser.arg is less than 16 do
         call parser.peek
         if parser.peek is equal to tokens.NEWLINE then
             break
@@ -285,6 +285,7 @@ sub-procedure parser.node.create
             call parser.node.set1
         end if
     else if "DISPLAY" is equal to parser.token then
+        store 0 in parser.arg
         call parser.node.set-vargs
     else if "CALL" is equal to parser.token then
         call parser.advance
@@ -504,8 +505,11 @@ sub-procedure parser.node.create
                 end if
             repeat
         else
+            call parser.node.set0
+            store "IN JOIN" in c.Nodes:c.Nodes*
             store "JOIN" in parser.expect
             call parser.expect
+            store 1 in parser.arg
             call parser.node.set-vargs
         end if
     else if "ACCEPT" is equal to parser.token then

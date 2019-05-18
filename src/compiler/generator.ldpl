@@ -17,6 +17,7 @@ gen.while          is number
 gen.out            is text
 gen.subs           is text  # sub-procedure definitions
 gen.sub?           is number
+gen.var            is text
 
 # generator.Run
 gen.node is number
@@ -414,8 +415,25 @@ sub-procedure generator.Run
         else if "CHARACTER" is equal to gen.node.type then
             store "PUTCC" in gen.op
             call gen.op.emit-2
-        else if "IN" is equal to gen.node.type then
-            # TODO:
+        else if "IN JOIN" is equal to gen.node.type then
+            call gen.op.fetch
+            store gen.op.fetch in gen.var
+            in gen.out join gen.out "\tSET @A, \"\""
+            store 1 in gen.arg
+            while 0 is less than 1 do
+                in gen.key join gen.node ":" gen.arg ":type"
+                store c.Nodes:gen.key in gen.arg.type
+                if gen.arg.type is equal to 0 then
+                    break
+                end if
+                if gen.arg is greater than 0 then
+                    in gen.out join gen.out crlf
+                end if
+                call gen.op.fetch
+                in gen.out join gen.out "\tJOIN @A, " gen.op.fetch ", @A"
+                incr gen.arg
+            repeat
+            in gen.out join gen.out crlf "\tSTORE " gen.var ", @A"
         else
             in gen.out join gen.out "? " gen.node.type
         end if
