@@ -4,17 +4,19 @@
 
 DATA:
 # shared
-gen.key          is text
-gen.blocks       is number vector # open if/while blocks
-gen.blocks*      is number
-gen.whiles       is number
-gen.while        is number
-gen.ifs          is number
-gen.if           is number
-gen.else         is number
-gen.out          is text
-gen.subs         is text  # sub-procedure definitions
-gen.sub?         is number
+gen.key            is text
+gen.if-blocks      is number vector # open if blocks
+gen.if-blocks*     is number
+gen.ifs            is number
+gen.if             is number
+gen.else           is number
+gen.while-blocks   is number vector
+gen.while-blocks*  is number
+gen.whiles         is number
+gen.while          is number
+gen.out            is text
+gen.subs           is text  # sub-procedure definitions
+gen.sub?           is number
 
 # generator.Run
 gen.node is number
@@ -254,44 +256,44 @@ sub-procedure generator.Run
         else if "IF" is equal to gen.node.type then
             incr gen.ifs
             incr gen.else
-            store gen.ifs in gen.blocks:gen.blocks*
-            incr gen.blocks*
+            store gen.ifs in gen.if-blocks:gen.if-blocks*
+            incr gen.if-blocks*
             # emit test (GT x y z)
             call gen.op.emit-cond
             # emit jump (JIF end_if_001)
             in gen.out join gen.out "\tJIF end_if_" gen.ifs
         else if "ELSE IF" is equal to gen.node.type then
-            decr gen.blocks*
-            store gen.blocks:gen.blocks* in gen.if
+            decr gen.if-blocks*
+            store gen.if-blocks:gen.if-blocks* in gen.if
             in gen.out join gen.out "\tJUMP end_else_" gen.else crlf
             # emit label (end_if_001:)
             in gen.out join gen.out "end_if_" gen.if ":" crlf
             incr gen.ifs
-            store gen.ifs in gen.blocks:gen.blocks*
-            incr gen.blocks*
+            store gen.ifs in gen.if-blocks:gen.if-blocks*
+            incr gen.if-blocks*
             # emit test (GT x y z)
             call gen.op.emit-cond
             # emit jump (JIF end_if_001)
             in gen.out join gen.out "\tJIF end_if_" gen.ifs
         else if "ELSE" is equal to gen.node.type then
-            decr gen.blocks*
-            store gen.blocks:gen.blocks* in gen.if
+            decr gen.if-blocks*
+            store gen.if-blocks:gen.if-blocks* in gen.if
             in gen.out join gen.out "\tJUMP end_else_" gen.else crlf
             # emit label (end_if_001:)
             in gen.out join gen.out "end_if_" gen.if ":"
             incr gen.ifs
-            store gen.ifs in gen.blocks:gen.blocks*
-            incr gen.blocks*
+            store gen.ifs in gen.if-blocks:gen.if-blocks*
+            incr gen.if-blocks*
         else if "END IF" is equal to gen.node.type then
-            decr gen.blocks*
-            store gen.blocks:gen.blocks* in gen.if
+            decr gen.if-blocks*
+            store gen.if-blocks:gen.if-blocks* in gen.if
             # emit label (end_if_001:)
             in gen.out join gen.out "end_if_" gen.if ":" crlf
             in gen.out join gen.out "end_else_" gen.else ":"
         else if "WHILE" is equal to gen.node.type then
             incr gen.whiles
-            store gen.whiles in gen.blocks:gen.blocks*
-            incr gen.blocks*
+            store gen.whiles in gen.while-blocks:gen.while-blocks*
+            incr gen.while-blocks*
             # emit label (while_001:)
             in gen.out join gen.out "while_" gen.whiles ":" crlf
             # emit test (GT x y z)
@@ -299,12 +301,20 @@ sub-procedure generator.Run
             # emit jump (JIF end_while_001)
             in gen.out join gen.out "\tJIF end_while_" gen.whiles
         else if "REPEAT" is equal to gen.node.type then
-            decr gen.blocks*
-            store gen.blocks:gen.blocks* in gen.while
+            decr gen.while-blocks*
+            store gen.while-blocks:gen.while-blocks* in gen.while
             # emit jump (JUMP while_001)
             in gen.out join gen.out "\tJUMP while_" gen.while crlf
             # emit label (end_while_001:)
             in gen.out join gen.out "end_while_" gen.while ":"
+        else if "CONTINUE" is equal to gen.node.type then
+            subtract 1 from gen.while-blocks* in gen.while
+            store gen.while-blocks:gen.while in gen.while
+            in gen.out join gen.out "\tJUMP while_" gen.while
+        else if "BREAK" is equal to gen.node.type then
+            subtract 1 from gen.while-blocks* in gen.while
+            store gen.while-blocks:gen.while in gen.while
+            in gen.out join gen.out "\tJUMP end_while_" gen.while
         else if "SUB-PROCEDURE" is equal to gen.node.type then
             store 1 in gen.sub?
             store 0 in gen.arg
@@ -331,14 +341,6 @@ sub-procedure generator.Run
             join gen.out and "\tRETURN" in gen.out
         else if "EXIT" is equal to gen.node.type then
             join gen.out and "\tEXIT" in gen.out
-        else if "CONTINUE" is equal to gen.node.type then
-            subtract 1 from gen.blocks* in gen.while
-            store gen.blocks:gen.while in gen.while
-            in gen.out join gen.out "\tJUMP while_" gen.while
-        else if "BREAK" is equal to gen.node.type then
-            subtract 1 from gen.blocks* in gen.while
-            store gen.blocks:gen.while in gen.while
-            in gen.out join gen.out "\tJUMP end_while_" gen.while
         else if "ADD" is equal to gen.node.type then
             store "ADD" in gen.op
             call gen.op.emit-math-2
