@@ -276,6 +276,19 @@ sub-procedure parser.node.create
             call parser.expect
             call parser.advance
             call parser.node.set1
+        else if parser.token is equal to "QUOTE" then
+            store "QUOTE" in c.Nodes:c.Nodes*
+            store "IN" in parser.expect
+            call parser.expect
+            call parser.advance
+            call parser.node.set0
+            store tokens.NEWLINE in parser.expect
+            call parser.expect
+            call parser.advance
+            call parser.node.set1
+            store $TYPES:"TXL" in c.Nodes:parser.key
+            store "END QUOTE" in parser.expect
+            call parser.expect
         else
             label STORE_IN
             call parser.node.set0
