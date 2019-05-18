@@ -6,6 +6,12 @@ dino: src/*.ldpl src/**/*.ldpl
 	ldpl $(LDPL_FILES) src/main.ldpl -o=dino; true
 	@git checkout src/version.ldpl
 
+release: src/*.ldpl src/**/*.ldpl
+	@make version
+	ldpl $(LDPL_FILES) src/main.ldpl -o=dino -f=-O3
+	strip dino
+	@git checkout src/version.ldpl
+
 ldpltest:
 	git clone https://github.com/lartu/ldpltest
 
