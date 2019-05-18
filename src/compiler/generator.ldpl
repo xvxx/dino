@@ -127,17 +127,17 @@ sub-procedure gen.arg.emit
     else if gen.arg.type is equal to 2 then
         in gen.out join gen.out "@" gen.arg.value
     else if gen.arg.type is equal to 3 then
-        in gen.out join gen.out "UNIMPLEMENTED: number vector"
+        display "UNIMPLEMENTED: number vector" crlf
         exit
     else if gen.arg.type is equal to 4 then
-        in gen.out join gen.out "UNIMPLEMENTED: text vector"
+        display "UNIMPLEMENTED: text vector" crlf
         exit
     else if gen.arg.type is equal to 5 then
         in gen.out join gen.out gen.arg.value
     else if gen.arg.type is equal to 6 then
         in gen.out join gen.out gen.arg.value
     else
-        in gen.out join gen.out "bad arg type: " gen.arg.type " for " gen.arg.value crlf
+        display "bad arg type: " gen.arg.type " for " gen.arg.value crlf
         exit
     end if
 end sub-procedure
