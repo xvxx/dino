@@ -284,9 +284,9 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 |  06  | EXIT              | Exit program
 |  07  | WAIT $r           | Pause for milliseconds in register.
 | ==== | ================= | MEMORY COMMANDS =========================
-|  10  | STORE %var $r     | Store value of register r in variable var.
-|  11  | SET $r 314        | Set $r to literal number value.
-|  12  | FETCH $r $x       | Set $r to value of memory at address in $x.
+|  10  | STORE %var $r     | %r = value of $r
+|  11  | SET $r 314        | $r = literal number value
+|  12  | FETCH $r $x       | $r = value of memory at address in $x. Like a pointer.
 |  13  | PUSH $x           | Push $x onto the stack.
 |  14  | POP $a            | Pop off the stack into $a.
 | ==== | ================= | ARITHMETIC ==============================
@@ -295,11 +295,11 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 |  22  | GTE $x $y $a      | Set $a=1 if $x > $y
 |  23  | LT $x $y $a       | Set $a=1 if $x < $y
 |  24  | LTE $x $y $a      | Set $a=1 if $x < $y
-|  25  | ADD $x $y $a      | Put sum of registers $x and $y in $a
-|  26  | SUB $x $y $a      | Subtract value of $y from $x and put in $a.
-|  27  | MUL $x $y $a      | Multiplication
-|  28  | DIV $x $y $a      | Division. $e will be set to 1 if $y is 0.
-|  29  | MOD $x $y $a      | Modulo
+|  25  | ADD $x $y $a      | Set $x + $y to $a
+|  26  | SUB $x $y $a      | Set $x - $y to $a
+|  27  | MUL $x $y $a      | Set $x * $y to $a
+|  28  | DIV $x $y $a      | Set $x / $y to $a, $e will be set to 1 if $y is 0.
+|  29  | MOD $x $y $a      | Set $x % $y to $a
 |  2A  | ABS $x            | Convert $x to its absolute value.
 |  2B  | CEIL $x           | Round $x to next whole number.
 |  2C  | FLOOR $x          | Round $x to previous whole number.
