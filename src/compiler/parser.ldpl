@@ -249,6 +249,10 @@ sub-procedure parser.node.create
             call parser.advance
             call parser.node.set0
         else if parser.token is equal to "LENGTH" then
+            call parser.peek # check if it's STORE length IN x
+            if parser.peek is equal to "IN" then
+                goto STORE_IN
+            end if
             store parser.token in c.Nodes:c.Nodes*
             store "OF" in parser.expect
             call parser.expect
@@ -273,6 +277,7 @@ sub-procedure parser.node.create
             call parser.advance
             call parser.node.set1
         else
+            label STORE_IN
             call parser.node.set0
             store "IN" in parser.expect
             call parser.expect
