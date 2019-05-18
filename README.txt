@@ -152,11 +152,11 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
       * [ ] STORE QUOTE
       * [ ] text vector
    * [X] conflow.ldpl
-   * [ ] exec.ldpl
+   * [x] exec.ldpl
    * [ ] explode.ldpl
       * [ ] STORE QUOTE
    * [X] fibo.ldpl
-   * [ ] file.ldpl
+   * [x] file.ldpl
       * [x] IN - JOIN
    * [ ] quine.ldpl
       * [ ] NUMBER VECTOR
