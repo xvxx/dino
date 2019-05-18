@@ -412,8 +412,10 @@ sub-procedure generator.Run
             store "GETCC" in gen.op
             call gen.op.emit-2
         else if "CHARACTER" is equal to gen.node.type then
-            store "PUTC" in gen.op
+            store "PUTCC" in gen.op
             call gen.op.emit-2
+        else if "IN" is equal to gen.node.type then
+            # TODO:
         else
             in gen.out join gen.out "? " gen.node.type
         end if
