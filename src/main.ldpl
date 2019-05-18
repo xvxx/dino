@@ -92,6 +92,13 @@ sub-procedure main.parse
     load file argv:1 in c.Input
     call lexer.Run
     call parser.Run
+    display "vars (" c.Vars* "):\n"
+    store 0 in main.i
+    while main.i is less than c.Vars* do
+        display "  #<" $TYPENAMES:c.Vars:c.Vars:main.i ": " c.Vars:main.i ">" crlf
+        incr main.i
+    repeat
+    display "\e[0m"
     store 0 in main.i
     display "nodes (" c.Nodes* "):\n"
     while main.i is less than c.Nodes* do
@@ -107,13 +114,6 @@ sub-procedure main.parse
         repeat
         incr main.i
     repeat
-    display "vars:\n"
-    store 0 in main.i
-    while main.i is less than c.Vars* do
-        display "  #<" $TYPENAMES:c.Vars:c.Vars:main.i ": " c.Vars:main.i ">" crlf
-        incr main.i
-    repeat
-    display "\e[0m"
 end sub-procedure
 
 # --- RUN FILE -------------------------------------------------------
