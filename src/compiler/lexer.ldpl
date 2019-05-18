@@ -137,8 +137,7 @@ sub-procedure lexer.Run
                     call lexer.token.push
                     store "END QUOTE" in lexer.token
                     call lexer.token.push
-                    add lexer.ci and 10 in lexer.ci # END QUOTE chars
-                    continue
+                    add lexer.ci and 9 in lexer.ci # END QUOTE chars
                 else
                     join lexer.token and lexer.char in lexer.token
                 end if
