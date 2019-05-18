@@ -247,8 +247,8 @@ sub-procedure generator.Run
                 if gen.arg is greater than 0 then
                     in gen.out join gen.out crlf
                 end if
-                in gen.out join gen.out "\tPRINT "
-                call gen.arg.emit
+                call gen.op.fetch
+                in gen.out join gen.out "\tPRINT " gen.op.fetch
                 incr gen.arg
             repeat
         else if "IF" is equal to gen.node.type then
