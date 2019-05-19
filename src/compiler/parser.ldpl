@@ -404,6 +404,9 @@ sub-procedure parser.node.create
             call parser.error
         end if
         call parser.advance
+    else if "END-IF" is equal to parser.token then
+        store "END IF" in c.Nodes:c.Nodes*
+        call parser.advance
     else if "WHILE" is equal to parser.token then
         call parser.advance
         call parser.node.set0
