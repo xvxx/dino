@@ -48,6 +48,9 @@ gen.op.i is number
 gen.op.z is number
 gen.op.syms is text vector
 
+# gen.emit-vector-op
+gen.vec.op is text
+
 # gen.escape-quotes
 gen.escape-quotes is text
 gen.escape.i      is number
@@ -117,7 +120,7 @@ sub-procedure gen.tvar
     incr gen.tvar.i
 end sub-procedure
 
-#  IN: gen.op
+#  IN: gen.vec.op
 #      gen.op.a
 #      gen.op.c
 #      gen.node
@@ -138,7 +141,7 @@ sub-procedure gen.emit-vector-op
     else if gen.op.type is equal to $TYPES:"TXT" then
         join "@" and gen.op.b in gen.op.b
     end if
-    in gen.out join gen.out "\t" gen.op " " gen.op.a ", " gen.op.b ", " gen.op.c
+    in gen.out join gen.out "\t" gen.vec.op " " gen.op.a ", " gen.op.b ", " gen.op.c
 end sub-procedure
 
 # Use `gen.arg` to fill `gen.arg.value` and `gen.arg.type`
@@ -164,7 +167,7 @@ sub-procedure gen.op.fetch
         in gen.out join gen.out "\tSET " gen.nvar ", " gen.arg.value crlf
         store gen.nvar in gen.op.fetch
     else if gen.arg.type is equal to $TYPES:"NMV" then
-        store "PUTV" in gen.op
+        store "PUTV" in gen.vec.op
         join "%" and gen.arg.value in gen.op.a
         call gen.nvar
         store gen.nvar in gen.op.c
@@ -172,7 +175,7 @@ sub-procedure gen.op.fetch
         join gen.out and crlf in gen.out
         store gen.op.c in gen.op.fetch
     else if gen.arg.type is equal to $TYPES:"TXV" then
-        store "PUTV" in gen.op
+        store "PUTV" in gen.vec.op
         join "@" and gen.arg.value in gen.op.a
         call gen.tvar
         store gen.tvar in gen.op.c
