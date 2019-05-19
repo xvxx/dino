@@ -43,13 +43,13 @@ sub-procedure main.help
     display "Usage: $ dino [command] [options...]" crlf
     display crlf
     display "Commands:" crlf
-    display "\t" "run  " "\t" "execute .ldpl, .dino, or .dinocode file" crlf
-    display "\t" "asm  " "\t" "compile .ldpl file to .dino assembly" crlf
-    display "\t" "bytes" "\t" "compile .ldpl or .dino file to .dinocode bytecode" crlf
-    display "\t" "dis  " "\t" "disassemble .dinocode file to .dino assembly" crlf
-    display "\t" "lex  " "\t" "lex .ldpl file and print tokens" crlf
-    display "\t" "parse" "\t" "parse .ldpl file and print nodes" crlf
-    display "\t" "help " "\t" "print help screen" crlf
+    display "    " "run  " "    " "execute .ldpl, .dino, or .dinocode file" crlf
+    display "    " "asm  " "    " "compile .ldpl file to .dino assembly" crlf
+    display "    " "bytes" "    " "compile .ldpl or .dino file to .dinocode bytecode" crlf
+    display "    " "dis  " "    " "disassemble .dinocode file to .dino assembly" crlf
+    display "    " "lex  " "    " "lex .ldpl file and print tokens" crlf
+    display "    " "parse" "    " "parse .ldpl file and print nodes" crlf
+    display "    " "help " "    " "print help screen" crlf
 end sub-procedure
 
 # Strip dino related command line arguments from argv and update argc.
