@@ -14,34 +14,46 @@
 #   - $id:1       # 2nd argument...
 #   - $id:1:type
 # And so on.
+# --- VECTORS --------------------------------------------------------
+# Vectors are special arguments. A vector of `v:n:"t"` with types
+# `v is number vector` and `n is text vector` will produce this node:
+#   - $id:0        "v"
+#   - $id:0:type   3   # NMV
+#   - $id:0:0      "n"
+#   - $id:0:0:type 4   # TXV
+#   - $id:0:1      "t"
+#   - $id:0:1:type 2   # TXT
 
 DATA:
 # OUT:
-parser.mode          is number        # 1=data, 2=code
-parser.node          is number
+parser.mode            is number        # 1=data, 2=code
+parser.node            is number
 
-parser.run.c         is number        # main iterator
-parser.n             is number
-parser.i             is number
-parser.t             is text
-parser.token         is text
-parser.char          is text
-parser.prev          is number
-parser.next          is number
-parser.var           is text
-parser.key           is text
-parser.expect        is text
+parser.run.c           is number        # main iterator
+parser.n               is number
+parser.i               is number
+parser.x               is number
+parser.t               is text
+parser.token           is text
+parser.char            is text
+parser.prev            is number
+parser.next            is number
+parser.var             is text
+parser.key             is text
+parser.expect          is text
 
-parser.type          is number
-parser.type.parts    is text vector
-parser.arg           is number
+parser.type            is number
+parser.type.parts      is text vector
+parser.arg             is number
+parser.node.parts      is text vector
 
-parser.peek          is text
-parser.peek.n        is number
+parser.peek            is text
+parser.peek.n          is number
 
-parser.error         is text
-parser.error.i       is number
-parser.token.vector? is number
+parser.error           is text
+parser.error.i         is number
+parser.token.vector?   is number
+parser.token.vector.i  is number
 
 PROCEDURE:
 # IN: parser.error
@@ -134,6 +146,7 @@ sub-procedure parser.type.identify
     if parser.token.vector? is equal to 1 then
         split parser.token by ":" in parser.type.parts
         store c.Vars:parser.type.parts:0 in parser.type
+        store parser.type.parts:0 in c.Nodes:parser.key
         return
     end if
 
@@ -205,9 +218,29 @@ end sub-procedure
 sub-procedure parser.node.set
     in parser.key join c.Nodes* ":" parser.arg
     store parser.token in c.Nodes:parser.key
-    join parser.key and ":type" in parser.key
     call parser.type.identify
+    join parser.key and ":type" in parser.key
     store parser.type in c.Nodes:parser.key
+    # check for vectors
+    if parser.type is not equal to $TYPES:"NMV" then
+        if parser.type is not equal to $TYPES:"TXV" then
+            return
+        end if
+    end if
+    count ":" from parser.token in parser.x
+    split parser.token by ":" in parser.node.parts
+    store 1 in parser.i
+    while parser.i is less than or equal to parser.x do
+        decr parser.i
+        in parser.key join c.Nodes* ":" parser.arg ":" parser.i
+        incr parser.i
+        store parser.node.parts:parser.i in parser.token
+        store parser.token in c.Nodes:parser.key
+        call parser.type.identify
+        join parser.key and ":type" in parser.key
+        store parser.type in c.Nodes:parser.key
+        incr parser.i
+    repeat
 end sub-procedure
 
 # sets the value of `parser.token` to c.Nodes:$id:0
