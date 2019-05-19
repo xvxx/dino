@@ -25,6 +25,7 @@
 </head>
 <body>
    <div id="manual">
+
                 *  *__* _*  *  * _*  *__*_ *__*  *
                 * |   \(_)_ _  __\ \ / /  \/  |  *
                 * | |) | | ' \/ _ \ V /| |\/| |  *
@@ -34,7 +35,7 @@
                            An LDPL VM
                            Written in
                               LDPL
-                               &#129430;
+                               🦖
 
 === INTRODUCTION =====================================================
 
@@ -68,7 +69,7 @@ For extra protection, run the official ldpltests:
    make test
 
 Once again, you should see a "success" message if everything is
-working properly. If not, please kindly report an issue at this URL:
+working properly. If not, kindly report an issue at this URL:
 
    https://github.com/dvkt/dino/issues
 
@@ -84,13 +85,14 @@ Now then, we can start to properly explore Dino:
       bytes   compile .ldpl or .dino file to .dinocode bytecode
       dis     disassemble .dinocode file to .dino assembly
       lex     lex .ldpl file and print tokens
+      parse   parse .ldpl file and print nodes
       help    print help screen
       version print version number
 
    Examples:
-      $ dino spark.ldpl 1 3 7 12 22 31  # run file with args
-      $ dino bytes gild.ldpl            # print bytecode
-      $ dino asm spacemines.ldpl        # print assembly code
+      $ dino run spark.ldpl 1 3 7 12 22 31  # run file with args
+      $ dino bytes gild.ldpl                # print bytecode
+      $ dino asm spacemines.ldpl            # print assembly code
 
 === OVERVIEW =========================================================
 
@@ -130,7 +132,7 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 * 0xFFFF words of memory
 * 11 numeric registers (A, X, Y, Z, E, C, I, J, SP, PC, AC)
 * 5 text registers (A, X, Y, T, E)
-* Registers, variables, and constants share a logical address space:
+* Registers, variables, and constants share a logical address space.
 * Two types: numeric and text. Address determines type.
 * Instructions are 1-4 words: One opcode and 0-3 operands.
 * ...?
@@ -140,46 +142,93 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 +---+-----------+-----------------------------------------------------
 | ? | NAME      | STATUS
 +---+-----------+-----------------------------------------------------
-|   | ========= | COMPILER ===========================================
-| X | Lexer     | Mostly Working
-| > | Parser    | Design
-|   | Generator |
-| X | Assembler | Mostly Working
-|   | ========= | VIRTUAL MACHINE =====================================
-| X | CPU       | Mostly Working
-| X | Memory    | Mostly Working
-| = | ========= | TOOLING =============================================
+| = | ========= | COMPILER ===========================================
+| X | Lexer     | Operational
+| X | Parser    | Operational
+| > | Generator | Underway!! Missing: sub-procedure
+| X | Assembler | Operational
+| = | ========= | VIRTUAL MACHINE ====================================
+| X | CPU       | Operational
+| X | Memory    | Operational
+| = | ========= | TOOLING ============================================
 |   | REPL      |
 |   | Debugger  |
-| > | CLI       | Basics
-| X | dis       | Working, basic version
-| X | vscode    | Syntax highlighting. No Tasks.
+| X | CLI       | Operational. Lacks options, features.
+| X | dis       | Operational: Basic debug, needs labels and real asm
+| X | vscode    | Operational: Syntax highlighting. No Tasks.
+| = | ========= | DOCUMENTATION ======================================
+| > | manual    | In progress.
+|   | website   | Need to generate from manual.
+|   | man page  | Need to figure out how to generate from manual
+
 
 === TODO =============================================================
 
-* [ ] build each part separately
-   * [x] lexer
-   * [ ] parser
-   * [ ] generator
-   * [x] assembler
-   * [x] loader
-   * [x] memory
-   * [x] cpu
-   * [x] vscode for dinoasm
-* [x] assembly -> bytecode $ dino bytes examples/99.dino
-   * [x] strip comments
-   * [x] trim line
-   * [x] tokenize file
-   * [x] support strings
-   * [-] :newline: token  (don't need)
-   * [x] accept file from command line
-   * [x] tokens -> bytecode
-   * [x] print raw bytecode
+* [ ] Newest commits to ldpl/master:
+   * [ ] REPLACE
+   * [ ] SPLIT
+   * [ ] TRIM
+   * [ ] GET INDEX OF
+   * [ ] COUNT
+   * [ ] SUBSTRING
+* [ ] ARGV vector
+* [ ] IN - SOLVE
+* [ ] LDPL Test Battery:
+   * [ ] basicar.ldpl
+      * [ ] SOLVE
+   * [ ] basictx.ldpl
+      * [x] IN - JOIN
+      * [x] STORE QUOTE
+      * [x] text vector
+      * [ ] escape codes
+   * [X] conflow.ldpl
+   * [x] exec.ldpl
+   * [x] explode.ldpl
+   * [X] fibo.ldpl
+   * [x] file.ldpl
+   * [x] quine.ldpl
+   * [x] sqrt.ldpl
+   * [x] vector.ldpl
+* [ ] LDPL Examples:
+   * [x] 99bottles.ldpl
+   * [ ] brainfuck.ldpl
+      * [ ] argv
+   * [x] disancount.ldpl
+   * [x] euler.ldpl
+   * [x] explode.ldpl
+   * [x] factorial.ldpl
+   * [x] fibonacci.ldpl
+   * [x] helloworld.ldpl
+   * [x] quine.ldpl
+   * [x] sqrt.ldpl
+* [ ] LDPL Programs:
+   * [ ] spark
+      * [ ] argv
+   * [*] space mines (!)
+   * [ ] lisp
+      * [ ] argv
+   * [ ] gild
+   * [ ] lartu's br*nfuck interpreter
+      * [ ] argv
+   * [ ] lartu's flash cards thing
+      * [ ] parser bug (milliseconds)
+      * [ ] improve the error first! good opportunity.
+* [ ] parser nodes:
+   * [ ] SOLVE
+   * [x] STORE QUOTE
+   * [ ] CALL EXTERNAL
+   * [ ] EXTERNAL SUB-PROCEDURE
+   * [ ] var is EXTERNAL data types
+* [ ] generator:
+   * [x] MOD
+   * [ ] SOLVE
+   * [x] STORE QUOTE
+   * [x] IN JOIN
+   * [ ] Extensions...
+* [ ] assembly -> bytecode $ dino bytes examples/99.dino
    * [ ] error checking:
       * [ ] arity
       * [ ] labels?
-   * [x] relative jumps
-   * [ ] save bytecode to file
 * [ ] REPL
    * [ ] >> input
    * [ ] == output
@@ -187,68 +236,48 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
    * [ ] history
    * [ ] multi-lines
    * [ ] asm mode
-* [x] bytecode -> assembly $ dino dis file.dinocode
-   * [x] load bytecode from file
 * [ ] RAM
-   * [ ] vectors?
+   * [ ] vectors
 * [ ] CPU
-   * [x] load bytecode from file
-   * [x] run bytecode
-   * [ ] vectors?
-   * [x] Instructions:
-      * [x] JUMP
-      * [x] JIF
-      * [x] JIT
-      * [x] CALL
-      * [x] RETURN
-      * [x] EXIT
-      * [x] WAIT
-      * [x] STORE
-      * [x] SET
-      * [x] EQ
-      * [x] GT
-      * [x] LT
-      * [x] ADD
-      * [x] SUB
-      * [x] MUL
-      * [x] DIV
-      * [x] MOD
-      * [x] ABS
-      * [x] CEIL
-      * [x] FLOOR
-      * [x] RANDOM
-      * [x] PRINT
-      * [x] ACCEPT
-      * [x] EXEC
-      * [x] READ
-      * [x] WRITE
-      * [x] APPEND
-      * [x] LEN
-      * [x] JOIN
-      * [x] GETC
-      * [x] GETCC
-      * [x] PUTC
-      * [x] PUSH
-      * [x] POP
-      * [x] INCR
-      * [x] DECR
+   * [ ] vectors
+   * [ ] Instructions:
+      * [ ] AND
+      * [ ] OR
+      * [ ] XOR
+      * [ ] NOT
+* [ ] 2nd pass TODO:
+   * [ ] validate syntax in parser, eg no ELSE before ELSE IF
+   * [ ] much better error messages. like rust's.
+   * [ ] rename generator methods (gen.arg.fetch vs gen.op.fetch confusing)
 
 === APPENDIX =========================================================
+
+# --- ADDRESS SYNTAX -------------------------------------------------
+| NAME            | SYNTAX
++-----------------+---------------------------------------------------
+| Number Register | $a, $pc
+| Number Variable | %bufsize, %Users
+| Text Variable   | @name, @City
+| Text Literal    | "heya", "LDPL rox!"
+| Label           | print-fn, DISPLAY
 
 # ----- MEMORY ADDRESSES ---------------------------------------------
 | 1ST  | LAST | TYPE | DESCRIPTION
 +------+------+---------------------------------------------------
 | 0000 | 000F | NUM  | Registers ($x, $y, $a, $pc)
 | 0010 | 2FFF | NUM  | Variables (%count, %item-size)
-| 3000 | FFFF | TEXT | Variables (@name, @ErrorMessage)
+| 3000 | 300F | TEXT | Registers (@A, @X, @E)
+| 3010 | 301F | TEXT | Command line arguments (@arg0, @arg1...@arg8)
+| 3020 | 3FFF | TEXT | Variables (@beer, @name, @label)
+| 4000 | FFFF | TEXT | Literals ("Hiya", "SCORE", "????")
 
 # --- REGISTERS ------------------------------------------------------
 | NUM  | NAME | DESCRIPTION
-+------+------+------------------------------------------------
++------+------+-------------------------------------------------------
 | 0000 | $A   | Accumulator
 | 0001 | $X   | Parameter
 | 0002 | $Y   | Parameter
-| 0003 | $Z   | $a = 0?
+| 0003 | $Z   | Parameter
 | 0004 | $E   | Non-zero error code
 | 0005 | $C   | Carry
 | 0006 | $I   | Incrementor
@@ -256,8 +285,6 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 | 0008 | $SP  | Stack pointer
 | 0009 | $PC  | Program counter
 | 0010 | $AC  | Num of command line arguments given aka ARGC. 8 max.
-| .... |      | Reserved
-| 000F |      | Reserved
 | 0010 |      | Number variables
 | .... |      |
 | 3000 | @A   | Text accumulator
@@ -265,20 +292,21 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 | 3002 | @Y   | Text register
 | 3003 | @T   | Text register
 | 3004 | @E   | Error message
-| .... |      | Reserved
-| 300F |      | Reserved
+| .... |      |
 | 3010 | @arg0| First command line argument (ARGV)
 | 3011 | @arg1| Second...
 | 3017 | @arg7| Penultimate
 | 3018 | @arg8| Final command line argument
+| .... |      |
 | 3020 |      | Text variables
+| .... |      |
 | 4000 |      | Text literals
 | .... |      |
 | FFFF |      | Final address
 
 # --- BYTECODE FORMAT ------------------------------------------------
 | BYTE | DATA | DESCRIPTION
-+------+------+------------------------------------------------------
++------+------+-------------------------------------------------------
 | 0000 |  76  | First four bytes are char codes for "LDPL"
 | 0001 |  68  |
 | 0002 |  80  |
@@ -289,15 +317,6 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 | 00XX |  06  | Final EXIT
 | 00XX |      | Sub-procedure definitions
 | 00XX |      | Text literals
-
-# --- ADDRESS SYNTAX -------------------------------------------------
-| NAME            | SYNTAX
-+-----------------+---------------------------------------------------
-| Register Name   | $z, $pc
-| Number Variable | %bufsize, %Users
-| Text Variable   | @name, @City
-| Text Literal    | "heya", "LDPL rox!"
-| Label           | print-fn, DISPLAY
 
 # --- INSTRUCTIONS ---------------------------------------------------
 | CODE | NAME              | DESCRIPTION
@@ -312,41 +331,47 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 |  06  | EXIT              | Exit program
 |  07  | WAIT $r           | Pause for milliseconds in register.
 | ==== | ================= | MEMORY COMMANDS =========================
-|  10  | STORE %var $r     | Store value of register r in variable var.
-|  11  | SET $r 314        | Set $r to literal number value.
-|  12  | FETCH $r $x       | Set $r to value of memory at address in $x.
+|  10  | STORE %var $r     | %r = value of $r
+|  11  | SET $r 314        | Set $r to a literal number value
+|  12  | FETCH $r $x       | Set $r to the value at address in $x. Like a pointer.
 |  13  | PUSH $x           | Push $x onto the stack.
 |  14  | POP $a            | Pop off the stack into $a.
+|  15  | STOREV %vec $r %v | Set %vec:$r to value of %v. %vec:@t and @v work too.
+|  16  | PUTV %vec $r %a   | Put %vec:$r into %a. %vec:@t and @v work too.
 | ==== | ================= | ARITHMETIC ==============================
-|  21  | GT $x $y $a       | Set $a=1 if $x > $y
 |  20  | EQ $x $y $a       | Set $a=1 if $x == $y
-|  22  | LT $x $y $a       | Set $a=1 if $x < $y
-|  23  | ADD $x $y $a      | Put sum of registers $x and $y in $a
-|  24  | SUB $x $y $a      | Subtract value of $y from $x and put in $a.
-|  25  | MUL $x $y $a      | Multiplication
-|  26  | DIV $x $y $a      | Division. $e will be set to 1 if $y is 0.
-|  27  | MOD $x $y $a      | Modulo
-|  28  | ABS $x            | Convert $x to its absolute value.
-|  29  | CEIL $x           | Round $x to next whole number.
-|  2A  | FLOOR $x          | Round $x to previous whole number.
-|  2B  | RANDOM $a         | Put random number in $a.
-|  2C  | INCR $x           | Add 1 to $x.
-|  2D  | DECR $x           | Subtract 1 from $x.
+|  21  | GT $x $y $a       | Set $a=1 if $x > $y
+|  22  | GTE $x $y $a      | Set $a=1 if $x > $y
+|  23  | LT $x $y $a       | Set $a=1 if $x < $y
+|  24  | LTE $x $y $a      | Set $a=1 if $x < $y
+|  25  | ADD $x $y $a      | Set $x + $y to $a
+|  26  | SUB $x $y $a      | Set $x - $y to $a
+|  27  | MUL $x $y $a      | Set $x * $y to $a
+|  28  | DIV $x $y $a      | Set $x / $y to $a, $e will be set to 1 if $y is 0.
+|  29  | MOD $x $y $a      | Set $x % $y to $a
+|  2A  | ABS $x            | Convert $x to its absolute value.
+|  2B  | CEIL $x           | Round $x to next whole number.
+|  2C  | FLOOR $x          | Round $x to previous whole number.
+|  2D  | RANDOM $a         | Put random number in $a.
+|  2E  | INCR $x           | Add 1 to $x.
+|  2F  | DECR $x           | Subtract 1 from $x.
 | ==== | ================= | I/O COMMANDS ============================
 |  30  | PRINT $x          | Print content of register $x
 |  31  | PRINL $x          | Print content of register $x and newline.
 |  32  | ACCEPT $x         | Accept user input into num or text var.
+|  32  | ACCEOF $x         | Accept user input until EOF.
 |  33  | EXEC @x @a        | Run @x and put output in @a.
 |  34  | EXECC @x $a       | Run @x and put exit code in $a.
 |  35  | READ @x @a        | Read file at path @x into @a. Sets $e, @e
-|  36  | WRITE @x @y       | Write @y to file at path @x.
-|  37  | APPEND @x @y      | Append @y to file at path @x.
+|  36  | WRITE @x @y       | Write @x to file at path @y.
+|  37  | APPEND @x @y      | Append @x to file at path @y.
 | ==== | ================  | TEXT OPERATIONS ========================
 |  40  | LEN @x $a         | Get length of string in @x.
 |  41  | JOIN @x @y @a     | Concatenate text in registers into @a.
-|  42  | GETC n @str @a    | Get character in @str at n and put into @a.
+|  42  | GETC $x @str @a   | Get character in @str at $x and put into @a.
 |  43  | GETCC @str $a     | Get character code of @str and put into @a.
-|  44  | PUTCC n @a        | Put ascii character with code n into @a.
+|  44  | PUTCC $x @a       | Put ascii character with code $x into @a.
+|  45  | REPLCE @x @y @z @a| Replace @x from @y with @z in @a
 
    </div>
 </body>

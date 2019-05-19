@@ -6,6 +6,11 @@ dino: src/*.ldpl src/**/*.ldpl
 	ldpl $(LDPL_FILES) src/main.ldpl -o=dino; true
 	@git checkout src/version.ldpl
 
+docs/index.html: docs/index.tpl README.txt dino
+	dino scripts/build-docs.lsc
+
+docs: docs/index.html
+
 release: src/*.ldpl src/**/*.ldpl
 	@make version
 	ldpl $(LDPL_FILES) src/main.ldpl -o=dino -f=-O3

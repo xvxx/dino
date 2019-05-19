@@ -1,0 +1,10 @@
+# create docs/index.html
+DATA:
+template is text
+readme is text
+html is text
+PROCEDURE:
+load file "docs/index.tpl" in template
+load file "README.txt" in readme
+replace "{{body}}" from template with readme in html
+write html to file "docs/index.html"
