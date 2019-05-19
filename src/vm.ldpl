@@ -6,7 +6,7 @@ vm.Version     is number
 # text bytecode input for the loader
 vm.Input       is text
 
-# 8 numeric registers
+# 8 numeric registers & num vars
 vm.R           is number vector
 
 # instructions
@@ -31,7 +31,7 @@ sub-procedure vm.boot
 
     # Set command line arguments on boot.
     if ARGC is greater than $MAX.ARGS then
-        store $MAX.ARGS in ARGC
+        store $MAX.ARGS in ARGC`
     end if
     store ARGC in vm.R:$AC
     store $OFFSET.ARGV in __vm.x
