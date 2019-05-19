@@ -61,7 +61,7 @@ PROCEDURE:
 # IN: parser.error
 sub-procedure parser.error
     store 1 in parser.error.line
-    display "parser.error: " parser.error
+    display "parser.error: " parser.error crlf
     display "token " parser.run.c " of " c.Tokens* crlf
     display " 01 | "
     while parser.error.i is less than c.Tokens* do
@@ -123,7 +123,7 @@ end sub-procedure
 sub-procedure parser.expect
     call parser.advance
     if parser.token is not equal to parser.expect then
-        in parser.error join "expected " parser.expect ", got " parser.token crlf
+        in parser.error join "expected " parser.expect ", got " parser.token
         call parser.error
     end if
 end sub-procedure
