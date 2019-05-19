@@ -200,6 +200,8 @@ sub-procedure main.run
 
     if main.ext is equal to "LDPL" then
         call main.run.ldpl
+    else if main.ext is equal to "LSC" then
+        call main.run.ldpl
     else if main.ext is equal to "DINO" then
         call main.run.dino
     else if main.ext is equal to "DINOCODE" then
