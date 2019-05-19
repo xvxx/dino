@@ -171,6 +171,10 @@ sub-procedure lexer.Run
             continue
         end if
 
+        if lexer.char is equal to "\t" then
+            store " " in lexer.char
+        end if
+
         if lexer.char is equal to "\n" then
             # store current token in tokens vector
             if lexer.token is not equal to "" then
