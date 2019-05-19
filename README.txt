@@ -99,6 +99,10 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 3. The bytecode format, version number, and set of CPU instructions
    are going to change a lot while this is still in development.
 
+4. Extensions are not and probably won't be supported.
+
+5. Nested vectors don't work yet, ex vec1:vec2:2
+
 === TECHNNICAL SPECIFICATIONS ========================================
 
 * 32 bit words
@@ -109,31 +113,6 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 * Two types: numeric and text. Address determines type.
 * Instructions are 1-4 words: One opcode and 0-3 operands.
 * ...?
-
-=== PROJECT STATUS ===================================================
-
-+---+-----------+-----------------------------------------------------
-| ? | NAME      | STATUS
-+---+-----------+-----------------------------------------------------
-| = | ========= | COMPILER ===========================================
-| X | Lexer     | Operational
-| X | Parser    | Operational
-| > | Generator | Underway!! Missing: sub-procedure
-| X | Assembler | Operational
-| = | ========= | VIRTUAL MACHINE ====================================
-| X | CPU       | Operational
-| X | Memory    | Operational
-| = | ========= | TOOLING ============================================
-|   | REPL      |
-|   | Debugger  |
-| X | CLI       | Operational. Lacks options, features.
-| X | dis       | Operational: Basic debug, needs labels and real asm
-| X | vscode    | Operational: Syntax highlighting. No Tasks.
-| = | ========= | DOCUMENTATION ======================================
-| > | manual    | In progress.
-|   | website   | Need to generate from manual.
-|   | man page  | Need to figure out how to generate from manual
-
 
 === TODO =============================================================
 
@@ -181,6 +160,7 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
    * [ ] lisp
       * [ ] argv
    * [ ] gild
+      * [ ] extensions/sockets
    * [ ] lartu's br*nfuck interpreter
       * [ ] argv
    * [ ] lartu's flash cards thing
@@ -188,20 +168,12 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
       * [ ] improve the error first! good opportunity.
 * [ ] parser nodes:
    * [ ] SOLVE
-   * [x] STORE QUOTE
+* [ ] generator:
+   * [ ] SOLVE
+* [ ] error on:
    * [ ] CALL EXTERNAL
    * [ ] EXTERNAL SUB-PROCEDURE
    * [ ] var is EXTERNAL data types
-* [ ] generator:
-   * [x] MOD
-   * [ ] SOLVE
-   * [x] STORE QUOTE
-   * [x] IN JOIN
-   * [ ] Extensions...
-* [ ] assembly -> bytecode $ dino bytes examples/99.dino
-   * [ ] error checking:
-      * [ ] arity
-      * [ ] labels?
 * [ ] REPL
    * [ ] >> input
    * [ ] == output
@@ -209,10 +181,7 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
    * [ ] history
    * [ ] multi-lines
    * [ ] asm mode
-* [ ] RAM
-   * [ ] vectors
 * [ ] CPU
-   * [ ] vectors
    * [ ] Instructions:
       * [ ] AND
       * [ ] OR
