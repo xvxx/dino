@@ -373,14 +373,44 @@ store 2 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
 incr $opnum
 
+store "GETIDX" in $opname
+store $opnum in $CODES:$opname
+store 3 in $SIZES:$CODES:$opname
+store $opname in $NAMES:$CODES:$opname
+incr $opnum
+
 store "PUTCC" in $opname
 store $opnum in $CODES:$opname
 store 2 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
 incr $opnum
 
+store "COUNT" in $opname
+store $opnum in $CODES:$opname
+store 3 in $SIZES:$CODES:$opname
+store $opname in $NAMES:$CODES:$opname
+incr $opnum
+
+store "SUBSTR" in $opname
+store $opnum in $CODES:$opname
+store 4 in $SIZES:$CODES:$opname
+store $opname in $NAMES:$CODES:$opname
+incr $opnum
+
+store "SPLIT" in $opname
+store $opnum in $CODES:$opname
+store 3 in $SIZES:$CODES:$opname
+store $opname in $NAMES:$CODES:$opname
+incr $opnum
+
 store "REPLCE" in $opname
 store $opnum in $CODES:$opname
 store 4 in $SIZES:$CODES:$opname
+store $opname in $NAMES:$CODES:$opname
+incr $opnum
+
+store "TRIM" in $opname
+store $opnum in $CODES:$opname
+store 2 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
 incr $opnum

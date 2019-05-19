@@ -312,5 +312,10 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 |  41  | JOIN @x @y @a     | Concatenate text in registers into @a.
 |  42  | GETC $x @str @a   | Get character in @str at $x and put into @a.
 |  43  | GETCC @str $a     | Get character code of @str and put into @a.
-|  44  | PUTCC $x @a       | Put ascii character with code $x into @a.
-|  45  | REPLCE @x @y @z @a| Replace @x from @y with @z in @a
+|  44  | GETIDX @x @y $a   | Get index of @x in @y, put in $a.
+|  45  | PUTCC $x @a       | Put ascii character with code $x into @a.
+|  46  | COUNT @x @y $a    | Count occurrences of @x in @y, put in $a.
+|  47  | SUBSTR @x $x $y @a| Put @x[$x..$y] into @a.
+|  48  | SPLIT @x @y @a    | Split @x by @y and put in @a
+|  49  | REPLCE @x @y @z @a| Replace @x from @y with @z in @a
+|  4A  | TRIM @x @a        | Strip L/R whitespace from @x, put in @a.
