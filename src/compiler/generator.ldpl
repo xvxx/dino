@@ -23,7 +23,7 @@ gen.var            is text
 gen.node is number
 gen.node.type is text
 
-# gen.arg.emit
+# gen.arg
 gen.arg is number
 gen.arg.type is number
 gen.arg.value is text
@@ -126,47 +126,6 @@ sub-procedure gen.arg.fetch
     store c.Nodes:gen.key in gen.arg.value
     in gen.key join gen.key ":type"
     store c.Nodes:gen.key in gen.arg.type
-end sub-procedure
-
-# Emit correct asm arg type for current node based on `gen.arg`
-# IN: gen.arg.num
-#     gen.node
-#     c.Nodes
-sub-procedure gen.arg.emit
-    call gen.arg.fetch
-
-    if gen.arg.type is equal to $TYPES:"NUM" then
-        in gen.out join gen.out "%" gen.arg.value
-    else if gen.arg.type is equal to $TYPES:"TXT" then
-        in gen.out join gen.out "@" gen.arg.value
-    else if gen.arg.type is equal to $TYPES:"NMV" then
-        display "UNIMPLEMENTED: number vector" crlf
-        # exit
-    else if gen.arg.type is equal to $TYPES:"TXV" then
-        display "UNIMPLEMENTED: text vector" crlf
-        # exit
-    else if gen.arg.type is equal to $TYPES:"NML" then
-        in gen.out join gen.out gen.arg.value
-    else if gen.arg.type is equal to $TYPES:"TXL" then
-        in gen.out join gen.out gen.arg.value
-    else
-        display "bad arg type: " gen.arg.type " for " gen.arg.value crlf
-        exit
-    end if
-end sub-procedure
-
-# emit
-sub-procedure gen.arg.emit0
-    store 0 in gen.arg
-    call gen.arg.emit
-end sub-procedure
-sub-procedure gen.arg.emit1
-    store 1 in gen.arg
-    call gen.arg.emit
-end sub-procedure
-sub-procedure gen.arg.emit2
-    store 2 in gen.arg
-    call gen.arg.emit
 end sub-procedure
 
 # Call gen.arg.fetch and then puts ASM var name into gen.op.fetch.
@@ -283,9 +242,12 @@ sub-procedure gen.op.emit-math-2
     call gen.op.fetch
     store gen.op.fetch in gen.op.b
 
+    store 2 in gen.arg
+    call gen.op.fetch
+    store gen.op.fetch in gen.op.c
+
     # make sure to flip the order, since LDPL is "backwards"
-    in gen.out join gen.out "\t" gen.op " " gen.op.a ", " gen.op.b ", "
-    call gen.arg.emit2
+    in gen.out join gen.out "\t" gen.op " " gen.op.a ", " gen.op.b ", " gen.op.c
 end sub-procedure
 
 # emit a conditional like GT from a WHILE or IF node
