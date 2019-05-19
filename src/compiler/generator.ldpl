@@ -43,6 +43,7 @@ gen.op.c is text
 gen.op.t is text
 gen.op.key is text
 gen.op.tkey is text
+gen.op.type is number
 gen.op.i is number
 gen.op.z is number
 gen.op.syms is text vector
@@ -142,8 +143,8 @@ sub-procedure gen.op.fetch
         in gen.op.key join gen.node ":" gen.arg ":0"
         in gen.op.tkey join gen.node ":" gen.arg ":0:type"
         store c.Nodes:gen.op.key in gen.op.a
-        store c.Nodes:gen.op.tkey in gen.op.z
-        if gen.op.z is equal to $TYPES:"NML" then
+        store c.Nodes:gen.op.tkey in gen.op.type
+        if gen.op.type is equal to $TYPES:"NML" then
             call gen.nvar
             in gen.out join gen.out "\tSET " gen.nvar ", " gen.op.a crlf
             store gen.nvar in gen.op.a
@@ -155,8 +156,8 @@ sub-procedure gen.op.fetch
         in gen.op.key join gen.node ":" gen.arg ":0"
         in gen.op.tkey join gen.node ":" gen.arg ":0:type"
         store c.Nodes:gen.op.key in gen.op.a
-        store c.Nodes:gen.op.tkey in gen.op.z
-        if gen.op.z is equal to $TYPES:"NML" then
+        store c.Nodes:gen.op.tkey in gen.op.type
+        if gen.op.type is equal to $TYPES:"NML" then
             call gen.nvar
             in gen.out join gen.out "\tSET " gen.nvar ", " gen.op.a crlf
             store gen.nvar in gen.op.a
@@ -286,7 +287,27 @@ sub-procedure generator.Run
         store "" in gen.out
         if "STORE" is equal to gen.node.type then
             store "STORE" in gen.op
-            call gen.op.emit-2-flipped
+            store 1 in gen.arg
+            call gen.arg.fetch
+            if gen.arg.type is not equal to $TYPES:"NMV" then
+                if gen.arg.type is not equal to $TYPES:"TXV" then
+                    call gen.op.emit-2-flipped
+                    continue
+                end if
+            end if
+            join "%" and gen.arg.value in gen.op.a
+            in gen.op.key join gen.node ":" gen.arg ":0"
+            in gen.op.tkey join gen.node ":" gen.arg ":0:type"
+            store c.Nodes:gen.op.key in gen.op.b
+            store c.Nodes:gen.op.tkey in gen.op.type
+            if gen.op.type is equal to $TYPES:"NML" then
+                call gen.nvar
+                in gen.out join gen.out "\tSET " gen.nvar ", " gen.op.b crlf
+                store gen.nvar in gen.op.b
+            end if
+            store 0 in gen.arg
+            call gen.op.fetch
+            in gen.out join gen.out "\tSTOREV " gen.op.a ", " gen.op.b ", " gen.op.fetch
         else if "DISPLAY" is equal to gen.node.type then
             store 0 in gen.arg
             while 0 is less than 1 do
