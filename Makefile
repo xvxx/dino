@@ -7,7 +7,7 @@ dino: src/*.ldpl src/**/*.ldpl
 	@git checkout src/version.ldpl
 
 docs/index.html: docs/index.tpl README.txt dino
-	dino scripts/build-docs.lsc
+	dino docs/build.ldpl
 
 docs: docs/index.html
 
