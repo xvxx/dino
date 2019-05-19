@@ -31,6 +31,8 @@ gen.emit.char is text
 
 gen.nvar is text
 gen.nvar.i is number
+gen.tvar is text
+gen.tvar.i is number
 
 # gen.op.fetch
 gen.op is text   # operation, like ADD
@@ -39,6 +41,10 @@ gen.op.a is text  # tmpvars
 gen.op.b is text
 gen.op.c is text
 gen.op.t is text
+gen.op.key is text
+gen.op.tkey is text
+gen.op.i is number
+gen.op.z is number
 gen.op.syms is text vector
 
 # gen.escape-quotes
@@ -101,6 +107,13 @@ end sub-procedure
 sub-procedure gen.nvar
     join "%var" and gen.nvar.i in gen.nvar
     incr gen.nvar.i
+end sub-procedure
+
+# Generate a unique text variable name for use in emitting.
+# OUT: gen.nvar
+sub-procedure gen.tvar
+    join "@var" and gen.tvar.i in gen.tvar
+    incr gen.tvar.i
 end sub-procedure
 
 # Use `gen.arg` to fill `gen.arg.value` and `gen.arg.type`
@@ -167,9 +180,31 @@ sub-procedure gen.op.fetch
         in gen.out join gen.out "\tSET " gen.nvar ", " gen.arg.value crlf
         store gen.nvar in gen.op.fetch
     else if gen.arg.type is equal to $TYPES:"NMV" then
-        # number vector
+        in gen.op.key join gen.node ":" gen.arg ":0"
+        in gen.op.tkey join gen.node ":" gen.arg ":0:type"
+        store c.Nodes:gen.op.key in gen.op.a
+        store c.Nodes:gen.op.tkey in gen.op.z
+        if gen.op.z is equal to $TYPES:"NML" then
+            call gen.nvar
+            in gen.out join gen.out "\tSET " gen.nvar ", " gen.op.a crlf
+            store gen.nvar in gen.op.a
+        end if
+        call gen.nvar
+        in gen.out join gen.out "\tPUTV %" gen.arg.value ", " gen.op.a ", " gen.nvar crlf
+        store gen.nvar in gen.op.fetch
     else if gen.arg.type is equal to $TYPES:"TXV" then
-        # text vector
+        in gen.op.key join gen.node ":" gen.arg ":0"
+        in gen.op.tkey join gen.node ":" gen.arg ":0:type"
+        store c.Nodes:gen.op.key in gen.op.a
+        store c.Nodes:gen.op.tkey in gen.op.z
+        if gen.op.z is equal to $TYPES:"NML" then
+            call gen.nvar
+            in gen.out join gen.out "\tSET " gen.nvar ", " gen.op.a crlf
+            store gen.nvar in gen.op.a
+        end if
+        call gen.tvar
+        in gen.out join gen.out "\tPUTV @" gen.arg.value ", " gen.op.a ", " gen.tvar crlf
+        store gen.tvar in gen.op.fetch
     else if gen.arg.type is equal to $TYPES:"TXL" then
         store gen.arg.value in gen.op.fetch
     else if gen.arg.type is equal to $TYPES:"TXT" then
