@@ -28,6 +28,7 @@ DATA:
 # OUT:
 parser.mode            is number        # 1=data, 2=code
 parser.node            is number
+parser.line            is number
 
 parser.run.c           is number        # main iterator
 parser.n               is number
@@ -52,17 +53,33 @@ parser.peek.n          is number
 
 parser.error           is text
 parser.error.i         is number
+parser.error.line      is number
 parser.token.vector?   is number
 parser.token.vector.i  is number
 
 PROCEDURE:
 # IN: parser.error
 sub-procedure parser.error
-    display "parser.error: " parser.error crlf
+    store 1 in parser.error.line
+    display "parser.error: " parser.error
     display "token " parser.run.c " of " c.Tokens* crlf
+    display " 01 | "
     while parser.error.i is less than c.Tokens* do
         if parser.error.i is equal to parser.run.c then
             display "\e[33;1m" c.Tokens:parser.error.i "\e[0m "
+        else if c.Tokens:parser.error.i is equal to tokens.NEWLINE then
+            incr parser.error.line
+            if parser.error.line is less than c.Tokens* then
+                if parser.error.line is less than 10 then
+                    display crlf " 0" parser.error.line " | "
+                else if parser.error.line is less than 100 then
+                    display crlf " " parser.error.line " | "
+                else
+                    display crlf parser.error.line " | "
+                end if
+            end if
+        else if c.Tokens:parser.error.i is equal to "\"\\r\\n\"" then
+            display "CRLF "
         else
             display c.Tokens:parser.error.i " "
         end if
