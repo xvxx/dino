@@ -145,6 +145,7 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
    * [ ] COUNT
    * [ ] SUBSTRING
 * [ ] ARGV vector
+* [ ] IN - SOLVE
 * [ ] LDPL Test Battery:
    * [ ] basicar.ldpl
       * [ ] SOLVE
@@ -158,21 +159,20 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
    * [x] explode.ldpl
    * [X] fibo.ldpl
    * [x] file.ldpl
-   * [ ] quine.ldpl
-      * [ ] number vector
+   * [x] quine.ldpl
    * [x] sqrt.ldpl
    * [x] vector.ldpl
 * [ ] LDPL Examples:
    * [x] 99bottles.ldpl
    * [ ] brainfuck.ldpl
+      * [ ] argv
    * [x] disancount.ldpl
    * [x] euler.ldpl
    * [x] explode.ldpl
    * [x] factorial.ldpl
    * [x] fibonacci.ldpl
    * [x] helloworld.ldpl
-   * [ ] quine.ldpl
-      * [ ] number vector
+   * [x] quine.ldpl
    * [x] sqrt.ldpl
 * [ ] LDPL Programs:
    * [ ] spark
