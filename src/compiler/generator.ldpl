@@ -122,19 +122,19 @@ end sub-procedure
 sub-procedure gen.arg.emit
     call gen.arg.fetch
 
-    if gen.arg.type is equal to 1 then
+    if gen.arg.type is equal to $TYPES:"NUM" then
         in gen.out join gen.out "%" gen.arg.value
-    else if gen.arg.type is equal to 2 then
+    else if gen.arg.type is equal to $TYPES:"TXT" then
         in gen.out join gen.out "@" gen.arg.value
-    else if gen.arg.type is equal to 3 then
+    else if gen.arg.type is equal to $TYPES:"NMV" then
         display "UNIMPLEMENTED: number vector" crlf
         exit
-    else if gen.arg.type is equal to 4 then
+    else if gen.arg.type is equal to $TYPES:"TXV" then
         display "UNIMPLEMENTED: text vector" crlf
         exit
-    else if gen.arg.type is equal to 5 then
+    else if gen.arg.type is equal to $TYPES:"NML" then
         in gen.out join gen.out gen.arg.value
-    else if gen.arg.type is equal to 6 then
+    else if gen.arg.type is equal to $TYPES:"TXL" then
         in gen.out join gen.out gen.arg.value
     else
         display "bad arg type: " gen.arg.type " for " gen.arg.value crlf
