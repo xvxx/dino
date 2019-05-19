@@ -21,10 +21,13 @@
 DATA:
 main.i       is number
 main.x       is number
+main.y       is number
+main.z       is number
 main.l       is number
 main.char    is text
 main.ext     is text
 main.key     is text
+main.akey    is text
 main.tkey    is text
 
 PROCEDURE:
@@ -104,11 +107,20 @@ sub-procedure main.parse
     while main.i is less than c.Nodes* do
         display "  " c.Nodes:main.i crlf
         store 0 in main.x
-        while main.x is less than 8 do
+        while main.x is less than 16 do
             in main.key join main.i ":" main.x
             if c.Nodes:main.key is not equal to "" then
                 join main.key and ":type" in main.tkey
                 display "    - a" main.x "(" $TYPENAMES:c.Nodes:main.tkey "): " c.Nodes:main.key crlf
+                store 0 in main.y
+                while main.y is less than 16 do
+                    in main.akey join main.key ":" main.y
+                    join main.akey and ":type" in main.tkey
+                    if c.Nodes:main.akey is not equal to "" then
+                        display "      - v" main.y "(" $TYPENAMES:c.Nodes:main.tkey "): " c.Nodes:main.akey crlf
+                    end if
+                    incr main.y
+                repeat
             end if
             incr main.x
         repeat
