@@ -117,6 +117,30 @@ sub-procedure gen.tvar
     incr gen.tvar.i
 end sub-procedure
 
+#  IN: gen.op
+#      gen.op.a
+#      gen.op.c
+#      gen.node
+#      gen.arg
+#      c.Nodes
+# OUT: gen.out
+sub-procedure gen.emit-vector-op
+    in gen.op.key join gen.node ":" gen.arg ":0"
+    in gen.op.tkey join gen.node ":" gen.arg ":0:type"
+    store c.Nodes:gen.op.key in gen.op.b
+    store c.Nodes:gen.op.tkey in gen.op.type
+    if gen.op.type is equal to $TYPES:"NML" then
+        call gen.nvar
+        in gen.out join gen.out "\tSET " gen.nvar ", " gen.op.b crlf
+        store gen.nvar in gen.op.b
+    else if gen.op.type is equal to $TYPES:"NUM" then
+        join "%" and gen.op.b in gen.op.b
+    else if gen.op.type is equal to $TYPES:"TXT" then
+        join "@" and gen.op.b in gen.op.b
+    end if
+    in gen.out join gen.out "\t" gen.op " " gen.op.a ", " gen.op.b ", " gen.op.c
+end sub-procedure
+
 # Use `gen.arg` to fill `gen.arg.value` and `gen.arg.type`
 #  IN: gen.arg
 #  IN: gen.node
@@ -140,18 +164,12 @@ sub-procedure gen.op.fetch
         in gen.out join gen.out "\tSET " gen.nvar ", " gen.arg.value crlf
         store gen.nvar in gen.op.fetch
     else if gen.arg.type is equal to $TYPES:"NMV" then
-        in gen.op.key join gen.node ":" gen.arg ":0"
-        in gen.op.tkey join gen.node ":" gen.arg ":0:type"
-        store c.Nodes:gen.op.key in gen.op.a
-        store c.Nodes:gen.op.tkey in gen.op.type
-        if gen.op.type is equal to $TYPES:"NML" then
-            call gen.nvar
-            in gen.out join gen.out "\tSET " gen.nvar ", " gen.op.a crlf
-            store gen.nvar in gen.op.a
-        end if
+        store "PUTV" in gen.op
+        join "%" and gen.arg.value in gen.op.a
         call gen.nvar
-        in gen.out join gen.out "\tPUTV %" gen.arg.value ", " gen.op.a ", " gen.nvar crlf
-        store gen.nvar in gen.op.fetch
+        store gen.nvar in gen.op.c
+        call gen.emit-vector-op
+        join gen.out and crlf in gen.out
     else if gen.arg.type is equal to $TYPES:"TXV" then
         in gen.op.key join gen.node ":" gen.arg ":0"
         in gen.op.tkey join gen.node ":" gen.arg ":0:type"
@@ -289,25 +307,25 @@ sub-procedure generator.Run
             store "STORE" in gen.op
             store 1 in gen.arg
             call gen.arg.fetch
-            if gen.arg.type is not equal to $TYPES:"NMV" then
-                if gen.arg.type is not equal to $TYPES:"TXV" then
-                    call gen.op.emit-2-flipped
-                    continue
-                end if
+            if gen.arg.type is equal to $TYPES:"NMV" then
+                join "%" and gen.arg.value in gen.op.a
+                store "STOREV" in gen.op
+                store 0 in gen.arg
+                call gen.op.fetch
+                store gen.op.fetch in gen.op.c
+                store 1 in gen.arg
+                call gen.emit-vector-op
+            else if gen.arg.type is equal to $TYPES:"TXV" then
+                join "@" and gen.arg.value in gen.op.a
+                store "STOREV" in gen.op
+                store 0 in gen.arg
+                call gen.op.fetch
+                store gen.op.fetch in gen.op.c
+                store 1 in gen.arg
+                call gen.emit-vector-op
+            else
+                call gen.op.emit-2-flipped
             end if
-            join "%" and gen.arg.value in gen.op.a
-            in gen.op.key join gen.node ":" gen.arg ":0"
-            in gen.op.tkey join gen.node ":" gen.arg ":0:type"
-            store c.Nodes:gen.op.key in gen.op.b
-            store c.Nodes:gen.op.tkey in gen.op.type
-            if gen.op.type is equal to $TYPES:"NML" then
-                call gen.nvar
-                in gen.out join gen.out "\tSET " gen.nvar ", " gen.op.b crlf
-                store gen.nvar in gen.op.b
-            end if
-            store 0 in gen.arg
-            call gen.op.fetch
-            in gen.out join gen.out "\tSTOREV " gen.op.a ", " gen.op.b ", " gen.op.fetch
         else if "DISPLAY" is equal to gen.node.type then
             store 0 in gen.arg
             while 0 is less than 1 do
