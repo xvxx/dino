@@ -12,7 +12,7 @@ cpu.pc           is number
 cpu.v.n          is number vector
 cpu.v.t          is text vector
 
-# Temp vars - not actual registers. They're in vm.R
+# Temp vars - not actual registers. They're in vm.RAM
 cpu.a            is number
 cpu.x            is number
 cpu.y            is number
@@ -75,27 +75,27 @@ sub-procedure cpu.Run
             add vm.Code:cpu.pc and cpu.pc in cpu.pc
         else if $CODES:"JIF" is equal to cpu.code then
             incr cpu.pc
-            if vm.R:$a is equal to 0 then
+            if vm.RAM:$a is equal to 0 then
                 add vm.Code:cpu.pc and cpu.pc in cpu.pc
             end if
         else if $CODES:"JIT" is equal to cpu.code then
             incr cpu.pc
-            if vm.R:$a is equal to 1 then
+            if vm.RAM:$a is equal to 1 then
                 add vm.Code:cpu.pc and cpu.pc in cpu.pc
             end if
         else if $CODES:"CALL" is equal to cpu.code then
             incr cpu.pc
-            add 1 and cpu.pc in cpu.stack:vm.R:$sp
-            incr vm.R:$sp
+            add 1 and cpu.pc in cpu.stack:vm.RAM:$sp
+            incr vm.RAM:$sp
             add vm.Code:cpu.pc and cpu.pc in cpu.pc
         else if $CODES:"RETURN" is equal to cpu.code then
-            decr vm.R:$sp
-            subtract 1 from cpu.stack:vm.R:$sp in cpu.pc
+            decr vm.RAM:$sp
+            subtract 1 from cpu.stack:vm.RAM:$sp in cpu.pc
         else if $CODES:"EXIT" is equal to cpu.code then
             exit
         else if $CODES:"WAIT" is equal to cpu.code then
             incr cpu.pc
-            wait vm.R:vm.Code:cpu.pc milliseconds
+            wait vm.RAM:vm.Code:cpu.pc milliseconds
 
         # --- MEMORY COMMANDS ----------------------------------------
         else if $CODES:"STORE" is equal to cpu.code then
@@ -108,52 +108,52 @@ sub-procedure cpu.Run
                 if cpu.y is greater than or equal to $OFFSET.TEXT then
                     store vm.Text:cpu.y in vm.Text:cpu.x
                 else
-                    store vm.R:cpu.y in vm.Text:cpu.x
+                    store vm.RAM:cpu.y in vm.Text:cpu.x
                 end if
             else
                 if cpu.y is greater than or equal to $OFFSET.TEXT then
-                    store vm.Text:cpu.y in vm.R:cpu.x
+                    store vm.Text:cpu.y in vm.RAM:cpu.x
                 else
-                    store vm.R:cpu.y in vm.R:cpu.x
+                    store vm.RAM:cpu.y in vm.RAM:cpu.x
                 end if
             end if
         else if $CODES:"SET" is equal to cpu.code then
             incr cpu.pc
             store vm.Code:cpu.pc in cpu.x
             incr cpu.pc
-            store vm.Code:cpu.pc in vm.R:cpu.x
+            store vm.Code:cpu.pc in vm.RAM:cpu.x
         else if $CODES:"FETCH" is equal to cpu.code then
             incr cpu.pc
             store vm.Code:cpu.pc in cpu.x  # dest
             incr cpu.pc
             store vm.Code:cpu.pc in cpu.y  # src
-            store vm.R:cpu.y in cpu.y    # get address
+            store vm.RAM:cpu.y in cpu.y    # get address
 
             if cpu.y is less than $OFFSET.TEXT then
                 if cpu.x is less than $OFFSET.TEXT then
-                    store vm.R:cpu.y in vm.R:cpu.x
+                    store vm.RAM:cpu.y in vm.RAM:cpu.x
                 else
-                    store vm.R:cpu.y in vm.Text:cpu.x
+                    store vm.RAM:cpu.y in vm.Text:cpu.x
                 end if
             else
                 if cpu.x is less than $OFFSET.TEXT then
-                    store vm.Text:cpu.y in vm.R:cpu.x
+                    store vm.Text:cpu.y in vm.RAM:cpu.x
                 else
                     store vm.Text:cpu.y in vm.Text:cpu.x
                 end if
             end if
         else if $CODES:"PUSH" is equal to cpu.code then
             incr cpu.pc
-            store vm.Code:cpu.pc in cpu.stack:vm.R:$sp
-            incr vm.R:$sp
+            store vm.Code:cpu.pc in cpu.stack:vm.RAM:$sp
+            incr vm.RAM:$sp
         else if $CODES:"POP" is equal to cpu.code then
             incr cpu.pc
-            if vm.R:$sp is greater than 0 then
-                decr vm.R:$sp
-                store cpu.stack:vm.R:$sp in vm.R:vm.Code:cpu.pc
+            if vm.RAM:$sp is greater than 0 then
+                decr vm.RAM:$sp
+                store cpu.stack:vm.RAM:$sp in vm.RAM:vm.Code:cpu.pc
             else
-                store 0 in vm.R:vm.Code:cpu.pc
-                store 1 in vm.R:$e
+                store 0 in vm.RAM:vm.Code:cpu.pc
+                store 1 in vm.RAM:$e
                 store "can't pop empty stack" in vm.Text:@e
             end if
         else if $CODES:"STOREV" is equal to cpu.code then
@@ -165,19 +165,19 @@ sub-procedure cpu.Run
             store vm.Code:cpu.pc in cpu.z # value
             # set key
             if cpu.y is less than $OFFSET.TEXT then
-                join cpu.x and vm.R:cpu.y in cpu.t
+                join cpu.x and vm.RAM:cpu.y in cpu.t
             else
                 join cpu.x and vm.Text:cpu.y in cpu.t
             end if
             if cpu.x is less than $OFFSET.TEXT then
                 if cpu.z is less than $OFFSET.TEXT then
-                    store vm.R:cpu.z in cpu.v.n:cpu.t
+                    store vm.RAM:cpu.z in cpu.v.n:cpu.t
                 else
                     store vm.Text:cpu.z in cpu.v.n:cpu.t
                 end if
             else
                 if cpu.z is less than $OFFSET.TEXT then
-                    store vm.R:cpu.z in cpu.v.t:cpu.t
+                    store vm.RAM:cpu.z in cpu.v.t:cpu.t
                 else
                     store vm.Text:cpu.z in cpu.v.t:cpu.t
                 end if
@@ -192,19 +192,19 @@ sub-procedure cpu.Run
             store vm.Code:cpu.pc in cpu.z # target
             # set key
             if cpu.y is less than $OFFSET.TEXT then
-                join cpu.x and vm.R:cpu.y in cpu.t
+                join cpu.x and vm.RAM:cpu.y in cpu.t
             else
                 join cpu.x and vm.Text:cpu.y in cpu.t
             end if
             if cpu.x is less than $OFFSET.TEXT then
                 if cpu.z is less than $OFFSET.TEXT then
-                    store cpu.v.n:cpu.t in vm.R:cpu.z
+                    store cpu.v.n:cpu.t in vm.RAM:cpu.z
                 else
                     store cpu.v.n:cpu.t in vm.Text:cpu.z
                 end if
             else
                 if cpu.z is less than $OFFSET.TEXT then
-                    store cpu.v.t:cpu.t in vm.R:cpu.z
+                    store cpu.v.t:cpu.t in vm.RAM:cpu.z
                 else
                     store cpu.v.t:cpu.t in vm.Text:cpu.z
                 end if
@@ -221,116 +221,116 @@ sub-procedure cpu.Run
                 store vm.Text:cpu.x in cpu.tx
                 store vm.Text:cpu.y in cpu.ty
                 if cpu.tx is equal to cpu.ty then
-                    store 1 in vm.R:vm.Code:cpu.pc
+                    store 1 in vm.RAM:vm.Code:cpu.pc
                 else
-                    store 0 in vm.R:vm.Code:cpu.pc
+                    store 0 in vm.RAM:vm.Code:cpu.pc
                 end if
             else
-                store vm.R:cpu.x in cpu.x
-                store vm.R:cpu.y in cpu.y
+                store vm.RAM:cpu.x in cpu.x
+                store vm.RAM:cpu.y in cpu.y
                 if cpu.x is equal to cpu.y then
-                    store 1 in vm.R:vm.Code:cpu.pc
+                    store 1 in vm.RAM:vm.Code:cpu.pc
                 else
-                    store 0 in vm.R:vm.Code:cpu.pc
+                    store 0 in vm.RAM:vm.Code:cpu.pc
                 end if
             end if
         else if $CODES:"GT" is equal to cpu.code then
             incr cpu.pc
-            store vm.R:vm.Code:cpu.pc in cpu.x
+            store vm.RAM:vm.Code:cpu.pc in cpu.x
             incr cpu.pc
-            store vm.R:vm.Code:cpu.pc in cpu.y
+            store vm.RAM:vm.Code:cpu.pc in cpu.y
             incr cpu.pc
             if cpu.x is greater than cpu.y then
-                store 1 in vm.R:vm.Code:cpu.pc
+                store 1 in vm.RAM:vm.Code:cpu.pc
             else
-                store 0 in vm.R:vm.Code:cpu.pc
+                store 0 in vm.RAM:vm.Code:cpu.pc
             end if
         else if $CODES:"GTE" is equal to cpu.code then
             incr cpu.pc
-            store vm.R:vm.Code:cpu.pc in cpu.x
+            store vm.RAM:vm.Code:cpu.pc in cpu.x
             incr cpu.pc
-            store vm.R:vm.Code:cpu.pc in cpu.y
+            store vm.RAM:vm.Code:cpu.pc in cpu.y
             incr cpu.pc
             if cpu.x is greater than or equal to cpu.y then
-                store 1 in vm.R:vm.Code:cpu.pc
+                store 1 in vm.RAM:vm.Code:cpu.pc
             else
-                store 0 in vm.R:vm.Code:cpu.pc
+                store 0 in vm.RAM:vm.Code:cpu.pc
             end if
         else if $CODES:"LT" is equal to cpu.code then
             incr cpu.pc
-            store vm.R:vm.Code:cpu.pc in cpu.x
+            store vm.RAM:vm.Code:cpu.pc in cpu.x
             incr cpu.pc
-            store vm.R:vm.Code:cpu.pc in cpu.y
+            store vm.RAM:vm.Code:cpu.pc in cpu.y
             incr cpu.pc
             if cpu.x is less than cpu.y then
-                store 1 in vm.R:vm.Code:cpu.pc
+                store 1 in vm.RAM:vm.Code:cpu.pc
             else
-                store 0 in vm.R:vm.Code:cpu.pc
+                store 0 in vm.RAM:vm.Code:cpu.pc
             end if
         else if $CODES:"LTE" is equal to cpu.code then
             incr cpu.pc
-            store vm.R:vm.Code:cpu.pc in cpu.x
+            store vm.RAM:vm.Code:cpu.pc in cpu.x
             incr cpu.pc
-            store vm.R:vm.Code:cpu.pc in cpu.y
+            store vm.RAM:vm.Code:cpu.pc in cpu.y
             incr cpu.pc
             if cpu.x is less than or equal to cpu.y then
-                store 1 in vm.R:vm.Code:cpu.pc
+                store 1 in vm.RAM:vm.Code:cpu.pc
             else
-                store 0 in vm.R:vm.Code:cpu.pc
+                store 0 in vm.RAM:vm.Code:cpu.pc
             end if
         else if $CODES:"ADD" is equal to cpu.code then
             incr cpu.pc
-            store vm.R:vm.Code:cpu.pc in cpu.x
+            store vm.RAM:vm.Code:cpu.pc in cpu.x
             incr cpu.pc
-            store vm.R:vm.Code:cpu.pc in cpu.y
+            store vm.RAM:vm.Code:cpu.pc in cpu.y
             incr cpu.pc
-            add cpu.x and cpu.y in vm.R:vm.Code:cpu.pc
+            add cpu.x and cpu.y in vm.RAM:vm.Code:cpu.pc
         else if $CODES:"SUB" is equal to cpu.code then
             incr cpu.pc
-            store vm.R:vm.Code:cpu.pc in cpu.x
+            store vm.RAM:vm.Code:cpu.pc in cpu.x
             incr cpu.pc
-            store vm.R:vm.Code:cpu.pc in cpu.y
+            store vm.RAM:vm.Code:cpu.pc in cpu.y
             incr cpu.pc
-            subtract cpu.y from cpu.x in vm.R:vm.Code:cpu.pc
+            subtract cpu.y from cpu.x in vm.RAM:vm.Code:cpu.pc
         else if $CODES:"MUL" is equal to cpu.code then
             incr cpu.pc
-            store vm.R:vm.Code:cpu.pc in cpu.x
+            store vm.RAM:vm.Code:cpu.pc in cpu.x
             incr cpu.pc
-            store vm.R:vm.Code:cpu.pc in cpu.y
+            store vm.RAM:vm.Code:cpu.pc in cpu.y
             incr cpu.pc
-            multiply cpu.x by cpu.y in vm.R:vm.Code:cpu.pc
+            multiply cpu.x by cpu.y in vm.RAM:vm.Code:cpu.pc
         else if $CODES:"DIV" is equal to cpu.code then
             incr cpu.pc
-            store vm.R:vm.Code:cpu.pc in cpu.x
+            store vm.RAM:vm.Code:cpu.pc in cpu.x
             incr cpu.pc
-            store vm.R:vm.Code:cpu.pc in cpu.y
+            store vm.RAM:vm.Code:cpu.pc in cpu.y
             incr cpu.pc
-            divide cpu.x by cpu.y in vm.R:vm.Code:cpu.pc
+            divide cpu.x by cpu.y in vm.RAM:vm.Code:cpu.pc
         else if $CODES:"MOD" is equal to cpu.code then
             incr cpu.pc
-            store vm.R:vm.Code:cpu.pc in cpu.x
+            store vm.RAM:vm.Code:cpu.pc in cpu.x
             incr cpu.pc
-            store vm.R:vm.Code:cpu.pc in cpu.y
+            store vm.RAM:vm.Code:cpu.pc in cpu.y
             incr cpu.pc
-            modulo cpu.x by cpu.y in vm.R:vm.Code:cpu.pc
+            modulo cpu.x by cpu.y in vm.RAM:vm.Code:cpu.pc
         else if $CODES:"ABS" is equal to cpu.code then
             incr cpu.pc
-            abs vm.R:vm.Code:cpu.pc
+            abs vm.RAM:vm.Code:cpu.pc
         else if $CODES:"CEIL" is equal to cpu.code then
             incr cpu.pc
-            ceil vm.R:vm.Code:cpu.pc
+            ceil vm.RAM:vm.Code:cpu.pc
         else if $CODES:"FLOOR" is equal to cpu.code then
             incr cpu.pc
-            floor vm.R:vm.Code:cpu.pc
+            floor vm.RAM:vm.Code:cpu.pc
         else if $CODES:"RANDOM" is equal to cpu.code then
             incr cpu.pc
-            store random in vm.R:vm.Code:cpu.pc
+            store random in vm.RAM:vm.Code:cpu.pc
         else if $CODES:"INCR" is equal to cpu.code then
             incr cpu.pc
-            incr vm.R:vm.Code:cpu.pc
+            incr vm.RAM:vm.Code:cpu.pc
         else if $CODES:"DECR" is equal to cpu.code then
             incr cpu.pc
-            decr vm.R:vm.Code:cpu.pc
+            decr vm.RAM:vm.Code:cpu.pc
 
         # --- I/O COMMANDS -------------------------------------------
         else if $CODES:"PRINT" is equal to cpu.code then
@@ -340,7 +340,7 @@ sub-procedure cpu.Run
                 if vm.Code:cpu.pc is greater than or equal to $OFFSET.TEXT then
                     display vm.Text:vm.Code:cpu.pc
                 else
-                    display vm.R:vm.Code:cpu.pc
+                    display vm.RAM:vm.Code:cpu.pc
                 end if
                 incr cpu.i
             repeat
@@ -351,7 +351,7 @@ sub-procedure cpu.Run
                 if vm.Code:cpu.pc is greater than or equal to $OFFSET.TEXT then
                     display vm.Text:vm.Code:cpu.pc crlf
                 else
-                    display vm.R:vm.Code:cpu.pc crlf
+                    display vm.RAM:vm.Code:cpu.pc crlf
                 end if
                 incr cpu.i
             repeat
@@ -360,50 +360,50 @@ sub-procedure cpu.Run
             if vm.Code:cpu.pc is greater than or equal to $OFFSET.TEXT then
                 accept vm.Text:vm.Code:cpu.pc
             else
-                accept vm.R:vm.Code:cpu.pc
+                accept vm.RAM:vm.Code:cpu.pc
             end if
         else if $CODES:"EXEC" is equal to cpu.code then
             incr cpu.pc
             store vm.Text:vm.Code:cpu.pc in cpu.t
             incr cpu.pc
             execute cpu.t and store output in vm.Text:vm.Code:cpu.pc
-            store ERRORCODE in vm.R:$E
+            store ERRORCODE in vm.RAM:$E
             store ERRORTEXT in vm.Text:@E
         else if $CODES:"EXECC" is equal to cpu.code then
             incr cpu.pc
             store vm.Text:vm.Code:cpu.pc in cpu.t
             incr cpu.pc
-            execute cpu.t and store exit code in vm.R:vm.Code:cpu.pc
-            store ERRORCODE in vm.R:$E
+            execute cpu.t and store exit code in vm.RAM:vm.Code:cpu.pc
+            store ERRORCODE in vm.RAM:$E
             store ERRORTEXT in vm.Text:@E
         else if $CODES:"READ" is equal to cpu.code then
             incr cpu.pc
             store vm.Text:vm.Code:cpu.pc in cpu.t
             incr cpu.pc
             load file cpu.t in vm.Text:vm.Code:cpu.pc
-            store ERRORCODE in vm.R:$E
+            store ERRORCODE in vm.RAM:$E
             store ERRORTEXT in vm.Text:@E
         else if $CODES:"WRITE" is equal to cpu.code then
             incr cpu.pc
             if vm.Code:cpu.pc is greater than or equal to $OFFSET.TEXT then
                 store vm.Text:vm.Code:cpu.pc in cpu.t
             else
-                store vm.R:vm.Code:cpu.pc in cpu.t
+                store vm.RAM:vm.Code:cpu.pc in cpu.t
             end if
             incr cpu.pc
             write cpu.t to file vm.Text:vm.Code:cpu.pc
-            store ERRORCODE in vm.R:$E
+            store ERRORCODE in vm.RAM:$E
             store ERRORTEXT in vm.Text:@E
         else if $CODES:"APPEND" is equal to cpu.code then
             incr cpu.pc
             if vm.Code:cpu.pc is greater than or equal to $OFFSET.TEXT then
                 store vm.Text:vm.Code:cpu.pc in cpu.t
             else
-                store vm.R:vm.Code:cpu.pc in cpu.t
+                store vm.RAM:vm.Code:cpu.pc in cpu.t
             end if
             incr cpu.pc
             append cpu.t to file vm.Text:vm.Code:cpu.pc
-            store ERRORCODE in vm.R:$E
+            store ERRORCODE in vm.RAM:$E
             store ERRORTEXT in vm.Text:@E
 
         # --- TEXT OPERATIONS ----------------------------------------
@@ -411,7 +411,7 @@ sub-procedure cpu.Run
             incr cpu.pc
             store vm.Text:vm.Code:cpu.pc in cpu.t
             incr cpu.pc
-            store length of cpu.t in vm.R:vm.Code:cpu.pc
+            store length of cpu.t in vm.RAM:vm.Code:cpu.pc
         else if $CODES:"JOIN" is equal to cpu.code then
             incr cpu.pc
             store vm.Text:vm.Code:cpu.pc in cpu.tx
@@ -421,7 +421,7 @@ sub-procedure cpu.Run
             join cpu.tx and cpu.ty in vm.Text:vm.Code:cpu.pc
         else if $CODES:"GETC" is equal to cpu.code then
             incr cpu.pc
-            store vm.R:vm.Code:cpu.pc in cpu.x
+            store vm.RAM:vm.Code:cpu.pc in cpu.x
             incr cpu.pc
             store vm.Text:vm.Code:cpu.pc in cpu.t
             incr cpu.pc
@@ -430,16 +430,16 @@ sub-procedure cpu.Run
             incr cpu.pc
             store vm.Text:vm.Code:cpu.pc in cpu.t
             incr cpu.pc
-            store character code of cpu.t in vm.R:vm.Code:cpu.pc
+            store character code of cpu.t in vm.RAM:vm.Code:cpu.pc
             if ERRORCODE is not equal to 0 then
-                store 0 in vm.R:$e
+                store 0 in vm.RAM:$e
             else
-                store ERRORCODE in vm.R:$e
+                store ERRORCODE in vm.RAM:$e
                 store ERRORTEXT in vm.Text:@e
             end if
         else if $CODES:"PUTCC" is equal to cpu.code then
             incr cpu.pc
-            store vm.R:vm.Code:cpu.pc in cpu.x
+            store vm.RAM:vm.Code:cpu.pc in cpu.x
             incr cpu.pc
             store character cpu.x in vm.Text:vm.Code:cpu.pc
         else
