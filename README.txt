@@ -144,36 +144,30 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
    * [ ] GET INDEX OF
    * [ ] COUNT
    * [ ] SUBSTRING
+* [ ] ARGV vector
 * [ ] LDPL Test Battery:
    * [ ] basicar.ldpl
       * [ ] SOLVE
    * [ ] basictx.ldpl
       * [x] IN - JOIN
       * [x] STORE QUOTE
-      * [ ] text vector
+      * [x] text vector
+      * [ ] escape codes
    * [X] conflow.ldpl
    * [x] exec.ldpl
-   * [ ] explode.ldpl
-      * [x] STORE QUOTE
-      * [ ] text vector
+   * [x] explode.ldpl
    * [X] fibo.ldpl
    * [x] file.ldpl
-      * [x] IN - JOIN
    * [ ] quine.ldpl
       * [ ] number vector
    * [x] sqrt.ldpl
-      * [x] fix DIVIDE
-      * [x] fix MODULO
-   * [ ] vector.ldpl
-      * [ ] text vector
-      * [ ] number vector
+   * [x] vector.ldpl
 * [ ] LDPL Examples:
    * [x] 99bottles.ldpl
    * [ ] brainfuck.ldpl
    * [x] disancount.ldpl
    * [x] euler.ldpl
-   * [ ] explode.ldpl
-      * [ ] text vector
+   * [x] explode.ldpl
    * [x] factorial.ldpl
    * [x] fibonacci.ldpl
    * [x] helloworld.ldpl
@@ -182,11 +176,16 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
    * [x] sqrt.ldpl
 * [ ] LDPL Programs:
    * [ ] spark
-   * [ ] space mines
+      * [ ] argv
+   * [*] space mines (!)
    * [ ] lisp
+      * [ ] argv
    * [ ] gild
    * [ ] lartu's br*nfuck interpreter
+      * [ ] argv
    * [ ] lartu's flash cards thing
+      * [ ] parser bug (milliseconds)
+      * [ ] improve the error first! good opportunity.
 * [ ] parser nodes:
    * [ ] SOLVE
    * [x] STORE QUOTE
@@ -222,6 +221,7 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 * [ ] 2nd pass TODO:
    * [ ] validate syntax in parser, eg no ELSE before ELSE IF
    * [ ] much better error messages. like rust's.
+   * [ ] rename generator methods (gen.arg.fetch vs gen.op.fetch confusing)
 
 === APPENDIX =========================================================
 
