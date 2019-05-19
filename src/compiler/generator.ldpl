@@ -170,6 +170,7 @@ sub-procedure gen.op.fetch
         store gen.nvar in gen.op.c
         call gen.emit-vector-op
         join gen.out and crlf in gen.out
+        store gen.op.c in gen.op.fetch
     else if gen.arg.type is equal to $TYPES:"TXV" then
         in gen.op.key join gen.node ":" gen.arg ":0"
         in gen.op.tkey join gen.node ":" gen.arg ":0:type"
