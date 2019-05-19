@@ -21,6 +21,8 @@ cpu.i            is number
 cpu.t            is text
 cpu.tx           is text
 cpu.ty           is text
+cpu.tz           is text
+cpu.var          is text
 
 PROCEDURE:
 # Print an error and crashes.
@@ -442,6 +444,15 @@ sub-procedure cpu.Run
             store vm.RAM:vm.Code:cpu.pc in cpu.x
             incr cpu.pc
             store character cpu.x in vm.Text:vm.Code:cpu.pc
+        else if $CODES:"REPLCE" is equal to cpu.code then
+            incr cpu.pc
+            store vm.Text:vm.Code:cpu.pc in cpu.tx  # find
+            incr cpu.pc
+            store vm.Text:vm.Code:cpu.pc in cpu.t   # src
+            incr cpu.pc
+            store vm.Text:vm.Code:cpu.pc in cpu.ty  # replace
+            incr cpu.pc
+            replace cpu.tx from cpu.t with cpu.ty in vm.Text:vm.Code:cpu.pc
         else
             join "BAD OPCODE: " and cpu.code in cpu.error
             if $NAMES:cpu.code is not equal to "" then

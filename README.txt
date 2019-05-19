@@ -138,7 +138,7 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 === TODO =============================================================
 
 * [ ] Newest commits to ldpl/master:
-   * [ ] REPLACE
+   * [x] REPLACE
    * [ ] SPLIT
    * [ ] TRIM
    * [ ] GET INDEX OF
@@ -344,3 +344,4 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 |  42  | GETC $x @str @a   | Get character in @str at $x and put into @a.
 |  43  | GETCC @str $a     | Get character code of @str and put into @a.
 |  44  | PUTCC $x @a       | Put ascii character with code $x into @a.
+|  45  | REPLCE @x @y @z @a| Replace @x from @y with @z in @a

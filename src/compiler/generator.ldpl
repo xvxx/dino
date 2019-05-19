@@ -40,6 +40,7 @@ gen.op.fetch is text
 gen.op.a is text  # tmpvars
 gen.op.b is text
 gen.op.c is text
+gen.op.d is text
 gen.op.t is text
 gen.op.key is text
 gen.op.tkey is text
@@ -247,6 +248,24 @@ sub-procedure gen.op.emit-3
     call gen.op.fetch
     store gen.op.fetch in gen.op.c
     in gen.out join gen.out "\t" gen.op " " gen.op.a ", " gen.op.b ", " gen.op.c
+end sub-procedure
+
+# emit an instruction with 4 args, like REPLCE
+# IN : gen.op
+sub-procedure gen.op.emit-4
+    store 0 in gen.arg
+    call gen.op.fetch
+    store gen.op.fetch in gen.op.a
+    store 1 in gen.arg
+    call gen.op.fetch
+    store gen.op.fetch in gen.op.b
+    store 2 in gen.arg
+    call gen.op.fetch
+    store gen.op.fetch in gen.op.c
+    store 3 in gen.arg
+    call gen.op.fetch
+    store gen.op.fetch in gen.op.d
+    in gen.out join gen.out "\t" gen.op " " gen.op.a ", " gen.op.b ", " gen.op.c ", " gen.op.d
 end sub-procedure
 
 # emit a math operation with 2 args, like ADD
@@ -510,6 +529,9 @@ sub-procedure generator.Run
         else if "CHARACTER" is equal to gen.node.type then
             store "PUTCC" in gen.op
             call gen.op.emit-2
+        else if "REPLACE" is equal to gen.node.type then
+            store "REPLCE" in gen.op
+            call gen.op.emit-4
         else if "IN JOIN" is equal to gen.node.type then
             store 0 in gen.arg
             call gen.op.fetch

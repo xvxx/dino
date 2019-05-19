@@ -378,3 +378,9 @@ store $opnum in $CODES:$opname
 store 2 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
 incr $opnum
+
+store "REPLCE" in $opname
+store $opnum in $CODES:$opname
+store 4 in $SIZES:$CODES:$opname
+store $opname in $NAMES:$CODES:$opname
+incr $opnum
