@@ -560,10 +560,62 @@ sub-procedure parser.node.create
         call parser.advance
         call parser.node.set2
     else if "GET" is equal to parser.token then
-        store "CHARACTER" in parser.expect
+        call parser.peek
+        if parser.peek is equal to "CHARACTER" then
+            call parser.advance
+            store "AT" in parser.expect
+            call parser.expect
+            call parser.advance
+            call parser.node.set0
+            store "FROM" in parser.expect
+            call parser.expect
+            call parser.advance
+            call parser.node.set1
+            store "IN" in parser.expect
+            call parser.expect
+            call parser.advance
+            call parser.node.set2
+        else if parser.peek is equal to "INDEX" then
+            call parser.advance
+            store "OF" in parser.expect
+            call parser.expect
+            call parser.advance
+            call parser.node.set0
+            store "FROM" in parser.expect
+            call parser.expect
+            call parser.advance
+            call parser.node.set1
+            store "IN" in parser.expect
+            call parser.expect
+            call parser.advance
+            call parser.node.set2
+        else
+            store "CHARACTER or INDEX" in parser.expect
+            call parser.expect
+        end if
+    else if "SUBSTRING" is equal to parser.token then
+        call parser.advance
+        call parser.node.set0
+        store "FROM" in parser.expect
         call parser.expect
-        store "AT" in parser.expect
+        call parser.advance
+        call parser.node.set1
+        store "LENGTH" in parser.expect
         call parser.expect
+        call parser.advance
+        call parser.node.set2
+        store "IN" in parser.expect
+        call parser.expect
+        call parser.advance
+        call parser.node.set3
+    else if "TRIM" is equal to parser.token then
+        call parser.advance
+        call parser.node.set0
+        store "IN" in parser.expect
+        call parser.expect
+        call parser.advance
+        call parser.node.set1
+    else if "COUNT" is equal to parser.token then
         call parser.advance
         call parser.node.set0
         store "FROM" in parser.expect
