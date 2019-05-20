@@ -45,6 +45,7 @@ $AC            is number
 @Y             is number
 @T             is number
 @E             is number
+@ARGV          is number
 
 # private
 $opname        is text
@@ -112,7 +113,7 @@ add @A and 1 in @X
 add @X and 1 in @Y
 add @Y and 1 in @T
 add @T and 1 in @E
-
+store $OFFSET.ARGV in @ARGV
 
 store 1 in $opnum # make it easy to shuffle codes around for now
 
@@ -120,7 +121,7 @@ store 1 in $opnum # make it easy to shuffle codes around for now
 store "JUMP" in $opname
 store $opnum in $CODES:$opname
 store 1 in $SIZES:$CODES:$opname
-store "JMP" in $NAMES:$CODES:$opname
+store $opname in $NAMES:$CODES:$opname
 
 incr $opnum
 store "JIF" in $opname
@@ -138,19 +139,19 @@ incr $opnum
 store "CALL" in $opname
 store $opnum in $CODES:$opname
 store 1 in $SIZES:$CODES:$opname
-store "CLL" in $NAMES:$CODES:$opname
+store $opname in $NAMES:$CODES:$opname
 incr $opnum
 
 store "RETURN" in $opname
 store $opnum in $CODES:$opname
 store 0 in $SIZES:$CODES:$opname
-store "RET" in $NAMES:$CODES:$opname
+store $opname in $NAMES:$CODES:$opname
 incr $opnum
 
 store "EXIT" in $opname
 store $opnum in $CODES:$opname
 store 0 in $SIZES:$CODES:$opname
-store "EXT" in $NAMES:$CODES:$opname
+store $opname in $NAMES:$CODES:$opname
 incr $opnum
 
 store "WAIT" in $opname

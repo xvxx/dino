@@ -30,3 +30,8 @@ PROCEDURE:
 # TODO: like opcodes
 store ":NL:"    in tokens.NEWLINE
 store "CRLF"    in tokens.CRLF
+
+# setup argv and argc
+display $OFFSET.ARGV crlf
+store "@argv" in c.Vars:$OFFSET.ARGV
+store 4 in c.Vars:"@argv"
