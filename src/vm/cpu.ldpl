@@ -11,6 +11,7 @@ cpu.pc           is number
 # Vectors
 cpu.v.n          is number vector
 cpu.v.t          is text vector
+cpu.v.tmp        is text vector
 
 # Temp vars - not actual registers. They're in vm.RAM
 cpu.a            is number
@@ -19,6 +20,7 @@ cpu.y            is number
 cpu.z            is number
 cpu.i            is number
 cpu.t            is text
+cpu.ta           is text
 cpu.tx           is text
 cpu.ty           is text
 cpu.tz           is text
@@ -439,11 +441,58 @@ sub-procedure cpu.Run
                 store ERRORCODE in vm.RAM:$e
                 store ERRORTEXT in vm.Text:@e
             end if
+        else if $CODES:"GETIDX" is equal to cpu.code then
+            incr cpu.pc
+            store vm.Text:vm.Code:cpu.pc in cpu.tx
+            incr cpu.pc
+            store vm.Text:vm.Code:cpu.pc in cpu.ty
+            incr cpu.pc
+            store vm.Code:cpu.pc in cpu.a
+            get index of cpu.tx from cpu.ty in vm.RAM:cpu.a
         else if $CODES:"PUTCC" is equal to cpu.code then
             incr cpu.pc
             store vm.RAM:vm.Code:cpu.pc in cpu.x
             incr cpu.pc
             store character cpu.x in vm.Text:vm.Code:cpu.pc
+        else if $CODES:"COUNT" is equal to cpu.code then
+            incr cpu.pc
+            store vm.Text:vm.Code:cpu.pc in cpu.tx
+            incr cpu.pc
+            store vm.Text:vm.Code:cpu.pc in cpu.ty
+            incr cpu.pc
+            store vm.Code:cpu.pc in cpu.x
+            count cpu.tx from cpu.ty in vm.RAM:cpu.x
+        else if $CODES:"SUBSTR" is equal to cpu.code then
+            incr cpu.pc
+            store vm.Text:vm.Code:cpu.pc in cpu.tx
+            incr cpu.pc
+            store vm.RAM:vm.Code:cpu.pc in cpu.x
+            incr cpu.pc
+            store vm.RAM:vm.Code:cpu.pc in cpu.y
+            incr cpu.pc
+            substring cpu.tx from cpu.x length cpu.y in vm.Text:vm.Code:cpu.pc
+        else if $CODES:"SPLIT" is equal to cpu.code then
+            incr cpu.pc
+            store vm.Text:vm.Code:cpu.pc in cpu.tx
+            incr cpu.pc
+            store vm.Text:vm.Code:cpu.pc in cpu.ty
+            incr cpu.pc
+            store vm.Code:cpu.pc in cpu.x
+            split cpu.tx by cpu.ty in cpu.v.tmp
+            # gross - move vector entries into RAM
+            if cpu.ty is equal to "" then
+                store length of cpu.tx in cpu.y
+            else
+                count cpu.ty from cpu.tx in cpu.y
+            end if
+            store 0 in cpu.i
+            store cpu.v.tmp:0 in cpu.t
+            while cpu.i is less than cpu.y do
+                join cpu.x and cpu.i in cpu.tz # key
+                store cpu.v.tmp:cpu.i in cpu.t
+                store cpu.t in cpu.v.t:cpu.tz
+                incr cpu.i
+            repeat
         else if $CODES:"REPLCE" is equal to cpu.code then
             incr cpu.pc
             store vm.Text:vm.Code:cpu.pc in cpu.tx  # find
@@ -453,6 +502,11 @@ sub-procedure cpu.Run
             store vm.Text:vm.Code:cpu.pc in cpu.ty  # replace
             incr cpu.pc
             replace cpu.tx from cpu.t with cpu.ty in vm.Text:vm.Code:cpu.pc
+        else if $CODES:"TRIM" is equal to cpu.code then
+            incr cpu.pc
+            store vm.Text:vm.Code:cpu.pc in cpu.tx
+            incr cpu.pc
+            trim cpu.tx in vm.Text:vm.Code:cpu.pc
         else
             join "BAD OPCODE: " and cpu.code in cpu.error
             if $NAMES:cpu.code is not equal to "" then
