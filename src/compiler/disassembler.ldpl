@@ -1,14 +1,45 @@
 # === DISASSEMBLER ===================================================
 # The disassembler converts dino bytecode into text assembly code.
 DATA:
-dis.i      is number
-dis.j      is number
-dis.x      is number
-dis.pad    is number
-dis.len    is number
-dis.opcode is number
+dis.i         is number
+dis.j         is number
+dis.x         is number
+dis.pad       is number
+dis.len       is number
+dis.opcode    is number
+dis.text      is text
+dis.text.i    is number
+dis.text.l    is number
+dis.text.t    is text
+dis.text.char is text
 
 PROCEDURE:
+
+# Convert \n to \\n and so on inside a text value.
+#  IN: dis.text
+# OUT: dis.text
+sub-procedure dis.text-filter
+    store 0 in dis.text.i
+    store length of dis.text in dis.text.l
+    while dis.text.i is less than dis.text.l do
+        get character at dis.text.i from dis.text in dis.text.char
+        if dis.text.char is equal to "\n" then
+            join dis.text.t and "\\n" in dis.text.t
+        else if dis.text.char is equal to "\r" then
+            join dis.text.t and "\\r" in dis.text.t
+        else if dis.text.char is equal to "\0" then
+            join dis.text.t and "\\0" in dis.text.t
+        else if dis.text.char is equal to "\e" then
+            join dis.text.t and "\\e" in dis.text.t
+        else if dis.text.char is equal to "\t" then
+            join dis.text.t and "\\t" in dis.text.t
+        else
+            join dis.text.t and dis.text.char in dis.text.t
+        end if
+        incr dis.text.i
+    repeat
+    store dis.text.t in dis.text
+end sub-procedure
 
 sub-procedure dis.print
     store $OFFSET.CODE in dis.i
@@ -38,7 +69,9 @@ sub-procedure dis.print
                 display "\e[35m"
                 store vm.Code:dis.i in dis.opcode
                 if dis.opcode is greater than or equal to $OFFSET.TLIT then
-                    display "\"" vm.Text:dis.opcode "\""
+                    store vm.Text:dis.opcode in dis.text
+                    call dis.text-filter
+                    display "\"" dis.text "\""
                 else
                     display dis.opcode
                 end if
