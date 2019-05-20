@@ -609,5 +609,8 @@ sub-procedure generator.Run
     repeat
 
     # wrap it up
-    in c.Asm join c.Asm "\tEXIT" crlf crlf gen.subs
+    in c.Asm join c.Asm "\tEXIT" crlf
+    if gen.subs is not equal to "" then
+        in c.Asm join c.Asm gen.subs
+    end if
 end sub-procedure
