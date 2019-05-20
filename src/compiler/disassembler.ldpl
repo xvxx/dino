@@ -4,6 +4,8 @@ DATA:
 dis.i      is number
 dis.j      is number
 dis.x      is number
+dis.pad    is number
+dis.len    is number
 dis.opcode is number
 
 PROCEDURE:
@@ -14,10 +16,19 @@ sub-procedure dis.print
         store vm.Code:dis.i in dis.opcode
 
         display "\e[36m"
-        if dis.opcode is less than 10 then
-            display 0
+        if dis.i is less than 10 then
+            display "0"
         end if
-        display dis.opcode " \e[33m" $NAMES:dis.opcode "\t"
+        store length of $NAMES:dis.opcode in dis.len
+        subtract dis.len from 6 in dis.pad
+        display dis.i " \e[33m"
+        store 0 in dis.x
+        while dis.x is less than dis.pad do
+            display " "
+            incr dis.x
+        repeat
+        display $NAMES:dis.opcode
+        display " "
         if $SIZES:dis.opcode is greater than 0 then
             display "\e[32m"
             store $SIZES:dis.opcode in dis.x
