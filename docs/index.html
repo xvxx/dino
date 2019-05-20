@@ -126,6 +126,10 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 3. The bytecode format, version number, and set of CPU instructions
    are going to change a lot while this is still in development.
 
+4. Extensions are not and probably won't be supported.
+
+5. Nested vectors don't work yet, ex vec1:vec2:2
+
 === TECHNNICAL SPECIFICATIONS ========================================
 
 * 32 bit words
@@ -137,40 +141,8 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 * Instructions are 1-4 words: One opcode and 0-3 operands.
 * ...?
 
-=== PROJECT STATUS ===================================================
-
-+---+-----------+-----------------------------------------------------
-| ? | NAME      | STATUS
-+---+-----------+-----------------------------------------------------
-| = | ========= | COMPILER ===========================================
-| X | Lexer     | Operational
-| X | Parser    | Operational
-| > | Generator | Underway!! Missing: sub-procedure
-| X | Assembler | Operational
-| = | ========= | VIRTUAL MACHINE ====================================
-| X | CPU       | Operational
-| X | Memory    | Operational
-| = | ========= | TOOLING ============================================
-|   | REPL      |
-|   | Debugger  |
-| X | CLI       | Operational. Lacks options, features.
-| X | dis       | Operational: Basic debug, needs labels and real asm
-| X | vscode    | Operational: Syntax highlighting. No Tasks.
-| = | ========= | DOCUMENTATION ======================================
-| > | manual    | In progress.
-|   | website   | Need to generate from manual.
-|   | man page  | Need to figure out how to generate from manual
-
-
 === TODO =============================================================
 
-* [ ] Newest commits to ldpl/master:
-   * [ ] REPLACE
-   * [ ] SPLIT
-   * [ ] TRIM
-   * [ ] GET INDEX OF
-   * [ ] COUNT
-   * [ ] SUBSTRING
 * [ ] ARGV vector
 * [ ] IN - SOLVE
 * [ ] LDPL Test Battery:
@@ -208,6 +180,7 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
    * [ ] lisp
       * [ ] argv
    * [ ] gild
+      * [ ] extensions/sockets
    * [ ] lartu's br*nfuck interpreter
       * [ ] argv
    * [ ] lartu's flash cards thing
@@ -215,20 +188,12 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
       * [ ] improve the error first! good opportunity.
 * [ ] parser nodes:
    * [ ] SOLVE
-   * [x] STORE QUOTE
+* [ ] generator:
+   * [ ] SOLVE
+* [ ] error on:
    * [ ] CALL EXTERNAL
    * [ ] EXTERNAL SUB-PROCEDURE
    * [ ] var is EXTERNAL data types
-* [ ] generator:
-   * [x] MOD
-   * [ ] SOLVE
-   * [x] STORE QUOTE
-   * [x] IN JOIN
-   * [ ] Extensions...
-* [ ] assembly -> bytecode $ dino bytes examples/99.dino
-   * [ ] error checking:
-      * [ ] arity
-      * [ ] labels?
 * [ ] REPL
    * [ ] >> input
    * [ ] == output
@@ -236,10 +201,7 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
    * [ ] history
    * [ ] multi-lines
    * [ ] asm mode
-* [ ] RAM
-   * [ ] vectors
 * [ ] CPU
-   * [ ] vectors
    * [ ] Instructions:
       * [ ] AND
       * [ ] OR
@@ -370,8 +332,13 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 |  41  | JOIN @x @y @a     | Concatenate text in registers into @a.
 |  42  | GETC $x @str @a   | Get character in @str at $x and put into @a.
 |  43  | GETCC @str $a     | Get character code of @str and put into @a.
-|  44  | PUTCC $x @a       | Put ascii character with code $x into @a.
-|  45  | REPLCE @x @y @z @a| Replace @x from @y with @z in @a
+|  44  | GETIDX @x @y $a   | Get index of @x in @y, put in $a.
+|  45  | PUTCC $x @a       | Put ascii character with code $x into @a.
+|  46  | COUNT @x @y $a    | Count occurrences of @x in @y, put in $a.
+|  47  | SUBSTR @x $x $y @a| Put @x[$x..$y] into @a.
+|  48  | SPLIT @x @y @a    | Split @x by @y and put in vector @a
+|  49  | REPLCE @x @y @z @a| Replace @x from @y with @z in @a
+|  4A  | TRIM @x @a        | Strip L/R whitespace from @x, put in @a.
 
    </div>
 </body>
