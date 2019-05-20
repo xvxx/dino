@@ -526,6 +526,9 @@ sub-procedure generator.Run
         else if "CHARACTER CODE" is equal to gen.node.type then
             store "GETCC" in gen.op
             call gen.op.emit-2
+        else if "GET INDEX" is equal to gen.node.type then
+            store "GETIDX" in gen.op
+            call gen.op.emit-3
         else if "CHARACTER" is equal to gen.node.type then
             store "PUTCC" in gen.op
             call gen.op.emit-2

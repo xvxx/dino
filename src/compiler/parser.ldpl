@@ -576,6 +576,7 @@ sub-procedure parser.node.create
             call parser.advance
             call parser.node.set2
         else if parser.peek is equal to "INDEX" then
+            store "GET INDEX" in c.Nodes:c.Nodes*
             call parser.advance
             store "OF" in parser.expect
             call parser.expect
