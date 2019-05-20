@@ -116,13 +116,6 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 
 === TODO =============================================================
 
-* [ ] Newest commits to ldpl/master:
-   * [x] REPLACE
-   * [ ] SPLIT
-   * [ ] TRIM
-   * [ ] GET INDEX OF
-   * [ ] COUNT
-   * [ ] SUBSTRING
 * [ ] ARGV vector
 * [ ] IN - SOLVE
 * [ ] LDPL Test Battery:
