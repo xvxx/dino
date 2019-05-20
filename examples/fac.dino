@@ -1,7 +1,8 @@
 ;; factorial
     SET %result, 1   ; default
-    STORE %n, @arg0
-    EQ $ac, 0, $a
+    SET %var0, 0
+    PUTV @argv, %var0, %n
+    EQ %n, 0, $a
     JIF while
     PRINT "🦕 Enter a number: "
     ACCEPT %n
