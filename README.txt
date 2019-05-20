@@ -103,17 +103,6 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 
 5. Nested vectors don't work yet, ex vec1:vec2:2
 
-=== TECHNNICAL SPECIFICATIONS ========================================
-
-* 32 bit words
-* 0xFFFF words of memory
-* 11 numeric registers (A, X, Y, Z, E, C, I, J, SP, PC, AC)
-* 5 text registers (A, X, Y, T, E)
-* Registers, variables, and constants share a logical address space.
-* Two types: numeric and text. Address determines type.
-* Instructions are 1-4 words: One opcode and 0-3 operands.
-* ...?
-
 === TODO =============================================================
 
 * [ ] ARGV vector
@@ -163,7 +152,7 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
    * [ ] much better error messages. like rust's.
    * [ ] rename generator methods (gen.arg.fetch vs gen.op.fetch confusing)
 
-=== APPENDIX =========================================================
+=== REFERENCE ========================================================
 
 # --- ADDRESS SYNTAX -------------------------------------------------
 | NAME            | SYNTAX
