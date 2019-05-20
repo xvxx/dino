@@ -532,6 +532,34 @@ sub-procedure generator.Run
         else if "REPLACE" is equal to gen.node.type then
             store "REPLCE" in gen.op
             call gen.op.emit-4
+        else if "SUBSTRING" is equal to gen.node.type then
+            store "SUBSTR" in gen.op
+            call gen.op.emit-4
+        else if "TRIM" is equal to gen.node.type then
+            store "TRIM" in gen.op
+            call gen.op.emit-2
+        else if "COUNT" is equal to gen.node.type then
+            store "COUNT" in gen.op
+            call gen.op.emit-3
+        else if "SPLIT" is equal to gen.node.type then
+            store "SPLIT" in gen.op
+            store 0 in gen.arg
+            call gen.op.fetch
+            store gen.op.fetch in gen.op.a
+            store 1 in gen.arg
+            call gen.op.fetch
+            store gen.op.fetch in gen.op.b
+            store 2 in gen.arg
+            call gen.arg.fetch
+            if gen.arg.type is equal to $TYPES:"NMV" then
+                join "%" and gen.arg.value in gen.op.c
+            else if gen.arg.type is equal to $TYPES:"TXV" then
+                join "@" and gen.arg.value in gen.op.c
+            else
+                in gen.error join "expected vector, got " gen.arg.type
+                call gen.error
+            end if
+            in gen.out join gen.out "\t" gen.op " " gen.op.a ", " gen.op.b ", " gen.op.c
         else if "IN JOIN" is equal to gen.node.type then
             store 0 in gen.arg
             call gen.op.fetch
