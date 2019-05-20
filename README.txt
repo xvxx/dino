@@ -21,7 +21,8 @@ programs on systems which lack a C++11 compiler.
 
 === GETTING STARTED ==================================================
 
-You must have the official LDPL compiler installed in your $PATH:
+You must have version 3.0.5 of the official LDPL compiler installed
+in your $PATH:
 
    https://www.ldpl-lang.org/
 
