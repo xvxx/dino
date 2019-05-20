@@ -8,11 +8,6 @@ cpu.address      is number
 cpu.stack        is number vector
 cpu.pc           is number
 
-# Vectors
-cpu.v.n          is number vector
-cpu.v.t          is text vector
-cpu.v.tmp        is text vector
-
 # Temp vars - not actual registers. They're in vm.RAM
 cpu.a            is number
 cpu.x            is number
@@ -175,15 +170,15 @@ sub-procedure cpu.Run
             end if
             if cpu.x is less than $OFFSET.TEXT then
                 if cpu.z is less than $OFFSET.TEXT then
-                    store vm.RAM:cpu.z in cpu.v.n:cpu.t
+                    store vm.RAM:cpu.z in vm.vec.n:cpu.t
                 else
-                    store vm.Text:cpu.z in cpu.v.n:cpu.t
+                    store vm.Text:cpu.z in vm.vec.n:cpu.t
                 end if
             else
                 if cpu.z is less than $OFFSET.TEXT then
-                    store vm.RAM:cpu.z in cpu.v.t:cpu.t
+                    store vm.RAM:cpu.z in vm.vec.t:cpu.t
                 else
-                    store vm.Text:cpu.z in cpu.v.t:cpu.t
+                    store vm.Text:cpu.z in vm.vec.t:cpu.t
                 end if
             end if
 
@@ -202,15 +197,15 @@ sub-procedure cpu.Run
             end if
             if cpu.x is less than $OFFSET.TEXT then
                 if cpu.z is less than $OFFSET.TEXT then
-                    store cpu.v.n:cpu.t in vm.RAM:cpu.z
+                    store vm.vec.n:cpu.t in vm.RAM:cpu.z
                 else
-                    store cpu.v.n:cpu.t in vm.Text:cpu.z
+                    store vm.vec.n:cpu.t in vm.Text:cpu.z
                 end if
             else
                 if cpu.z is less than $OFFSET.TEXT then
-                    store cpu.v.t:cpu.t in vm.RAM:cpu.z
+                    store vm.vec.t:cpu.t in vm.RAM:cpu.z
                 else
-                    store cpu.v.t:cpu.t in vm.Text:cpu.z
+                    store vm.vec.t:cpu.t in vm.Text:cpu.z
                 end if
             end if
 
@@ -478,7 +473,7 @@ sub-procedure cpu.Run
             store vm.Text:vm.Code:cpu.pc in cpu.ty
             incr cpu.pc
             store vm.Code:cpu.pc in cpu.x
-            split cpu.tx by cpu.ty in cpu.v.tmp
+            split cpu.tx by cpu.ty in vm.vec.tmp
             # gross - move vector entries into RAM
             if cpu.ty is equal to "" then
                 store length of cpu.tx in cpu.y
@@ -486,11 +481,11 @@ sub-procedure cpu.Run
                 count cpu.ty from cpu.tx in cpu.y
             end if
             store 0 in cpu.i
-            store cpu.v.tmp:0 in cpu.t
+            store vm.vec.tmp:0 in cpu.t
             while cpu.i is less than cpu.y do
                 join cpu.x and cpu.i in cpu.tz # key
-                store cpu.v.tmp:cpu.i in cpu.t
-                store cpu.t in cpu.v.t:cpu.tz
+                store vm.vec.tmp:cpu.i in cpu.t
+                store cpu.t in vm.vec.t:cpu.tz
                 incr cpu.i
             repeat
         else if $CODES:"REPLCE" is equal to cpu.code then

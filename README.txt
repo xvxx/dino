@@ -171,7 +171,7 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 | 0000 | 000F | NUM  | Registers ($x, $y, $a, $pc)
 | 0010 | 2FFF | NUM  | Variables (%count, %item-size)
 | 3000 | 300F | TEXT | Registers (@A, @X, @E)
-| 3010 | 301F | TEXT | Command line arguments (@arg0, @arg1...@arg8)
+| 3010 | 3010 | TVEC | Command line arguments @argv
 | 3020 | 3FFF | TEXT | Variables (@beer, @name, @label)
 | 4000 | FFFF | TEXT | Literals ("Hiya", "SCORE", "????")
 
@@ -197,10 +197,7 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 | 3003 | @T   | Text register
 | 3004 | @E   | Error message
 | .... |      |
-| 3010 | @arg0| First command line argument (ARGV)
-| 3011 | @arg1| Second...
-| 3017 | @arg7| Penultimate
-| 3018 | @arg8| Final command line argument
+| 3010 | @argv| Command line arguments vector
 | .... |      |
 | 3020 |      | Text variables
 | .... |      |

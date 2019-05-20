@@ -17,10 +17,16 @@ vm.Code*       is number
 vm.Text        is text vector
 vm.Text*       is number
 
+# internal - vectors
+vm.vec.n       is number vector
+vm.vec.t       is text vector
+vm.vec.tmp     is text vector
+
 # tmp
 __vm.i         is number
 __vm.x         is number
 __vm.boot      is number
+__vm.key       is text
 
 PROCEDURE:
 # vm must be booted (initalized) before it can run
@@ -34,11 +40,11 @@ sub-procedure vm.boot
         store $MAX.ARGS in ARGC
     end if
     store ARGC in vm.RAM:$AC
-    store $OFFSET.ARGV in __vm.x
     store 0 in __vm.i
+    display "ARGC: " ARGC crlf
     while __vm.i is less than ARGC do
-        store ARGV:__vm.i in vm.Text:__vm.x
-        incr __vm.x
+        join $OFFSET.ARGV and __vm.i in __vm.key
+        store ARGV:__vm.i in vm.vec.t:__vm.key
         incr __vm.i
     repeat
 
