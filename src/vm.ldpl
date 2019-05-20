@@ -39,10 +39,8 @@ sub-procedure vm.boot
     store ARGC in vm.RAM:$AC
     store 2 in __vm.i # dino 0:run 1:file 2...:[arguments...]
     store 0 in __vm.x
-    display "ARGC: " ARGC crlf
     while __vm.i is less than ARGC do
         join $OFFSET.ARGV and __vm.x in __vm.key
-        display "store " ARGV:__vm.i " in " __vm.key crlf
         store ARGV:__vm.i in vm.vec.t:__vm.key
         incr __vm.i
         incr __vm.x
