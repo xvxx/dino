@@ -124,6 +124,8 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
    * [*] space mines (!)
    * [ ] lisp
       * [ ] argv
+      * [ ] $ dino ambulisp.ldpl                                                                        master
+            ASM ERROR (2540): bad token: ACCEOF
    * [ ] gild
       * [ ] extensions/sockets
    * [ ] lartu's br*nfuck interpreter
