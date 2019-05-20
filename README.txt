@@ -126,26 +126,9 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
       * [x] STORE QUOTE
       * [x] text vector
       * [ ] escape codes
-   * [X] conflow.ldpl
-   * [x] exec.ldpl
-   * [x] explode.ldpl
-   * [X] fibo.ldpl
-   * [x] file.ldpl
-   * [x] quine.ldpl
-   * [x] sqrt.ldpl
-   * [x] vector.ldpl
 * [ ] LDPL Examples:
-   * [x] 99bottles.ldpl
    * [ ] brainfuck.ldpl
       * [ ] argv
-   * [x] disancount.ldpl
-   * [x] euler.ldpl
-   * [x] explode.ldpl
-   * [x] factorial.ldpl
-   * [x] fibonacci.ldpl
-   * [x] helloworld.ldpl
-   * [x] quine.ldpl
-   * [x] sqrt.ldpl
 * [ ] LDPL Programs:
    * [ ] spark
       * [ ] argv
@@ -159,10 +142,11 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
    * [ ] lartu's flash cards thing
       * [ ] parser bug (milliseconds)
       * [ ] improve the error first! good opportunity.
-* [ ] parser nodes:
-   * [ ] SOLVE
-* [ ] generator:
-   * [ ] SOLVE
+* [ ] docs 2nd pass
+* [ ] lex errors 2nd pass
+* [ ] parser errors 2nd pass
+* [ ] gen errors 2nd pass
+* [ ] asm errors 2nd pass
 * [ ] error on:
    * [ ] CALL EXTERNAL
    * [ ] EXTERNAL SUB-PROCEDURE
@@ -174,12 +158,6 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
    * [ ] history
    * [ ] multi-lines
    * [ ] asm mode
-* [ ] CPU
-   * [ ] Instructions:
-      * [ ] AND
-      * [ ] OR
-      * [ ] XOR
-      * [ ] NOT
 * [ ] 2nd pass TODO:
    * [ ] validate syntax in parser, eg no ELSE before ELSE IF
    * [ ] much better error messages. like rust's.
