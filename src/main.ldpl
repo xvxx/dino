@@ -31,6 +31,30 @@ main.akey    is text
 main.tkey    is text
 
 PROCEDURE:
+# --- HELPER SUB-PROCEDURES ------------------------------------------
+# Puts the file extension of argv:1 into main.ext, all uppercase.
+# ex file.ldpl => "LDPL"
+sub-procedure main.ext
+    store 0 in main.i
+    store "" in main.ext
+    store length of argv:1 in main.l
+
+    while main.i is less than main.l do
+        get character at main.i from argv:1 in main.char
+        if main.char is equal to "." then
+            add 1 and main.i in main.i
+            get character at main.i from argv:1 in main.ext
+        else if main.ext is not equal to "" then
+            join main.ext and main.char in main.ext
+        end if
+        add 1 and main.i in main.i
+    repeat
+
+    store main.ext in upcase.word
+    call upcase-word
+    store upcase.word in main.ext
+end sub-procedure
+
 # --- DISPLAY VERSION ------------------------------------------------
 # $ dino version
 sub-procedure main.version
@@ -53,7 +77,7 @@ sub-procedure main.help
 end sub-procedure
 
 # --- READ-EVAL-PRINT-LOOP -------------------------------------------
-# $ dino run file.ldpl
+# $ dino repl
 # The REPL reads, evaluates, and prints LDPL source code in a loop.
 sub-procedure main.repl
 end sub-procedure
@@ -168,25 +192,7 @@ end sub-procedure
 
 # $ dino run file
 sub-procedure main.run
-    store 0 in main.i
-    store "" in main.ext
-    store length of argv:1 in main.l
-
-    while main.i is less than main.l do
-        get character at main.i from argv:1 in main.char
-        if main.char is equal to "." then
-            add 1 and main.i in main.i
-            get character at main.i from argv:1 in main.ext
-        else if main.ext is not equal to "" then
-            join main.ext and main.char in main.ext
-        end if
-        add 1 and main.i in main.i
-    repeat
-
-    store main.ext in upcase.word
-    call upcase-word
-    store upcase.word in main.ext
-
+    call main.ext
     if main.ext is equal to "LDPL" then
         call main.run.ldpl
     else if main.ext is equal to "LSC" then
@@ -201,7 +207,7 @@ sub-procedure main.run
     end if
 end sub-procedure
 
-# --- CONVERT LDPL TO ASSEMBLY ---------------------------------------
+# --- CONVERT TO ASSEMBLY --------------------------------------------
 # $ dino asm file.ldpl
 sub-procedure main.ldpl-to-asm
     load file argv:1 in c.Input
@@ -215,14 +221,23 @@ sub-procedure main.ldpl-to-asm
     display c.Asm
 end sub-procedure
 
-# --- CONVERT LDPL TO BYTECODE ---------------------------------------
+# --- CONVERT TO BYTECODE --------------------------------------------
 # $ dino bytes file.ldpl
-sub-procedure main.ldpl-to-bytecode
+sub-procedure main.bytes.ldpl
+    load file argv:1 in c.Input
+    if ERRORCODE is greater than 0 then
+        display ERRORTEXT crlf
+        exit
+    end if
+    call lexer.Run
+    call parser.Run
+    call generator.Run
+    call asm.Compile
+    call asm.Print
 end sub-procedure
 
-# --- CONVERT ASSEMBLY TO BYTECODE -----------------------------------
 # $ dino bytes file.dino
-sub-procedure main.asm-to-bytecode
+sub-procedure main.bytes.dino
     load file argv:1 in c.Asm
     if ERRORCODE is greater than 0 then
         display ERRORTEXT crlf
@@ -230,6 +245,23 @@ sub-procedure main.asm-to-bytecode
     end if
     call asm.Compile
     call asm.Print
+end sub-procedure
+
+# $ dino bytes file
+sub-procedure main.bytes
+    call main.ext
+    if main.ext is equal to "LDPL" then
+        call main.bytes.ldpl
+    else if main.ext is equal to "LSC" then
+        call main.run.ldpl
+    else if main.ext is equal to "DINO" then
+        call main.run.dino
+    else if main.ext is equal to "DINOCODE" then
+        display "\e[1;31mError: \e[0malready bytecode" crlf
+    else
+        display "\e[1;31mBad file extension: \e[0m" main.ext crlf
+        exit
+    end if
 end sub-procedure
 
 # --- CONVERT BYTECODE TO ASSEMBLY -----------------------------------
@@ -243,7 +275,7 @@ end sub-procedure
 # --- MAIN PROGRAM ROUTINE -------------------------------------------
 sub-procedure main
     if argv:0 is equal to "bytes" then
-        call main.asm-to-bytecode
+        call main.bytes
     else if argv:0 is equal to "run" then
         call main.run
     else if argv:0 is equal to "asm" then
