@@ -106,7 +106,6 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 
 === TODO =============================================================
 
-* [x] ARGV vector
 * [ ] IN - SOLVE
 * [ ] LDPL Test Battery:
    * [ ] basicar.ldpl
@@ -115,14 +114,11 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
       * [x] IN - JOIN
       * [x] STORE QUOTE
       * [x] text vector
-      * [ ] escape codes
+      * [x] escape codes
 * [ ] LDPL Examples:
    * [ ] brainfuck.ldpl
       * [ ] argv
 * [ ] LDPL Programs:
-   * [x] spark
-      * [x] argv
-   * [*] space mines (!)
    * [ ] lisp
       * [x] argv
       * [x] $ dino ambulisp.ldpl                                                                        master
@@ -134,7 +130,7 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
       * [ ] argv
    * [ ] beKnowledge
       * [x] parser bug (milliseconds)
-      * [ ] escape codes
+      * [x] escape codes
       * [ ] bug in JOIN phase
 * [ ] parser errors 2nd pass (only show broken line) (like rust's.)
 * [ ] docs 2nd pass
