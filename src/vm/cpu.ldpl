@@ -421,9 +421,19 @@ sub-procedure cpu.Run
             store length of cpu.t in vm.RAM:vm.Code:cpu.pc
         else if $CODES:"JOIN" is equal to cpu.code then
             incr cpu.pc
-            store vm.Text:vm.Code:cpu.pc in cpu.tx
+            store vm.Code:cpu.pc in cpu.x
             incr cpu.pc
-            store vm.Text:vm.Code:cpu.pc in cpu.ty
+            store vm.Code:cpu.pc in cpu.y
+            if cpu.x is less than $OFFSET.TEXT then
+                store vm.RAM:cpu.x in cpu.tx
+            else
+                store vm.Text:cpu.x in cpu.tx
+            end if
+            if cpu.y is less than $OFFSET.TEXT then
+                store vm.RAM:cpu.y in cpu.ty
+            else
+                store vm.Text:cpu.y in cpu.ty
+            end if
             incr cpu.pc
             join cpu.tx and cpu.ty in vm.Text:vm.Code:cpu.pc
         else if $CODES:"GETC" is equal to cpu.code then
