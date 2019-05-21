@@ -36,8 +36,8 @@ sub-procedure vm.boot
     end if
 
     # Set command line arguments on boot.
-    store ARGC in vm.RAM:$AC
     store 2 in __vm.i # dino 0:run 1:file 2...:[arguments...]
+    subtract 2 from ARGC in vm.RAM:$AC
     store 0 in __vm.x
     while __vm.i is less than ARGC do
         join $OFFSET.ARGV and __vm.x in __vm.key

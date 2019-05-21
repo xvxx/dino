@@ -31,6 +31,8 @@ PROCEDURE:
 store ":NL:"    in tokens.NEWLINE
 store "CRLF"    in tokens.CRLF
 
-# setup argv
+# setup argv & argc
 store "ARGV" in c.Vars:$OFFSET.ARGV
 store 4 in c.Vars:"ARGV"
+store "ARGC" in c.Vars:$AC
+store 1 in c.Vars:"ARGC"

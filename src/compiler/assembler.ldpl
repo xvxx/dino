@@ -56,16 +56,10 @@ store @Y    in asm.addresses:"@Y"
 store @T    in asm.addresses:"@T"
 store @E    in asm.addresses:"@E"
 store @ARGV in asm.addresses:"@ARGV"
+store $ac   in asm.vars:"%ARGC"
 
 store 1 in asm.newline:"\n"
 store 1 in asm.newline:"\r"
-
-store 0 in asm.i
-while asm.i is less than 16 do
-    join "@ARG" and asm.i in asm.t
-    add $OFFSET.ARGV and asm.i in asm.addresses:asm.t
-    incr asm.i
-repeat
 
 store $OFFSET.VARS in asm.vars*
 store $OFFSET.TVAR in asm.tvars.next
