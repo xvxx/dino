@@ -2,6 +2,15 @@
 # The generator loops through c.Nodes and emits assembly for each.
 # By "emit", we mean it puts it into c.Asm.
 
+# Some things to note:
+
+# * Most instructions only work with regular text and number variables.
+#   That means if we are assigning to or using a value from a vector,
+#   we need to generate an extra PUTV or STOREV with a temporary text
+#   or number variable.
+# * Most instructions have the `dest` as the final argument except for
+#   STORE and STOREV.
+
 DATA:
 # shared
 gen.key            is text
