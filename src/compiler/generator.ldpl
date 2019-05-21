@@ -10,6 +10,7 @@
 #   or number variable.
 # * Most instructions have the `dest` as the final argument except for
 #   STORE and STOREV.
+# * Nested vectors don't work yet, ex vec1:vec2:2
 
 DATA:
 # shared
