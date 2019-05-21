@@ -115,6 +115,7 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
       * [x] STORE QUOTE
       * [x] text vector
       * [x] escape codes
+      * [ ] error code
 * [ ] LDPL Examples:
    * [ ] brainfuck.ldpl
       * [ ] argv
@@ -149,8 +150,18 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
    * [ ] history
    * [ ] multi-lines
    * [ ] asm mode
-* [ ] 2nd pass TODO:
-   * [ ] rename generator methods (gen.arg.fetch vs gen.op.fetch confusing)
+
+=== SUMMARY ==========================================================
+
+* "Words" are LDPL numbers.
+* Instructions are 1-4 words: opcode and then operands.
+* Two native types are number and text.
+* 11 number registers: $a, $x, $y, $z, $e, $c, $i, $t, $sp, $pc, $ac
+* $sp is stack pointer, $pc is program counter, $ac is argc, $e error code
+* 5 text registers: @a, @x, @y, @t, @e
+* One address space for number registers, number variables, text
+  registers, text variables, and text literals.
+* Parallel address space for number vectors and text vectors.
 
 === REFERENCE ========================================================
 
