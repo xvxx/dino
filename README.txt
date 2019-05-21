@@ -120,8 +120,8 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
    * [ ] brainfuck.ldpl
       * [ ] argv
 * [ ] LDPL Programs:
-   * [ ] spark
-      * [ ] argv
+   * [x] spark
+      * [x] argv
    * [*] space mines (!)
    * [ ] lisp
       * [ ] argv
