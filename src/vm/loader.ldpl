@@ -8,6 +8,7 @@ loader.input    is text # bytecode in .dinocode text format
 
 # LOCALS:
 loader.i        is number
+loader.x        is number
 loader*         is number
 loader.char     is text
 loader.prev     is text
@@ -45,7 +46,16 @@ sub-procedure loader.Run
                 else if loader.char is equal to "r" then
                     join loader.token and "\r" in loader.token
                 else if loader.char is equal to "0" then
-                    join loader.token and "\e" in loader.token
+                    add loader.i and 1 in loader.x
+                    get character at loader.x from loader.input in loader.char
+                    if loader.char is equal to "3" then
+                        incr loader.x
+                        get character at loader.x from loader.input in loader.char
+                        if loader.char is equal to "3" then
+                            add loader.i and 2 in loader.i
+                            join loader.token and "\e" in loader.token
+                        end if
+                    end if
                 else if loader.char is equal to "\"" then
                     join loader.token and "\"" in loader.token
                 else if loader.char is equal to "\\" then
