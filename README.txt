@@ -233,7 +233,7 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 |  06  | EXIT              | Exit program
 |  07  | WAIT $r           | Pause for milliseconds in register.
 | ==== | ================= | MEMORY COMMANDS =========================
-|  10  | STORE %var $r     | %r = value of $r
+|  10  | STORE %var $r     | %var = value at address $r
 |  11  | SET $r 314        | Set $r to a literal number value
 |  12  | FETCH $r $x       | Set $r to the value at address in $x. Like a pointer.
 |  13  | PUSH $x           | Push $x onto the stack.

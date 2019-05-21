@@ -44,13 +44,16 @@ gen.op.d is text
 gen.op.t is text
 gen.op.key is text
 gen.op.tkey is text
-gen.op.type is number
 gen.op.i is number
 gen.op.z is number
 gen.op.syms is text vector
 
 # gen.emit-vector-op
-gen.vec.op is text
+gen.vec.op   is text
+gen.vec.op.a is text
+gen.vec.op.b is text
+gen.vec.op.c is text
+gen.vec.type is number
 
 # gen.escape-quotes
 gen.escape-quotes is text
@@ -122,8 +125,8 @@ sub-procedure gen.tvar
 end sub-procedure
 
 #  IN: gen.vec.op
-#      gen.op.a
-#      gen.op.c
+#      gen.vec.op.a
+#      gen.vec.op.c
 #      gen.node
 #      gen.arg
 #      c.Nodes
@@ -131,18 +134,22 @@ end sub-procedure
 sub-procedure gen.emit-vector-op
     in gen.op.key join gen.node ":" gen.arg ":0"
     in gen.op.tkey join gen.node ":" gen.arg ":0:type"
-    store c.Nodes:gen.op.key in gen.op.b
-    store c.Nodes:gen.op.tkey in gen.op.type
-    if gen.op.type is equal to $TYPES:"NML" then
+    store c.Nodes:gen.op.key in gen.vec.op.b
+    store c.Nodes:gen.op.tkey in gen.vec.type
+    if gen.vec.type is equal to $TYPES:"NML" then
         call gen.nvar
-        in gen.out join gen.out "\tSET " gen.nvar ", " gen.op.b crlf
-        store gen.nvar in gen.op.b
-    else if gen.op.type is equal to $TYPES:"NUM" then
-        join "%" and gen.op.b in gen.op.b
-    else if gen.op.type is equal to $TYPES:"TXT" then
-        join "@" and gen.op.b in gen.op.b
+        in gen.out join gen.out "\tSET " gen.nvar ", " gen.vec.op.b crlf
+        store gen.nvar in gen.vec.op.b
+    else if gen.vec.type is equal to $TYPES:"NUM" then
+        join "%" and gen.vec.op.b in gen.vec.op.b
+    else if gen.vec.type is equal to $TYPES:"NMV" then
+        join "%" and gen.vec.op.b in gen.vec.op.b
+    else if gen.vec.type is equal to $TYPES:"TXT" then
+        join "@" and gen.vec.op.b in gen.vec.op.b
+    else if gen.vec.type is equal to $TYPES:"TXV" then
+        join "@" and gen.vec.op.b in gen.vec.op.b
     end if
-    in gen.out join gen.out "\t" gen.vec.op " " gen.op.a ", " gen.op.b ", " gen.op.c
+    in gen.out join gen.out "\t" gen.vec.op " " gen.vec.op.a ", " gen.vec.op.b ", " gen.vec.op.c
 end sub-procedure
 
 # Use `gen.arg` to fill `gen.arg.value` and `gen.arg.type`
@@ -169,20 +176,20 @@ sub-procedure gen.op.fetch
         store gen.nvar in gen.op.fetch
     else if gen.arg.type is equal to $TYPES:"NMV" then
         store "PUTV" in gen.vec.op
-        join "%" and gen.arg.value in gen.op.a
+        join "%" and gen.arg.value in gen.vec.op.a
         call gen.nvar
-        store gen.nvar in gen.op.c
+        store gen.nvar in gen.vec.op.c
         call gen.emit-vector-op
         join gen.out and crlf in gen.out
-        store gen.op.c in gen.op.fetch
+        store gen.vec.op.c in gen.op.fetch
     else if gen.arg.type is equal to $TYPES:"TXV" then
         store "PUTV" in gen.vec.op
-        join "@" and gen.arg.value in gen.op.a
+        join "@" and gen.arg.value in gen.vec.op.a
         call gen.tvar
-        store gen.tvar in gen.op.c
+        store gen.tvar in gen.vec.op.c
         call gen.emit-vector-op
         join gen.out and crlf in gen.out
-        store gen.op.c in gen.op.fetch
+        store gen.vec.op.c in gen.op.fetch
     else if gen.arg.type is equal to $TYPES:"TXL" then
         store gen.arg.value in gen.op.fetch
     else if gen.arg.type is equal to $TYPES:"TXT" then
@@ -314,23 +321,27 @@ sub-procedure gen.op.emit-cond
     in gen.out join gen.out "\t" gen.op " " gen.op.a ", " gen.op.b ", $a" crlf
 end sub-procedure
 
+#  IN: gen.node
+#      gen.arg
+#      gen.op.vec.a
+# OUT: gen.out
 sub-procedure gen.storev.emit-ops
-in gen.op.key join gen.node ":" gen.arg ":0"
+    in gen.op.key join gen.node ":" gen.arg ":0"
     in gen.op.tkey join gen.node ":" gen.arg ":0:type"
-    store c.Nodes:gen.op.key in gen.op.b
-    store c.Nodes:gen.op.tkey in gen.op.type
-    if gen.op.type is equal to $TYPES:"NML" then
+    store c.Nodes:gen.op.key in gen.vec.op.b
+    store c.Nodes:gen.op.tkey in gen.vec.type
+    if gen.vec.type is equal to $TYPES:"NML" then
         call gen.nvar
-        in gen.out join gen.out "\tSET " gen.nvar ", " gen.op.b crlf
-        store gen.nvar in gen.op.b
-    else if gen.op.type is equal to $TYPES:"NUM" then
-        join "%" and gen.op.b in gen.op.b
-    else if gen.op.type is equal to $TYPES:"TXT" then
-        join "@" and gen.op.b in gen.op.b
+        in gen.out join gen.out "\tSET " gen.nvar ", " gen.vec.op.b crlf
+        store gen.nvar in gen.vec.op.b
+    else if gen.vec.type is equal to $TYPES:"NUM" then
+        join "%" and gen.vec.op.b in gen.vec.op.b
+    else if gen.vec.type is equal to $TYPES:"TXT" then
+        join "@" and gen.vec.op.b in gen.vec.op.b
     end if
     store 0 in gen.arg
     call gen.op.fetch
-    in gen.out join gen.out "\tSTOREV " gen.op.a ", " gen.op.b ", " gen.op.fetch
+    in gen.out join gen.out "\tSTOREV " gen.vec.op.a ", " gen.vec.op.b ", " gen.op.fetch
 end sub-procedure
 
 # IN: c.Nodes
@@ -345,10 +356,10 @@ sub-procedure generator.Run
             store 1 in gen.arg
             call gen.arg.fetch
             if gen.arg.type is equal to $TYPES:"NMV" then
-                join "%" and gen.arg.value in gen.op.a
+                join "%" and gen.arg.value in gen.vec.op.a
                 call gen.storev.emit-ops
             else if gen.arg.type is equal to $TYPES:"TXV" then
-                join "@" and gen.arg.value in gen.op.a
+                join "@" and gen.arg.value in gen.vec.op.a
                 call gen.storev.emit-ops
             else
                 call gen.op.emit-2-flipped
