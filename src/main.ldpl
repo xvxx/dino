@@ -64,13 +64,19 @@ sub-procedure main.lex
     load file argv:1 in c.Input
     call lexer.Run
     store 0 in main.i
-    display "tokens:\n  "
+    display "\e[1mtokens:\e[0m\n  "
     while main.i is less than c.Tokens* do
         display "\e[36m<\e[33m" c.Tokens:main.i "\e[36m>"
-        incr main.i
-        if main.i is less than c.Tokens* then
+        if c.Tokens:main.i is equal to tokens.NEWLINE then
+            display crlf
+            add main.i and 1 in main.x
+            if main.x is less than c.Tokens* then
+                display "  "
+            end if
+        else if main.i is less than c.Tokens* then
             display "\e[0m, "
         end if
+        incr main.i
     repeat
     display "\e[0m"
 end sub-procedure
