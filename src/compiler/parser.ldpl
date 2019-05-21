@@ -722,6 +722,8 @@ sub-procedure parser.node.create
     else if "WAIT" is equal to parser.token then
         call parser.advance
         call parser.node.set0
+        store "MILLISECONDS" in parser.expect
+        call parser.expect
     else
         join "unknown token: " and parser.token in parser.error
         call parser.error

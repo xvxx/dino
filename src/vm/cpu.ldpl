@@ -361,6 +361,14 @@ sub-procedure cpu.Run
             else
                 accept vm.RAM:vm.Code:cpu.pc
             end if
+        else if $CODES:"ACCEOF" is equal to cpu.code then
+            incr cpu.pc
+            if vm.Code:cpu.pc is greater than or equal to $OFFSET.TEXT then
+                accept vm.Text:vm.Code:cpu.pc until eof
+            else
+                store "ACCEOF needs TEXT, got NUMBER" in cpu.error
+                call cpu.error
+            end if
         else if $CODES:"EXEC" is equal to cpu.code then
             incr cpu.pc
             store vm.Text:vm.Code:cpu.pc in cpu.t
