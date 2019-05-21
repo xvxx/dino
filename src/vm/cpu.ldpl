@@ -448,8 +448,9 @@ sub-procedure cpu.Run
             store vm.Text:vm.Code:cpu.pc in cpu.t
             incr cpu.pc
             store character code of cpu.t in vm.RAM:vm.Code:cpu.pc
-            if ERRORCODE is not equal to 0 then
+            if ERRORCODE is equal to 0 then
                 store 0 in vm.RAM:$e
+                store "" vm.Text:@e
             else
                 store ERRORCODE in vm.RAM:$e
                 store ERRORTEXT in vm.Text:@e
