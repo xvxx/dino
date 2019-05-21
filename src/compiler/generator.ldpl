@@ -304,6 +304,7 @@ sub-procedure gen.op.emit-4
     store gen.arg.load in gen.op.d
 
     in gen.out join gen.out "\t" gen.op " " gen.op.a ", " gen.op.b ", " gen.op.c ", " gen.op.d
+    call gen.emit-vector-as-src
 end sub-procedure
 
 # emit a math operation with 2 src args, like ADD
