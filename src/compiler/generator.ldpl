@@ -44,9 +44,9 @@ gen.nvar.i is number
 gen.tvar is text
 gen.tvar.i is number
 
-# gen.op.fetch
+# gen.arg.load
 gen.op is text   # operation, like ADD
-gen.op.fetch is text
+gen.arg.load is text
 gen.op.a is text  # tmpvars
 gen.op.b is text
 gen.op.c is text
@@ -185,16 +185,16 @@ sub-procedure gen.arg.fetch
     store c.Nodes:gen.key in gen.arg.type
 end sub-procedure
 
-# Call gen.arg.fetch and then puts ASM var name into gen.op.fetch.
+# Call gen.arg.fetch and then puts ASM var name into gen.arg.load.
 # Emits a SET first if num literal or vector.
 #  IN: gen.arg
-# OUT: gen.op.fetch
-sub-procedure gen.op.fetch
+# OUT: gen.arg.load
+sub-procedure gen.arg.load
     call gen.arg.fetch
     if gen.arg.type is equal to $TYPES:"NML" then
         call gen.nvar
         in gen.out join gen.out "\tSET " gen.nvar ", " gen.arg.value crlf
-        store gen.nvar in gen.op.fetch
+        store gen.nvar in gen.arg.load
     else if gen.arg.type is equal to $TYPES:"NMV" then
         store "PUTV" in gen.vec.op
         join "%" and gen.arg.value in gen.vec.op.a
@@ -202,7 +202,7 @@ sub-procedure gen.op.fetch
         store gen.nvar in gen.vec.op.c
         call gen.emit-vector-op
         join gen.out and crlf in gen.out
-        store gen.vec.op.c in gen.op.fetch
+        store gen.vec.op.c in gen.arg.load
     else if gen.arg.type is equal to $TYPES:"TXV" then
         store "PUTV" in gen.vec.op
         join "@" and gen.arg.value in gen.vec.op.a
@@ -210,19 +210,19 @@ sub-procedure gen.op.fetch
         store gen.tvar in gen.vec.op.c
         call gen.emit-vector-op
         join gen.out and crlf in gen.out
-        store gen.vec.op.c in gen.op.fetch
+        store gen.vec.op.c in gen.arg.load
     else if gen.arg.type is equal to $TYPES:"TXL" then
-        store gen.arg.value in gen.op.fetch
+        store gen.arg.value in gen.arg.load
     else if gen.arg.type is equal to $TYPES:"TXT" then
-        join "@" and gen.arg.value in gen.op.fetch
+        join "@" and gen.arg.value in gen.arg.load
     else if gen.arg.type is equal to $TYPES:"NUM" then
-        join "%" and gen.arg.value in gen.op.fetch
+        join "%" and gen.arg.value in gen.arg.load
     else if gen.arg.type is equal to $TYPES:"LBL" then
-        store gen.arg.value in gen.op.fetch
+        store gen.arg.value in gen.arg.load
     else if gen.arg.type is equal to $TYPES:"SYM" then
-        store gen.arg.value in gen.op.fetch
+        store gen.arg.value in gen.arg.load
     else
-        join "gen.op.fetch: bad arg type: " and gen.arg.type in gen.error
+        join "gen.arg.load: bad arg type: " and gen.arg.type in gen.error
         call gen.error
     end if
 end sub-procedure
@@ -231,8 +231,8 @@ end sub-procedure
 # IN : gen.op    # should be something like CALL or GOTO
 sub-procedure gen.op.emit
     store 0 in gen.arg
-    call gen.op.fetch
-    in gen.out join gen.out "\t" gen.op " " gen.op.fetch
+    call gen.arg.load
+    in gen.out join gen.out "\t" gen.op " " gen.arg.load
     call gen.emit-vector-as-src
 end sub-procedure
 
@@ -240,12 +240,12 @@ end sub-procedure
 # IN : gen.op    # should be something like EXEC
 sub-procedure gen.op.emit-2
     store 0 in gen.arg
-    call gen.op.fetch
-    store gen.op.fetch in gen.op.a
+    call gen.arg.load
+    store gen.arg.load in gen.op.a
 
     store 1 in gen.arg
-    call gen.op.fetch
-    store gen.op.fetch in gen.op.b
+    call gen.arg.load
+    store gen.arg.load in gen.op.b
 
     in gen.out join gen.out "\t" gen.op " " gen.op.a ", " gen.op.b
     call gen.emit-vector-as-src
@@ -255,12 +255,12 @@ end sub-procedure
 # IN : gen.op
 sub-procedure gen.op.emit-2-flipped
     store 1 in gen.arg
-    call gen.op.fetch
-    store gen.op.fetch in gen.op.a
+    call gen.arg.load
+    store gen.arg.load in gen.op.a
 
     store 0 in gen.arg
-    call gen.op.fetch
-    store gen.op.fetch in gen.op.b
+    call gen.arg.load
+    store gen.arg.load in gen.op.b
 
     in gen.out join gen.out "\t" gen.op " " gen.op.a ", " gen.op.b
 end sub-procedure
@@ -269,16 +269,16 @@ end sub-procedure
 # IN : gen.op    # should be something like GETC
 sub-procedure gen.op.emit-3
     store 0 in gen.arg
-    call gen.op.fetch
-    store gen.op.fetch in gen.op.a
+    call gen.arg.load
+    store gen.arg.load in gen.op.a
 
     store 1 in gen.arg
-    call gen.op.fetch
-    store gen.op.fetch in gen.op.b
+    call gen.arg.load
+    store gen.arg.load in gen.op.b
 
     store 2 in gen.arg
-    call gen.op.fetch
-    store gen.op.fetch in gen.op.c
+    call gen.arg.load
+    store gen.arg.load in gen.op.c
 
     in gen.out join gen.out "\t" gen.op " " gen.op.a ", " gen.op.b ", " gen.op.c
     call gen.emit-vector-as-src
@@ -288,20 +288,20 @@ end sub-procedure
 # IN : gen.op
 sub-procedure gen.op.emit-4
     store 0 in gen.arg
-    call gen.op.fetch
-    store gen.op.fetch in gen.op.a
+    call gen.arg.load
+    store gen.arg.load in gen.op.a
 
     store 1 in gen.arg
-    call gen.op.fetch
-    store gen.op.fetch in gen.op.b
+    call gen.arg.load
+    store gen.arg.load in gen.op.b
 
     store 2 in gen.arg
-    call gen.op.fetch
-    store gen.op.fetch in gen.op.c
+    call gen.arg.load
+    store gen.arg.load in gen.op.c
 
     store 3 in gen.arg
-    call gen.op.fetch
-    store gen.op.fetch in gen.op.d
+    call gen.arg.load
+    store gen.arg.load in gen.op.d
 
     in gen.out join gen.out "\t" gen.op " " gen.op.a ", " gen.op.b ", " gen.op.c ", " gen.op.d
 end sub-procedure
@@ -310,17 +310,17 @@ end sub-procedure
 # IN : gen.op    # should be something like ADD or SUB
 sub-procedure gen.op.emit-math-2
     store 0 in gen.arg
-    call gen.op.fetch
-    store gen.op.fetch in gen.op.a
+    call gen.arg.load
+    store gen.arg.load in gen.op.a
 
     store 1 in gen.arg
-    call gen.op.fetch
-    store gen.op.fetch in gen.op.b
+    call gen.arg.load
+    store gen.arg.load in gen.op.b
 
     store 2 in gen.arg
     call gen.arg.fetch
-    call gen.op.fetch
-    store gen.op.fetch in gen.op.c
+    call gen.arg.load
+    store gen.arg.load in gen.op.c
 
     in gen.out join gen.out "\t" gen.op " " gen.op.a ", " gen.op.b ", " gen.op.c
     call gen.emit-vector-as-src
@@ -331,16 +331,16 @@ end sub-procedure
 # IN : c.Nodes
 sub-procedure gen.op.emit-cond
     store 0 in gen.arg
-    call gen.op.fetch
-    store gen.op.fetch in gen.op.a
+    call gen.arg.load
+    store gen.arg.load in gen.op.a
 
     store 1 in gen.arg
-    call gen.op.fetch
-    store gen.op.fetch in gen.op.t
+    call gen.arg.load
+    store gen.arg.load in gen.op.t
 
     store 2 in gen.arg
-    call gen.op.fetch
-    store gen.op.fetch in gen.op.b
+    call gen.arg.load
+    store gen.arg.load in gen.op.b
 
     store gen.op.syms:gen.op.t in gen.op
     if gen.op.t is equal to "!=" then
@@ -372,8 +372,8 @@ sub-procedure gen.storev.emit-ops
         join "@" and gen.vec.op.b in gen.vec.op.b
     end if
     store 0 in gen.arg
-    call gen.op.fetch
-    in gen.out join gen.out "\tSTOREV " gen.vec.op.a ", " gen.vec.op.b ", " gen.op.fetch
+    call gen.arg.load
+    in gen.out join gen.out "\tSTOREV " gen.vec.op.a ", " gen.vec.op.b ", " gen.arg.load
 end sub-procedure
 
 # IN: c.Nodes
@@ -407,8 +407,8 @@ sub-procedure generator.Run
                 if gen.arg is greater than 0 then
                     in gen.out join gen.out crlf
                 end if
-                call gen.op.fetch
-                in gen.out join gen.out "\tPRINT " gen.op.fetch
+                call gen.arg.load
+                in gen.out join gen.out "\tPRINT " gen.arg.load
                 incr gen.arg
             repeat
         else if "IF" is equal to gen.node.type then
@@ -590,11 +590,11 @@ sub-procedure generator.Run
         else if "SPLIT" is equal to gen.node.type then
             store "SPLIT" in gen.op
             store 0 in gen.arg
-            call gen.op.fetch
-            store gen.op.fetch in gen.op.a
+            call gen.arg.load
+            store gen.arg.load in gen.op.a
             store 1 in gen.arg
-            call gen.op.fetch
-            store gen.op.fetch in gen.op.b
+            call gen.arg.load
+            store gen.arg.load in gen.op.b
             store 2 in gen.arg
             call gen.arg.fetch
             if gen.arg.type is equal to $TYPES:"NMV" then
@@ -608,8 +608,8 @@ sub-procedure generator.Run
             in gen.out join gen.out "\t" gen.op " " gen.op.a ", " gen.op.b ", " gen.op.c
         else if "IN JOIN" is equal to gen.node.type then
             store 0 in gen.arg
-            call gen.op.fetch
-            store gen.op.fetch in gen.var
+            call gen.arg.load
+            store gen.arg.load in gen.var
             in gen.out join gen.out "\tSET @A, \"\""
             store 1 in gen.arg
             while 0 is less than 1 do
@@ -621,18 +621,18 @@ sub-procedure generator.Run
                 if gen.arg is greater than 0 then
                     in gen.out join gen.out crlf
                 end if
-                call gen.op.fetch
-                in gen.out join gen.out "\tJOIN @A, " gen.op.fetch ", @A"
+                call gen.arg.load
+                in gen.out join gen.out "\tJOIN @A, " gen.arg.load ", @A"
                 incr gen.arg
             repeat
                 in gen.out join gen.out crlf "\tSTORE " gen.var ", @A"
         else if "QUOTE" is equal to gen.node.type then
             store 0 in gen.arg
-            call gen.op.fetch
-            store gen.op.fetch in gen.var
+            call gen.arg.load
+            store gen.arg.load in gen.var
             incr gen.arg
-            call gen.op.fetch
-            store gen.op.fetch in gen.escape-quotes
+            call gen.arg.load
+            store gen.arg.load in gen.escape-quotes
             call gen.escape-quotes
             in gen.out join gen.out crlf "\tSTORE " gen.var ", \"" gen.escape-quotes "\""
         else
