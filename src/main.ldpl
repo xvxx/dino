@@ -64,7 +64,7 @@ sub-procedure main.lex
     load file argv:1 in c.Input
     call lexer.Run
     store 0 in main.i
-    display "\e[1mtokens:\e[0m\n  "
+    display "\e[1mtokens (\e[34m" c.Tokens* "\e[0;1m):\e[0m\n  "
     while main.i is less than c.Tokens* do
         display "\e[36m<\e[33m" c.Tokens:main.i "\e[36m>"
         if c.Tokens:main.i is equal to tokens.NEWLINE then
@@ -87,7 +87,7 @@ sub-procedure main.parse
     load file argv:1 in c.Input
     call lexer.Run
     call parser.Run
-    display "vars (" c.Vars* "):\n"
+    display "\e[1mvars (\e[34m" c.Vars* "\e[0;1m):\e[0m\n"
     store 0 in main.i
     while main.i is less than c.Vars* do
         display "  #<" $TYPENAMES:c.Vars:c.Vars:main.i ": " c.Vars:main.i ">" crlf
@@ -95,7 +95,7 @@ sub-procedure main.parse
     repeat
     display "\e[0m"
     store 0 in main.i
-    display "nodes (" c.Nodes* "):\n"
+    display "\e[1mnodes (\e[34m" c.Nodes* "\e[0;1m):\e[0m\n"
     while main.i is less than c.Nodes* do
         display "  " c.Nodes:main.i crlf
         store 0 in main.x
