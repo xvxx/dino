@@ -2,7 +2,7 @@
 # The parser validates syntax (kinda) and turns a text vector of
 # tokens into two vectors: code nodes and variables.
 #
-# The variables vector, c.Vars, is actually two vectors in one:
+# The variables vector, parser.vars, is actually two vectors in one:
 #   - Number subindexes give you the name of a variable.
 #   - Text subindexes give the variable's $type.
 #
@@ -57,7 +57,22 @@ parser.error.line      is number
 parser.token.vector?   is number
 parser.token.vector.i  is number
 
+parser.vars          is text vector    # Vars is two vectors: name -> type OR num -> name
+parser.vars*         is number         # var types:1=n,2=t,3=nv,4=tv
+
 PROCEDURE:
+# setup argv & argc
+store "ARGV" in parser.vars:$OFFSET.ARGV
+store 4 in parser.vars:"ARGV"
+store "ARGC" in parser.vars:$AC
+store 1 in parser.vars:"ARGC"
+
+# setup error codes
+store "ERRORCODE" in parser.vars:$E
+store 1 in parser.vars:"ERRORCODE"
+store "ERRORTEXT" in parser.vars:@E
+store 2 in parser.vars:"ERRORTEXT"
+
 # IN: parser.error
 sub-procedure parser.error
     store 1 in parser.error.line
@@ -152,7 +167,7 @@ sub-procedure parser.type.identify
     end if
 
     # variable
-    store c.Vars:parser.token in parser.n
+    store parser.vars:parser.token in parser.n
     if parser.n is not equal to 0 then
         store parser.n in parser.type
         return
@@ -162,7 +177,7 @@ sub-procedure parser.type.identify
     call parser.token.vector?
     if parser.token.vector? is equal to 1 then
         split parser.token by ":" in parser.type.parts
-        store c.Vars:parser.type.parts:0 in parser.type
+        store parser.vars:parser.type.parts:0 in parser.type
         store parser.type.parts:0 in c.Nodes:parser.key
         return
     end if
@@ -734,7 +749,7 @@ end sub-procedure
 
 #  IN: c.Tokens
 # OUT: c.Nodes
-#      c.Vars
+#      parser.vars
 sub-procedure parser.Run
     store 0 in parser.run.c
     store 0 in parser.mode
@@ -753,7 +768,7 @@ sub-procedure parser.Run
                 incr parser.run.c
                 continue
             end if
-            store parser.token in c.Vars:c.Vars*
+            store parser.token in parser.vars:parser.vars*
             store parser.token in parser.var
             call parser.advance
             if parser.token is not equal to "IS" then
@@ -765,9 +780,9 @@ sub-procedure parser.Run
             add parser.run.c and 1 in parser.next
             if c.Tokens:parser.next is equal to "VECTOR" then
                 if parser.t is equal to "NUMBER" then
-                    store 3 in c.Vars:parser.var
+                    store 3 in parser.vars:parser.var
                 else if parser.t is equal to "TEXT" then
-                    store 4 in c.Vars:parser.var
+                    store 4 in parser.vars:parser.var
                 else
                     in parser.error join "bad token: " parser.token
                     call parser.error
@@ -775,15 +790,15 @@ sub-procedure parser.Run
                 incr parser.run.c
             else
                 if parser.t is equal to "NUMBER" then
-                    store 1 in c.Vars:parser.var
+                    store 1 in parser.vars:parser.var
                 else if parser.t is equal to "TEXT" then
-                    store 2 in c.Vars:parser.var
+                    store 2 in parser.vars:parser.var
                 else
                     in parser.error join "bad token: " parser.token
                     call parser.error
                 end if
             end if
-            incr c.Vars*
+            incr parser.vars*
         else if parser.mode is equal to 2 then # PROC: section
             call parser.node.create
         else if parser.token is equal to tokens.NEWLINE then

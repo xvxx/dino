@@ -7,11 +7,9 @@ c.Input         is text           # LDPL source code
 c.Tokens        is text vector    # source code as tokens
 c.Tokens*       is number
 
-# Tokens -> {Parser} -> Nodes & Vars
+# Tokens -> {Parser} -> Nodes
 c.Nodes         is text vector    # code
 c.Nodes*        is number
-c.Vars          is text vector    # Vars is two vectors: name -> type OR num -> name
-c.Vars*         is number         # var types:1=n,2=t,3=nv,4=tv
 
 # Nodes -> {Generator} -> Assembly
 c.Asm           is text           # assembly source code
@@ -30,15 +28,3 @@ PROCEDURE:
 # TODO: like opcodes
 store ":NL:"    in tokens.NEWLINE
 store "CRLF"    in tokens.CRLF
-
-# setup argv & argc
-store "ARGV" in c.Vars:$OFFSET.ARGV
-store 4 in c.Vars:"ARGV"
-store "ARGC" in c.Vars:$AC
-store 1 in c.Vars:"ARGC"
-
-# setup error codes
-store "ERRORCODE" in c.Vars:$E
-store 1 in c.Vars:"ERRORCODE"
-store "ERRORTEXT" in c.Vars:@E
-store 2 in c.Vars:"ERRORTEXT"
