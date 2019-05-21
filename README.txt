@@ -106,7 +106,7 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 
 === TODO =============================================================
 
-* [ ] ARGV vector
+* [x] ARGV vector
 * [ ] IN - SOLVE
 * [ ] LDPL Test Battery:
    * [ ] basicar.ldpl
@@ -124,21 +124,24 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
       * [x] argv
    * [*] space mines (!)
    * [ ] lisp
-      * [ ] argv
-      * [ ] $ dino ambulisp.ldpl                                                                        master
+      * [x] argv
+      * [x] $ dino ambulisp.ldpl                                                                        master
             ASM ERROR (2540): bad token: ACCEOF
+      * [ ] won't run in regular ldpl?
    * [ ] gild
       * [ ] extensions/sockets
    * [ ] lartu's br*nfuck interpreter
       * [ ] argv
-   * [ ] lartu's flash cards thing
-      * [ ] parser bug (milliseconds)
-      * [ ] improve the error first! good opportunity.
+   * [ ] beKnowledge
+      * [x] parser bug (milliseconds)
+      * [ ] escape codes
+      * [ ] bug in JOIN phase
+* [ ] parser errors 2nd pass (only show broken line) (like rust's.)
 * [ ] docs 2nd pass
 * [ ] lex errors 2nd pass
-* [ ] parser errors 2nd pass
 * [ ] gen errors 2nd pass
 * [ ] asm errors 2nd pass
+* [ ] function docs 2nd pass
 * [ ] error on:
    * [ ] CALL EXTERNAL
    * [ ] EXTERNAL SUB-PROCEDURE
@@ -151,8 +154,6 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
    * [ ] multi-lines
    * [ ] asm mode
 * [ ] 2nd pass TODO:
-   * [ ] validate syntax in parser, eg no ELSE before ELSE IF
-   * [ ] much better error messages. like rust's.
    * [ ] rename generator methods (gen.arg.fetch vs gen.op.fetch confusing)
 
 === REFERENCE ========================================================
@@ -261,12 +262,12 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 |  30  | PRINT $x          | Print content of register $x
 |  31  | PRINL $x          | Print content of register $x and newline.
 |  32  | ACCEPT $x         | Accept user input into num or text var.
-|  32  | ACCEOF $x         | Accept user input until EOF.
-|  33  | EXEC @x @a        | Run @x and put output in @a.
-|  34  | EXECC @x $a       | Run @x and put exit code in $a.
-|  35  | READ @x @a        | Read file at path @x into @a. Sets $e, @e
-|  36  | WRITE @x @y       | Write @x to file at path @y.
-|  37  | APPEND @x @y      | Append @x to file at path @y.
+|  33  | ACCEOF $x         | Accept user input until EOF.
+|  34  | EXEC @x @a        | Run @x and put output in @a.
+|  35  | EXECC @x $a       | Run @x and put exit code in $a.
+|  36  | READ @x @a        | Read file at path @x into @a. Sets $e, @e
+|  37  | WRITE @x @y       | Write @x to file at path @y.
+|  38  | APPEND @x @y      | Append @x to file at path @y.
 | ==== | ================  | TEXT OPERATIONS ========================
 |  40  | LEN @x $a         | Get length of string in @x.
 |  41  | JOIN @x @y @a     | Concatenate text in registers into @a.
