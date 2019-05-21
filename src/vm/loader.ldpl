@@ -45,7 +45,7 @@ sub-procedure loader.Run
                 else if loader.char is equal to "r" then
                     join loader.token and "\r" in loader.token
                 else if loader.char is equal to "0" then
-                    join loader.token and "\0" in loader.token
+                    join loader.token and "\e" in loader.token
                 else if loader.char is equal to "\"" then
                     join loader.token and "\"" in loader.token
                 else if loader.char is equal to "\\" then
