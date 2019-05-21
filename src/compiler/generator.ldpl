@@ -449,6 +449,7 @@ sub-procedure generator.Run
             # emit label (end_if_001:)
             in gen.out join gen.out "end_if_" gen.if ":" crlf
             in gen.out join gen.out "end_else_" gen.else ":"
+            decr gen.else
         else if "WHILE" is equal to gen.node.type then
             incr gen.whiles
             store gen.whiles in gen.while-stack:gen.while-stack*
