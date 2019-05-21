@@ -35,7 +35,6 @@ sub-procedure loader.Run
         if loader.string? is equal to 1 then
             add 1 and loader.i in loader.i
             if loader.char is equal to "\\" then
-                get character at loader.i from loader.input in loader.char
                 store loader.chars:loader.i in loader.char
                 if loader.char is equal to "n" then
                     join loader.token and "\n" in loader.token
@@ -47,10 +46,10 @@ sub-procedure loader.Run
                     join loader.token and "\r" in loader.token
                 else if loader.char is equal to "0" then
                     add loader.i and 1 in loader.x
-                    get character at loader.x from loader.input in loader.char
+                    store loader.chars:loader.x in loader.char
                     if loader.char is equal to "3" then
                         incr loader.x
-                        get character at loader.x from loader.input in loader.char
+                        store loader.chars:loader.x in loader.char
                         if loader.char is equal to "3" then
                             add loader.i and 2 in loader.i
                             join loader.token and "\e" in loader.token
