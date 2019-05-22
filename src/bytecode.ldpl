@@ -327,6 +327,12 @@ incr $opnum
 
 store "EXEC" in $opname
 store $opnum in $CODES:$opname
+store 1 in $SIZES:$CODES:$opname
+store $opname in $NAMES:$CODES:$opname
+incr $opnum
+
+store "EXECO" in $opname
+store $opnum in $CODES:$opname
 store 2 in $SIZES:$CODES:$opname
 store $opname in $NAMES:$CODES:$opname
 incr $opnum

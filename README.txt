@@ -378,11 +378,12 @@ Those are the main "under the hood" tools.
 |  31  | PRINL $x          | Print content of register $x and newline.
 |  32  | ACCEPT $x         | Accept user input into num or text var.
 |  33  | ACCEOF $x         | Accept user input until EOF.
-|  34  | EXEC @x @a        | Run @x and put output in @a.
-|  35  | EXECC @x $a       | Run @x and put exit code in $a.
-|  36  | READ @x @a        | Read file at path @x into @a. Sets $e, @e
-|  37  | WRITE @x @y       | Write @x to file at path @y.
-|  38  | APPEND @x @y      | Append @x to file at path @y.
+|  34  | EXEC @x           | Run @x.
+|  35  | EXECO @x @a       | Run @x and put output in @a.
+|  36  | EXECC @x $a       | Run @x and put exit code in $a.
+|  37  | READ @x @a        | Read file at path @x into @a. Sets $e, @e
+|  38  | WRITE @x @y       | Write @x to file at path @y.
+|  39  | APPEND @x @y      | Append @x to file at path @y.
 | ==== | ================  | TEXT OPERATIONS ========================
 |  40  | LEN @x $a         | Get length of string in @x.
 |  41  | JOIN @x @y @a     | Concatenate text in registers into @a.

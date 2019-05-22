@@ -372,6 +372,12 @@ sub-procedure cpu.Run
         else if $CODES:"EXEC" is equal to cpu.code then
             incr cpu.pc
             store vm.Text:vm.Code:cpu.pc in cpu.t
+            execute cpu.t
+            store ERRORCODE in vm.RAM:$E
+            store ERRORTEXT in vm.Text:@E
+        else if $CODES:"EXECO" is equal to cpu.code then
+            incr cpu.pc
+            store vm.Text:vm.Code:cpu.pc in cpu.t
             incr cpu.pc
             execute cpu.t and store output in vm.Text:vm.Code:cpu.pc
             store ERRORCODE in vm.RAM:$E

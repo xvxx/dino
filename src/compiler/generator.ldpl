@@ -250,8 +250,8 @@ sub-procedure gen.op.emit
     call gen.emit-vector-as-src
 end sub-procedure
 
-# emit an instruction with 2 args, like EXEC
-# IN : gen.op    # should be something like EXEC
+# emit an instruction with 2 args, like EXECC
+# IN : gen.op    # should be something like EXECC
 sub-procedure gen.op.emit-2
     store 0 in gen.arg
     call gen.arg.preload
@@ -559,12 +559,11 @@ sub-procedure generator.Run
         else if "EXECUTE" is equal to gen.node.type then
             store "EXEC" in gen.op
             call gen.op.emit
-            in gen.out join gen.out ", @a"
         else if "EXEC CODE" is equal to gen.node.type then
             store "EXECC" in gen.op
             call gen.op.emit-2
         else if "EXEC OUT" is equal to gen.node.type then
-            store "EXEC" in gen.op
+            store "EXECO" in gen.op
             call gen.op.emit-2
         else if "LOAD" is equal to gen.node.type then
             store "READ" in gen.op
