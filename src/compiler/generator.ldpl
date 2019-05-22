@@ -29,6 +29,7 @@ gen.subs           is text  # sub-procedure definitions
 gen.sub?           is number
 gen.var            is text
 gen.type           is number
+gen.idx            is text
 
 # generator.Run
 gen.node is number
@@ -644,7 +645,19 @@ sub-procedure generator.Run
                 in gen.out join gen.out "\tJOIN @A, " gen.arg.varname ", @A"
                 incr gen.arg
             repeat
-            in gen.out join gen.out crlf "\tSTORE " gen.var ", @A"
+            if gen.type is equal to $TYPES:"TXV" then
+                store 0 in gen.arg
+                in gen.out join gen.out crlf
+                store "STOREV" in gen.vec.op
+                store gen.var in gen.vec.op.a
+                store "@A" in gen.vec.op.c
+                call gen.emit-vector-op
+            else if gen.type is equal to $TYPES:"NMV" then
+                store "can't join into number vector" in gen.error
+                call gen.error
+            else
+                in gen.out join gen.out crlf "\tSTORE " gen.var ", @A"
+            end if
         else if "QUOTE" is equal to gen.node.type then
             store 0 in gen.arg
             call gen.arg.preload
