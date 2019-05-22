@@ -20,6 +20,8 @@
       }
       a {
          color: black;
+         text-decoration: none;
+         font-weight: heavy;
       }
    </style>
 </head>
