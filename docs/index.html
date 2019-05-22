@@ -21,7 +21,7 @@
       a {
          color: black;
          text-decoration: none;
-         font-weight: heavy;
+         font-weight: bold;
       }
    </style>
 </head>
