@@ -28,6 +28,7 @@ gen.out            is text
 gen.subs           is text  # sub-procedure definitions
 gen.sub?           is number
 gen.var            is text
+gen.type           is number
 
 # generator.Run
 gen.node is number
@@ -44,9 +45,10 @@ gen.nvar.i is number
 gen.tvar is text
 gen.tvar.i is number
 
-# gen.arg.load
+# gen.arg.preload
 gen.op is text   # operation, like ADD
-gen.arg.load is text
+gen.arg.varname is text
+gen.arg.preload.no-set? is number
 gen.op.a is text  # tmpvars
 gen.op.b is text
 gen.op.c is text
@@ -185,55 +187,65 @@ sub-procedure gen.arg.fetch
     store c.Nodes:gen.key in gen.arg.type
 end sub-procedure
 
-# Call gen.arg.fetch and then puts ASM var name into gen.arg.load.
-# Emits a SET first if num literal or vector.
+# Call gen.arg.fetch and puts asm varname into gen.arg.varname.
+# Emits a SET first if num literal or vector unless no-set? is 1
 #  IN: gen.arg
-# OUT: gen.arg.load
-sub-procedure gen.arg.load
+#      gen.arg.preload.no-set?
+# OUT: gen.arg.varname
+sub-procedure gen.arg.preload
     call gen.arg.fetch
     if gen.arg.type is equal to $TYPES:"NML" then
         call gen.nvar
         in gen.out join gen.out "\tSET " gen.nvar ", " gen.arg.value crlf
-        store gen.nvar in gen.arg.load
+        store gen.nvar in gen.arg.varname
     else if gen.arg.type is equal to $TYPES:"NMV" then
-        store "PUTV" in gen.vec.op
-        join "%" and gen.arg.value in gen.vec.op.a
-        call gen.nvar
-        store gen.nvar in gen.vec.op.c
-        call gen.emit-vector-op
-        join gen.out and crlf in gen.out
-        store gen.vec.op.c in gen.arg.load
+        if gen.arg.preload.no-set? is equal to 0 then
+            store "PUTV" in gen.vec.op
+            join "%" and gen.arg.value in gen.vec.op.a
+            call gen.nvar
+            store gen.nvar in gen.vec.op.c
+            call gen.emit-vector-op
+            join gen.out and crlf in gen.out
+            store gen.vec.op.c in gen.arg.varname
+        else
+            join "%" and gen.arg.value in gen.arg.varname
+        end if
     else if gen.arg.type is equal to $TYPES:"TXV" then
-        store "PUTV" in gen.vec.op
-        join "@" and gen.arg.value in gen.vec.op.a
-        call gen.tvar
-        store gen.tvar in gen.vec.op.c
-        call gen.emit-vector-op
-        join gen.out and crlf in gen.out
-        store gen.vec.op.c in gen.arg.load
+        if gen.arg.preload.no-set? is equal to 0 then
+            store "PUTV" in gen.vec.op
+            join "@" and gen.arg.value in gen.vec.op.a
+            call gen.tvar
+            store gen.tvar in gen.vec.op.c
+            call gen.emit-vector-op
+            join gen.out and crlf in gen.out
+            store gen.vec.op.c in gen.arg.varname
+        else
+            join "@" and gen.arg.value in gen.arg.varname
+        end if
     else if gen.arg.type is equal to $TYPES:"TXL" then
-        store gen.arg.value in gen.arg.load
+        store gen.arg.value in gen.arg.varname
     else if gen.arg.type is equal to $TYPES:"TXT" then
-        join "@" and gen.arg.value in gen.arg.load
+        join "@" and gen.arg.value in gen.arg.varname
     else if gen.arg.type is equal to $TYPES:"NUM" then
-        join "%" and gen.arg.value in gen.arg.load
+        join "%" and gen.arg.value in gen.arg.varname
     else if gen.arg.type is equal to $TYPES:"LBL" then
-        store gen.arg.value in gen.arg.load
+        store gen.arg.value in gen.arg.varname
     else if gen.arg.type is equal to $TYPES:"SYM" then
-        store gen.arg.value in gen.arg.load
+        store gen.arg.value in gen.arg.varname
     else
-        join "gen.arg.load: bad arg type: " and gen.arg.type in gen.error
+        join "gen.arg.preload: bad arg type: " and gen.arg.type in gen.error
         call gen.error
     end if
+    store 0 in gen.arg.preload.no-set?
 end sub-procedure
 
 # emit an instruction with 1 arg, like CALL
 # IN : gen.op    # should be something like CALL or GOTO
 sub-procedure gen.op.emit
     store 0 in gen.arg
-    call gen.arg.load
-    in gen.out join gen.out "\t" gen.op " " gen.arg.load
-    store gen.arg.load in gen.op.c
+    call gen.arg.preload
+    in gen.out join gen.out "\t" gen.op " " gen.arg.varname
+    store gen.arg.varname in gen.op.c
     call gen.emit-vector-as-src
 end sub-procedure
 
@@ -241,12 +253,12 @@ end sub-procedure
 # IN : gen.op    # should be something like EXEC
 sub-procedure gen.op.emit-2
     store 0 in gen.arg
-    call gen.arg.load
-    store gen.arg.load in gen.op.a
+    call gen.arg.preload
+    store gen.arg.varname in gen.op.a
 
     store 1 in gen.arg
-    call gen.arg.load
-    store gen.arg.load in gen.op.b
+    call gen.arg.preload
+    store gen.arg.varname in gen.op.b
 
     in gen.out join gen.out "\t" gen.op " " gen.op.a ", " gen.op.b
     store gen.op.b in gen.op.c
@@ -257,12 +269,12 @@ end sub-procedure
 # IN : gen.op
 sub-procedure gen.op.emit-2-flipped
     store 1 in gen.arg
-    call gen.arg.load
-    store gen.arg.load in gen.op.a
+    call gen.arg.preload
+    store gen.arg.varname in gen.op.a
 
     store 0 in gen.arg
-    call gen.arg.load
-    store gen.arg.load in gen.op.b
+    call gen.arg.preload
+    store gen.arg.varname in gen.op.b
 
     in gen.out join gen.out "\t" gen.op " " gen.op.a ", " gen.op.b
 end sub-procedure
@@ -271,16 +283,16 @@ end sub-procedure
 # IN : gen.op    # should be something like GETC
 sub-procedure gen.op.emit-3
     store 0 in gen.arg
-    call gen.arg.load
-    store gen.arg.load in gen.op.a
+    call gen.arg.preload
+    store gen.arg.varname in gen.op.a
 
     store 1 in gen.arg
-    call gen.arg.load
-    store gen.arg.load in gen.op.b
+    call gen.arg.preload
+    store gen.arg.varname in gen.op.b
 
     store 2 in gen.arg
-    call gen.arg.load
-    store gen.arg.load in gen.op.c
+    call gen.arg.preload
+    store gen.arg.varname in gen.op.c
 
     in gen.out join gen.out "\t" gen.op " " gen.op.a ", " gen.op.b ", " gen.op.c
     call gen.emit-vector-as-src
@@ -290,20 +302,20 @@ end sub-procedure
 # IN : gen.op
 sub-procedure gen.op.emit-4
     store 0 in gen.arg
-    call gen.arg.load
-    store gen.arg.load in gen.op.a
+    call gen.arg.preload
+    store gen.arg.varname in gen.op.a
 
     store 1 in gen.arg
-    call gen.arg.load
-    store gen.arg.load in gen.op.b
+    call gen.arg.preload
+    store gen.arg.varname in gen.op.b
 
     store 2 in gen.arg
-    call gen.arg.load
-    store gen.arg.load in gen.op.c
+    call gen.arg.preload
+    store gen.arg.varname in gen.op.c
 
     store 3 in gen.arg
-    call gen.arg.load
-    store gen.arg.load in gen.op.d
+    call gen.arg.preload
+    store gen.arg.varname in gen.op.d
 
     in gen.out join gen.out "\t" gen.op " " gen.op.a ", " gen.op.b ", " gen.op.c ", " gen.op.d
     store gen.op.d in gen.op.c
@@ -314,17 +326,17 @@ end sub-procedure
 # IN : gen.op    # should be something like ADD or SUB
 sub-procedure gen.op.emit-math-2
     store 0 in gen.arg
-    call gen.arg.load
-    store gen.arg.load in gen.op.a
+    call gen.arg.preload
+    store gen.arg.varname in gen.op.a
 
     store 1 in gen.arg
-    call gen.arg.load
-    store gen.arg.load in gen.op.b
+    call gen.arg.preload
+    store gen.arg.varname in gen.op.b
 
     store 2 in gen.arg
     call gen.arg.fetch
-    call gen.arg.load
-    store gen.arg.load in gen.op.c
+    call gen.arg.preload
+    store gen.arg.varname in gen.op.c
 
     in gen.out join gen.out "\t" gen.op " " gen.op.a ", " gen.op.b ", " gen.op.c
     call gen.emit-vector-as-src
@@ -335,16 +347,16 @@ end sub-procedure
 # IN : c.Nodes
 sub-procedure gen.op.emit-cond
     store 0 in gen.arg
-    call gen.arg.load
-    store gen.arg.load in gen.op.a
+    call gen.arg.preload
+    store gen.arg.varname in gen.op.a
 
     store 1 in gen.arg
-    call gen.arg.load
-    store gen.arg.load in gen.op.t
+    call gen.arg.preload
+    store gen.arg.varname in gen.op.t
 
     store 2 in gen.arg
-    call gen.arg.load
-    store gen.arg.load in gen.op.b
+    call gen.arg.preload
+    store gen.arg.varname in gen.op.b
 
     store gen.op.syms:gen.op.t in gen.op
     if gen.op.t is equal to "!=" then
@@ -376,8 +388,8 @@ sub-procedure gen.storev.emit-ops
         join "@" and gen.vec.op.b in gen.vec.op.b
     end if
     store 0 in gen.arg
-    call gen.arg.load
-    in gen.out join gen.out "\tSTOREV " gen.vec.op.a ", " gen.vec.op.b ", " gen.arg.load
+    call gen.arg.preload
+    in gen.out join gen.out "\tSTOREV " gen.vec.op.a ", " gen.vec.op.b ", " gen.arg.varname
 end sub-procedure
 
 # IN: c.Nodes
@@ -411,8 +423,8 @@ sub-procedure generator.Run
                 if gen.arg is greater than 0 then
                     in gen.out join gen.out crlf
                 end if
-                call gen.arg.load
-                in gen.out join gen.out "\tPRINT " gen.arg.load
+                call gen.arg.preload
+                in gen.out join gen.out "\tPRINT " gen.arg.varname
                 incr gen.arg
             repeat
         else if "IF" is equal to gen.node.type then
@@ -595,11 +607,11 @@ sub-procedure generator.Run
         else if "SPLIT" is equal to gen.node.type then
             store "SPLIT" in gen.op
             store 0 in gen.arg
-            call gen.arg.load
-            store gen.arg.load in gen.op.a
+            call gen.arg.preload
+            store gen.arg.varname in gen.op.a
             store 1 in gen.arg
-            call gen.arg.load
-            store gen.arg.load in gen.op.b
+            call gen.arg.preload
+            store gen.arg.varname in gen.op.b
             store 2 in gen.arg
             call gen.arg.fetch
             if gen.arg.type is equal to $TYPES:"NMV" then
@@ -613,8 +625,10 @@ sub-procedure generator.Run
             in gen.out join gen.out "\t" gen.op " " gen.op.a ", " gen.op.b ", " gen.op.c
         else if "IN JOIN" is equal to gen.node.type then
             store 0 in gen.arg
-            call gen.arg.load
-            store gen.arg.load in gen.var
+            store 1 in gen.arg.preload.no-set?
+            call gen.arg.preload
+            store gen.arg.varname in gen.var
+            store gen.arg.type in gen.type
             in gen.out join gen.out "\tSET @A, \"\""
             store 1 in gen.arg
             while 0 is less than 1 do
@@ -626,18 +640,18 @@ sub-procedure generator.Run
                 if gen.arg is greater than 0 then
                     in gen.out join gen.out crlf
                 end if
-                call gen.arg.load
-                in gen.out join gen.out "\tJOIN @A, " gen.arg.load ", @A"
+                call gen.arg.preload
+                in gen.out join gen.out "\tJOIN @A, " gen.arg.varname ", @A"
                 incr gen.arg
             repeat
-                in gen.out join gen.out crlf "\tSTORE " gen.var ", @A"
+            in gen.out join gen.out crlf "\tSTORE " gen.var ", @A"
         else if "QUOTE" is equal to gen.node.type then
             store 0 in gen.arg
-            call gen.arg.load
-            store gen.arg.load in gen.var
+            call gen.arg.preload
+            store gen.arg.varname in gen.var
             incr gen.arg
-            call gen.arg.load
-            store gen.arg.load in gen.escape-quotes
+            call gen.arg.preload
+            store gen.arg.varname in gen.escape-quotes
             call gen.escape-quotes
             in gen.out join gen.out crlf "\tSTORE " gen.var ", \"" gen.escape-quotes "\""
         else
