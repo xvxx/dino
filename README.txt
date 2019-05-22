@@ -16,8 +16,50 @@ Dino is an interpreter for the LDPL programming language, written in
 LDPL. Because LDPL is a compiled language, Dino's goal is to provide a
 lightweight, scriptable version of the language that can be used to
 quickly prototype ideas, perform system tasks, or compose programs in
-an interactive fashion using a REPL. Dino can also be used to run LDPL
-programs on systems which lack a C++11 compiler.
+an interactive fashion using a REPL. Dino can also be used to run basic
+LDPL programs on systems which lack a C++11 compiler.
+
+=== EXAMPLES =========================================================
+
+HELLO:
+
+    $ cat hi.ldpl
+    PROCEDURE:
+    display "Hey pardner" crlf
+    $ dino run hi.ldpl
+    Hey pardner
+
+LDPL-SPARK:
+
+    $ git clone https://github.com/photogabble/ldpl-spark
+    $ dino run ldpl-spark/spark.ldpl 9 13 5 17 1
+    ▄▆▂█▁
+    $ dino run ldpl-spark/spark.ldpl 0 30 55 80 33 150
+    ▁▂▃▄▂█
+
+LDPL-SPACE-MINES:
+
+    $ git clone https://github.com/photogabble/ldpl-space-mines
+    $ dino run ldpl-space-mines/spacemines.ldpl
+    ==================================================
+    YEAR 1:
+
+    There are 55 people in the colony...
+
+LBI:
+
+    $ git clone https://github.com/Lartu/LBI
+    $ dino run LBI/src/LBI.ldpl LBI/examples/fib.b
+    dino run ldpl/examples/brainfuck.ldpl LBI/examples/fib.b
+    0
+    1
+    1
+    2...
+    $ dino run ldpl/examples/brainfuck.ldpl LBI/examples/squares.b
+    0
+    1
+    4
+    9...
 
 === GETTING STARTED ==================================================
 
@@ -36,39 +78,22 @@ And build it:
    make dino
 
 You should see a "File(s) compiled successfully." message if
-everything worked.
+everything worked. You now have a `dino` command line program sitting
+in the current directory. Run it directly, or add it to your $PATH and
+enjoy the fruits of this installation process:
 
-For extra protection, run the official ldpltests:
+   ./dino -h
+
+For added security, run Dino against the official LDPL Test Battery:
 
    make test
 
-Once again, you should see a "success" message if everything is
-working properly. If not, kindly report an issue at this URL:
+You should see another "success" message if everything is working
+properly. If not, kindly report an issue at this address:
 
    https://github.com/dvkt/dino/issues
 
-Now then, we can start to properly explore Dino:
-
-   $ dino -h
-
-   Usage: $ dino [command] [file]
-
-   Commands:
-      run     execute .ldpl, .dino, or .dinocode file
-      asm     compile .ldpl file to .dino assembly
-      bytes   compile .ldpl or .dino file to .dinocode bytecode
-      dis     disassemble .dinocode file to .dino assembly
-      lex     lex .ldpl file and print tokens
-      parse   parse .ldpl file and print nodes
-      help    print help screen
-      version print version number
-
-   Examples:
-      $ dino run spark.ldpl 1 3 7 12 22 31  # run file with args
-      $ dino bytes gild.ldpl                # print bytecode
-      $ dino asm spacemines.ldpl            # print assembly code
-
-=== OVERVIEW =========================================================
+=== HOW IT WORKS =====================================================
 
 Internally, Dino is organized into three parts: compiler, virtual
 machine, and tooling, with the `dino` command line program serving as
@@ -87,71 +112,116 @@ support languages other than LDPL in the future, but for now it's
 focused on supporting the full LDPL 3.0.5 specification on Linux,
 MacOS, Windows, WebAssembly, and Raspberry Pi.
 
-=== ISSUES ===========================================================
+=== BASIC USAGE =====================================================
 
-1. This first iteration plays fast and loose with the "byte" in
-   bytecode. Once LDPL supports bitwise operations we will revisit the
-   core design so it's more bit-tastic. When we say "byte" in this
-   document, assume we mean "word".
+Let's look at a simple LDPL program:
 
-2. We are not considering performance at this time, but rather seeking
-   to educate ourselves by creating this prehistoric vm.
+    $ cat math.ldpl
+    DATA:
+    x is number
+    y is number
+    z is number
+    PROCEDURE:
+    store 1 in x
+    store 2 in y
+    add x and y in z
+    display x "+" y "=" z crlf
 
-3. The bytecode format, version number, and set of CPU instructions
-   are going to change a lot while this is still in development.
+First we'll run it using LDPL 3.0.5 as a sanity check:
 
-4. Extensions are not and probably won't be supported.
+    $ ldpl math.ldpl
+    LDPL: Compiling...
+    * File(s) compiled successfully.
+    * Saved as math-bin
+    $ ./math-bin
+    1+2=3
 
-5. Nested vectors don't work yet, ex vec1:vec2:2
+Okay, that seems right. Next we'll run it using Dino:
 
-=== TODO =============================================================
+    $ dino run math.ldpl
+    1+2=3
 
-* [ ] IN - SOLVE
-* [ ] LDPL Test Battery:
-   * [ ] basicar.ldpl
-      * [ ] SOLVE
-   * [ ] basictx.ldpl
-      * [x] IN - JOIN
-      * [x] STORE QUOTE
-      * [x] text vector
-      * [x] escape codes
-      * [ ] error code
-* [ ] LDPL Examples:
-   * [ ] brainfuck.ldpl
-      * [ ] argv
-* [ ] LDPL Programs:
-   * [ ] lisp
-      * [x] argv
-      * [x] $ dino ambulisp.ldpl                                                                        master
-            ASM ERROR (2540): bad token: ACCEOF
-      * [ ] won't run in regular ldpl?
-   * [ ] gild
-      * [ ] extensions/sockets
-   * [ ] lartu's br*nfuck interpreter
-      * [ ] argv
-   * [ ] beKnowledge
-      * [x] parser bug (milliseconds)
-      * [x] escape codes
-      * [ ] bug in JOIN phase
-* [ ] parser errors 2nd pass (only show broken line) (like rust's.)
-* [ ] docs 2nd pass
-* [ ] lex errors 2nd pass
-* [ ] gen errors 2nd pass
-* [ ] asm errors 2nd pass
-* [ ] function docs 2nd pass
-* [ ] error on:
-   * [ ] CALL EXTERNAL
-   * [ ] EXTERNAL SUB-PROCEDURE
-   * [ ] var is EXTERNAL data types
-* [ ] REPL
-   * [ ] >> input
-   * [ ] == output
-   * [ ] readline
-   * [ ] history
-   * [ ] multi-lines
-   * [ ] asm mode
+Great! We can stop there. But if you want to look under the hood a
+bit, you can see the tokens produced by Dino's lexer for this file:
 
-=== SUMMARY ==========================================================
+    $ dino lex math.ldpl
+    tokens (41):
+    <DATA:>, <:NL:>
+    <X>, <IS>, <NUMBER>, <:NL:>
+    <Y>, <IS>, <NUMBER>, <:NL:>
+    <Z>, <IS>, <NUMBER>, <:NL:>
+    <PROCEDURE:>, <:NL:>
+    <STORE>, <1>, <IN>, <X>, <:NL:>
+    <STORE>, <2>, <IN>, <Y>, <:NL:>
+    <ADD>, <X>, <AND>, <Y>, <IN>, <Z>, <:NL:>
+    <DISPLAY>, <X>, <"+">, <Y>, <"=">, <Z>, <"\r\n">, <:NL:>
+
+Pretty fun. The next step is the parser, so let's see the parse tree:
+
+    $ dino parse math.ldpl
+    vars (3):
+    #<NUM: X>
+    #<NUM: Y>
+    #<NUM: Z>
+    nodes (4):
+    STORE
+        - a0(NML): 1
+        - a1(NUM): X
+    STORE
+        - a0(NML): 2
+        - a1(NUM): Y
+    ADD
+        - a0(NUM): X
+        - a1(NUM): Y
+        - a2(NUM): Z
+    DISPLAY
+        - a0(NUM): X
+        - a1(TXL): "+"
+        - a2(NUM): Y
+        - a3(TXL): "="
+        - a4(NUM): Z
+        - a5(TXL): "\r\n"
+
+These nodes are used by the generator to emit dinoasm:
+
+    $ dino asm math.ldpl
+        SET %var0, 1
+        STORE %X, %var0
+        SET %var1, 2
+        STORE %Y, %var1
+        ADD %X, %Y, %Z
+        PRINT %X
+        PRINT "+"
+        PRINT %Y
+        PRINT "="
+        PRINT %Z
+        PRINT "\r\n"
+        EXIT
+
+If we want, we can save this output to a .dinoasm file and run it:
+
+    $ dino run math.dinoasm                                                                            master
+    1+2=3
+
+This can be helpful in debugging or development of Dino itself.
+
+Finally, the bytecode produced by the assembler:
+
+    $ dino bytes math.ldpl
+    76 68 80 76 2 09 17 01 08 18 17 09 19 02 08 20 19 20 18 20 21 31
+    18 31 16384 31 20 31 16385 31 21 31 16386 06 "+" "=" "\r\n"
+
+We can also save this output to a .dinocode file and run it directly.
+Or, you know, just write code this way:
+
+    $ dino bytes math.ldpl | sed 's/17 01/17 13/g' > math.dinocode
+    $ dino run math.dinocode
+    13+2=15
+
+There's also `dino dis` which turns dinocode back into dinoasm, kinda.
+But those are the main "under the hood" tools.
+
+=== TECHNICAL SPECIFICATION ==========================================
 
 * "Words" are LDPL numbers.
 * Instructions are 1-4 words: opcode and then operands.
@@ -162,6 +232,32 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 * One address space for number registers, number variables, text
   registers, text variables, and text literals.
 * Parallel address space for number vectors and text vectors.
+
+=== ISSUES ===========================================================
+
+1. This first iteration plays fast and loose with the "byte" in
+   bytecode. The .dinocode files aren't really binary and we're not
+   doing any bit shifting or funny stuff like that. Once LDPL supports
+   bitwise operations we'll revisit the core design so it's more bit-
+   tastic. For now, we're just using numbers.
+
+2. Dino is super slow, but that's okay. Performance may never be a
+   priority for our prehistoric VM.
+
+3. The bytecode format, version number, and set of CPU instructions
+   are going to change a lot while this is still in development.
+
+4. Extensions are not, and probably won't ever be, supported.
+
+5. Nothing is optimized at all, not even number constants. There are
+   way too many instructions generated in most cases.
+
+6. There is hardly any error checking yet, so you might end up
+   generating bytecode that can't be run without knowing why.
+
+7. Nested vectors don't work yet, like: `vec1:vec2:2`
+
+8. The `IN - SOLVE` instruction doesn't work yet.
 
 === REFERENCE ========================================================
 
@@ -287,3 +383,33 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 |  48  | SPLIT @x @y @a    | Split @x by @y and put in vector @a
 |  49  | REPLCE @x @y @z @a| Replace @x from @y with @z in @a
 |  4A  | TRIM @x @a        | Strip L/R whitespace from @x, put in @a.
+
+=== TODO =============================================================
+
+* [ ] IN - SOLVE
+* [ ] LDPL Test Battery:
+   * [ ] basicar.ldpl
+      * [ ] SOLVE
+* [ ] LDPL Programs:
+   * [ ] beKnowledge
+      * [x] parser bug (milliseconds)
+      * [x] escape codes
+      * [ ] bug in JOIN phase
+      * [ ] bug in clear
+* [ ] parser errors 2nd pass (only show broken line) (like rust's.)
+* [ ] docs 2nd pass
+* [ ] lex errors 2nd pass
+* [ ] gen errors 2nd pass
+* [ ] asm errors 2nd pass
+* [ ] function docs 2nd pass
+* [ ] error on:
+   * [ ] CALL EXTERNAL
+   * [ ] EXTERNAL SUB-PROCEDURE
+   * [ ] var is EXTERNAL data types
+* [ ] REPL
+   * [ ] >> input
+   * [ ] == output
+   * [ ] readline
+   * [ ] history
+   * [ ] multi-lines
+   * [ ] asm mode
