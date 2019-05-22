@@ -20,6 +20,7 @@ PROCEDURE:
 # OUT: dis.text
 sub-procedure dis.text-filter
     store 0 in dis.text.i
+    store "" in dis.text.t
     store length of dis.text in dis.text.l
     while dis.text.i is less than dis.text.l do
         get character at dis.text.i from dis.text in dis.text.char
