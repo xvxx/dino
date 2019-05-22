@@ -269,7 +269,10 @@ Those are the main "under the hood" tools.
 
 7. Nested vectors don't work yet, like: `vec1:vec2:2`
 
-8. The `IN - SOLVE` instruction doesn't work yet.
+8. Due to the way vectors are stored internally, both "1" and 1 are
+   treated as the same index. This is a bug.
+
+9. The `IN - SOLVE` instruction doesn't work yet.
 
 === REFERENCE ========================================================
 
@@ -405,13 +408,9 @@ Those are the main "under the hood" tools.
       * [ ] SOLVE
 * [ ] LDPL Programs:
    * [ ] beKnowledge
-      * [x] parser bug (milliseconds)
-      * [x] escape codes
-      * [ ] bug in JOIN phase
-      * [ ] bug in clear
+      * [ ] bug in displaying words
 * [ ] parser errors 2nd pass (only show broken line) (like rust's.)
 * [ ] docs 2nd pass
-* [ ] lex errors 2nd pass
 * [ ] gen errors 2nd pass
 * [ ] asm errors 2nd pass
 * [ ] function docs 2nd pass
