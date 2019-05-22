@@ -50,16 +50,28 @@ LBI:
 
     $ git clone https://github.com/Lartu/LBI
     $ dino run LBI/src/LBI.ldpl LBI/examples/fib.b
-    dino run ldpl/examples/brainfuck.ldpl LBI/examples/fib.b
+    dino run LBI/src/LBI.ldpl LBI/examples/fib.b
     0
     1
     1
     2...
-    $ dino run ldpl/examples/brainfuck.ldpl LBI/examples/squares.b
+    $ dino run LBI/src/LBI.ldpl LBI/examples/squares.b
     0
     1
     4
     9...
+
+LDPL Examples:
+
+    $ git clone https://github.com/lartu/ldpl
+    $ dino run ldpl/examples/explode.ldpl
+    Enter a sentence: That's all folks!
+    That's
+    all
+    folks!
+    $ dino run ldpl/examples/sqrt.ldpl
+    Enter a number: 50
+    sqrt(50) = 7.07106781186548
 
 === GETTING STARTED ==================================================
 
