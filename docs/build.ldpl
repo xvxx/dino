@@ -27,7 +27,12 @@ call escape-html
 sub-procedure replace-link-in-token
     get index of "https://" from token in x
     if x is equal to 0 then
-        in token join "<a href=\"" token "\">" token "</a>"
+        # in token join "<a href=\"" token "\">" token "</a>"
+        store token in link
+        join "<a href=\"" and link in token
+        join token and "\">" in token
+        join token and link in token
+        join token and "</a>" in token
     end if
 end sub-procedure
 
@@ -37,11 +42,14 @@ sub-procedure replace-links
     while i is less than len do
         store chars:i in char
         if char is equal to " " then
-            in newfile join newfile token char
+            call replace-link-in-token
+            join token and char in token
+            join newfile and token in newfile
             store "" in token
         else if char is equal to "\n" then
             call replace-link-in-token
-            in newfile join newfile token char
+            join token and char in token
+            join newfile and token in newfile
             store "" in token
         else if char is equal to "\r" then
             # ignore
