@@ -660,7 +660,6 @@ sub-procedure parser.node.create
                 end if
             repeat
         else
-            call parser.node.set0
             store "IN JOIN" in c.Nodes:c.Nodes*
             store "JOIN" in parser.expect
             call parser.expect
