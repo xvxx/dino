@@ -139,7 +139,7 @@ support languages other than LDPL in the future, but for now it's
 focused on supporting the full LDPL 3.0.5 specification on Linux,
 MacOS, Windows, WebAssembly, and Raspberry Pi.
 
-=== BASIC USAGE =====================================================
+=== BASIC USAGE ======================================================
 
 Let's look at a simple LDPL program:
 
@@ -314,7 +314,7 @@ Those are the main "under the hood" tools.
 
 # ----- MEMORY ADDRESSES ---------------------------------------------
 | 1ST  | LAST | TYPE | DESCRIPTION
-+------+------+---------------------------------------------------
++------+------+-------------------------------------------------------
 | 0000 | 000F | NUM  | Registers ($x, $y, $a, $pc)
 | 0010 | 2FFF | NUM  | Variables (%count, %item-size)
 | 3000 | 300F | TEXT | Registers (@A, @X, @E)
@@ -414,7 +414,7 @@ Those are the main "under the hood" tools.
 |  37  | READ @x @a        | Read file at path @x into @a. Sets $e, @e
 |  38  | WRITE @x @y       | Write @x to file at path @y.
 |  39  | APPEND @x @y      | Append @x to file at path @y.
-| ==== | ================  | TEXT OPERATIONS ========================
+| ==== | ================  | TEXT OPERATIONS =========================
 |  40  | LEN @x $a         | Get length of string in @x.
 |  41  | JOIN @x @y @a     | Concatenate text in registers into @a.
 |  42  | GETC $x @str @a   | Get character in @str at $x and put into @a.
