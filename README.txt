@@ -411,6 +411,7 @@ Those are the main "under the hood" tools.
       * [ ] bug in displaying words
 * [ ] parser errors 2nd pass (only show broken line) (like rust's.)
 * [ ] docs 2nd pass
+    * [ ] links in HTML docs
 * [ ] gen errors 2nd pass
 * [ ] asm errors 2nd pass
 * [ ] function docs 2nd pass
