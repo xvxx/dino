@@ -58,7 +58,7 @@ HELLO:
 
 LDPL-SPARK:
 
-    $ git clone https://github.com/photogabble/ldpl-spark
+    $ git clone <a href="https://github.com/photogabble/ldpl-spark">https://github.com/photogabble/ldpl-spark</a>
     $ dino run ldpl-spark/spark.ldpl 9 13 5 17 1
     ▄▆▂█▁
     $ dino run ldpl-spark/spark.ldpl 0 30 55 80 33 150
@@ -66,7 +66,7 @@ LDPL-SPARK:
 
 LDPL-SPACE-MINES:
 
-    $ git clone https://github.com/photogabble/ldpl-space-mines
+    $ git clone <a href="https://github.com/photogabble/ldpl-space-mines">https://github.com/photogabble/ldpl-space-mines</a>
     $ dino run ldpl-space-mines/spacemines.ldpl
     ==================================================
     YEAR 1:
@@ -75,7 +75,7 @@ LDPL-SPACE-MINES:
 
 LBI:
 
-    $ git clone https://github.com/Lartu/LBI
+    $ git clone <a href="https://github.com/Lartu/LBI">https://github.com/Lartu/LBI</a>
     $ dino run LBI/src/LBI.ldpl LBI/examples/fib.b
     dino run ldpl/examples/brainfuck.ldpl LBI/examples/fib.b
     0
@@ -93,11 +93,11 @@ LBI:
 You must have version 3.0.5 of the official LDPL compiler installed
 in your $PATH:
 
-   https://www.ldpl-lang.org/
+   <a href="https://www.ldpl-lang.org/">https://www.ldpl-lang.org/</a>
 
 Once that's done, clone Dino:
 
-   git clone https://github.com/dvkt/dino
+   git clone <a href="https://github.com/dvkt/dino">https://github.com/dvkt/dino</a>
 
 And build it:
 
@@ -118,7 +118,7 @@ For added security, run Dino against the official LDPL Test Battery:
 You should see another "success" message if everything is working
 properly. If not, kindly report an issue at this address:
 
-   https://github.com/dvkt/dino/issues
+   <a href="https://github.com/dvkt/dino/issues">https://github.com/dvkt/dino/issues</a>
 
 === HOW IT WORKS =====================================================
 
@@ -173,23 +173,23 @@ bit, you can see the tokens produced by Dino's lexer for this file:
 
     $ dino lex math.ldpl
     tokens (41):
-    <DATA:>, <:NL:>
-    <X>, <IS>, <NUMBER>, <:NL:>
-    <Y>, <IS>, <NUMBER>, <:NL:>
-    <Z>, <IS>, <NUMBER>, <:NL:>
-    <PROCEDURE:>, <:NL:>
-    <STORE>, <1>, <IN>, <X>, <:NL:>
-    <STORE>, <2>, <IN>, <Y>, <:NL:>
-    <ADD>, <X>, <AND>, <Y>, <IN>, <Z>, <:NL:>
-    <DISPLAY>, <X>, <"+">, <Y>, <"=">, <Z>, <"\r\n">, <:NL:>
+    &lt;DATA:&gt;, &lt;:NL:&gt;
+    &lt;X&gt;, &lt;IS&gt;, &lt;NUMBER&gt;, &lt;:NL:&gt;
+    &lt;Y&gt;, &lt;IS&gt;, &lt;NUMBER&gt;, &lt;:NL:&gt;
+    &lt;Z&gt;, &lt;IS&gt;, &lt;NUMBER&gt;, &lt;:NL:&gt;
+    &lt;PROCEDURE:&gt;, &lt;:NL:&gt;
+    &lt;STORE&gt;, &lt;1&gt;, &lt;IN&gt;, &lt;X&gt;, &lt;:NL:&gt;
+    &lt;STORE&gt;, &lt;2&gt;, &lt;IN&gt;, &lt;Y&gt;, &lt;:NL:&gt;
+    &lt;ADD&gt;, &lt;X&gt;, &lt;AND&gt;, &lt;Y&gt;, &lt;IN&gt;, &lt;Z&gt;, &lt;:NL:&gt;
+    &lt;DISPLAY&gt;, &lt;X&gt;, &lt;"+"&gt;, &lt;Y&gt;, &lt;"="&gt;, &lt;Z&gt;, &lt;"\r\n"&gt;, &lt;:NL:&gt;
 
 Pretty fun. The next step is the parser, so let's see the parse tree:
 
     $ dino parse math.ldpl
     vars (3):
-    #<NUM: X>
-    #<NUM: Y>
-    #<NUM: Z>
+    #&lt;NUM: X&gt;
+    #&lt;NUM: Y&gt;
+    #&lt;NUM: Z&gt;
     nodes (4):
     STORE
         - a0(NML): 1
@@ -247,12 +247,12 @@ Finally, we can see the bytecode produced by the assembler:
 We can also save this output to a .dinocode file and run it directly.
 Or modify it before running it:
 
-    $ dino bytes math.ldpl | sed 's/17 01/17 13/g' > math.dinocode
+    $ dino bytes math.ldpl | sed 's/17 01/17 13/g' &gt; math.dinocode
     $ dino run math.dinocode
     13+2=15
 
 Or, you know, just write all our code this way:
-    $ echo "76 68 80 76 02 31 16384 31 16385 06 \"hax!\" \"\n\"" > hi.dinocode
+    $ echo "76 68 80 76 02 31 16384 31 16385 06 \"hax!\" \"\n\"" &gt; hi.dinocode
     $ dino run hi.dinocode
     hax!
 
@@ -388,10 +388,10 @@ Those are the main "under the hood" tools.
 |  16  | PUTV %vec $r %a   | Put %vec:$r into %a. %vec:@t and @v work too.
 | ==== | ================= | ARITHMETIC ==============================
 |  20  | EQ $x $y $a       | Set $a=1 if $x == $y
-|  21  | GT $x $y $a       | Set $a=1 if $x > $y
-|  22  | GTE $x $y $a      | Set $a=1 if $x > $y
-|  23  | LT $x $y $a       | Set $a=1 if $x < $y
-|  24  | LTE $x $y $a      | Set $a=1 if $x < $y
+|  21  | GT $x $y $a       | Set $a=1 if $x &gt; $y
+|  22  | GTE $x $y $a      | Set $a=1 if $x &gt; $y
+|  23  | LT $x $y $a       | Set $a=1 if $x &lt; $y
+|  24  | LTE $x $y $a      | Set $a=1 if $x &lt; $y
 |  25  | ADD $x $y $a      | Set $x + $y to $a
 |  26  | SUB $x $y $a      | Set $x - $y to $a
 |  27  | MUL $x $y $a      | Set $x * $y to $a
@@ -447,7 +447,7 @@ Those are the main "under the hood" tools.
    * [ ] EXTERNAL SUB-PROCEDURE
    * [ ] var is EXTERNAL data types
 * [ ] REPL
-   * [ ] >> input
+   * [ ] &gt;&gt; input
    * [ ] == output
    * [ ] readline
    * [ ] history
