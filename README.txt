@@ -200,26 +200,38 @@ These nodes are used by the generator to emit dinoasm:
 
 If we want, we can save this output to a .dinoasm file and run it:
 
-    $ dino run math.dinoasm                                                                            master
+    $ dino run math.dinoasm
     1+2=3
 
 This can be helpful in debugging or development of Dino itself.
 
-Finally, the bytecode produced by the assembler:
+There are a few files in `examples/` with hand written dinoasm you can
+examine or run, too:
+
+    $ dino run examples/99.dinoasm
+    99 bottles of beer on the wall...
+
+Finally, we can see the bytecode produced by the assembler:
 
     $ dino bytes math.ldpl
     76 68 80 76 2 09 17 01 08 18 17 09 19 02 08 20 19 20 18 20 21 31
     18 31 16384 31 20 31 16385 31 21 31 16386 06 "+" "=" "\r\n"
 
 We can also save this output to a .dinocode file and run it directly.
-Or, you know, just write code this way:
+Or modify it before running it:
 
     $ dino bytes math.ldpl | sed 's/17 01/17 13/g' > math.dinocode
     $ dino run math.dinocode
     13+2=15
 
+Or, you know, just write all our code this way:
+    $ echo "76 68 80 76 02 31 16384 31 16385 06 \"hax!\" \"\n\"" > hi.dinocode
+    $ dino run hi.dinocode
+    hax!
+
 There's also `dino dis` which turns dinocode back into dinoasm, kinda.
-But those are the main "under the hood" tools.
+
+Those are the main "under the hood" tools.
 
 === TECHNICAL SPECIFICATION ==========================================
 
