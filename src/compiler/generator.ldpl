@@ -233,6 +233,7 @@ sub-procedure gen.op.emit
     store 0 in gen.arg
     call gen.arg.load
     in gen.out join gen.out "\t" gen.op " " gen.arg.load
+    store gen.arg.load in gen.op.c
     call gen.emit-vector-as-src
 end sub-procedure
 
@@ -248,6 +249,7 @@ sub-procedure gen.op.emit-2
     store gen.arg.load in gen.op.b
 
     in gen.out join gen.out "\t" gen.op " " gen.op.a ", " gen.op.b
+    store gen.op.b in gen.op.c
     call gen.emit-vector-as-src
 end sub-procedure
 
@@ -304,6 +306,7 @@ sub-procedure gen.op.emit-4
     store gen.arg.load in gen.op.d
 
     in gen.out join gen.out "\t" gen.op " " gen.op.a ", " gen.op.b ", " gen.op.c ", " gen.op.d
+    store gen.op.d in gen.op.c
     call gen.emit-vector-as-src
 end sub-procedure
 
