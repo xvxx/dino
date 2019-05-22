@@ -436,6 +436,7 @@ sub-procedure generator.Run
             # emit test (GT x y z)
             call gen.op.emit-cond
             # emit jump (JIF end_if_001)
+            in gen.out join gen.out "if_" gen.ifs ":" crlf
             in gen.out join gen.out "\tJIF end_if_" gen.ifs
         else if "ELSE IF" is equal to gen.node.type then
             decr gen.if-stack*
