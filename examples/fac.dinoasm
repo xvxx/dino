@@ -1,4 +1,5 @@
 ;; factorial
+;; inspired by the example in LDPL
     SET %result, 1   ; default
     SET %var0, 0
     PUTV @argv, %var0, %n

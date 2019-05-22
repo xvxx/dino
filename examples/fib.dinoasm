@@ -1,4 +1,5 @@
-    ;; Fibonacci Sequence
+;; fibonacci sequence
+;; inspired by the example in LDPL
     SET %length, 30
     SET %a, 1
     SET %b, 1

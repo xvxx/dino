@@ -35,7 +35,7 @@
     CEIL %age
     PRINL %age
 
-    SET @file, "./examples/test.dino"
+    SET @file, "./examples/test.dinoasm"
     READ @file, @file
     PRINL @file
 
