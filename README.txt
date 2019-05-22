@@ -75,7 +75,7 @@ LDPL Examples:
 
 === GETTING STARTED ==================================================
 
-You must have version 3.0.5 of the official LDPL compiler installed
+You must have version 3.0.4 of the official LDPL compiler installed
 in your $PATH:
 
    https://www.ldpl-lang.org/
@@ -111,17 +111,17 @@ Internally, Dino is organized into three parts: compiler, virtual
 machine, and tooling, with the `dino` command line program serving as
 the primary means of interacting with the suite.
 
-The compiler translates LDPL source code to DinoASM, Dino's simple
-assembly language, then to Dinocode, Dino's bytecode format. The
-virtual machine loads bytecode into its memory then performs each
-instruction, just like your old Nintendo. Tooling includes the `dino`
-command line program for running LDPL programs and using the compiler
-suite, the REPL, and `dino dis` for displaying / disassembling
-dinocode.
+The compiler convert LDPL source code to Dino bytecode by first lexing
+and parsing the source code, then translating it to Dino assembly,
+then finally the assembling Dino bytecode. The virtual machine loads
+bytecode into its memory then performs each instruction, just like
+your old Nintendo. Tooling includes the `dino` command line program
+for running LDPL programs and using the compiler suite, the REPL, and
+`dino dis` for displaying / disassembling dinocode.
 
 The classic bytecode/VM architecture means Dino could (with changes)
 support languages other than LDPL in the future, but for now it's
-focused on supporting the full LDPL 3.0.5 specification on Linux,
+focused on supporting the full LDPL 3.0.4 specification on Linux,
 MacOS, Windows, WebAssembly, and Raspberry Pi.
 
 === BASIC USAGE ======================================================
