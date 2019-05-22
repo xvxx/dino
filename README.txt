@@ -421,12 +421,13 @@ Those are the main "under the hood" tools.
 * [ ] LDPL Test Battery:
    * [ ] basicar.ldpl
       * [ ] SOLVE
+* [ ] IN - JOIN BUG
 * [ ] LDPL Programs:
    * [ ] beKnowledge
       * [ ] bug in displaying words
 * [ ] parser errors 2nd pass (only show broken line) (like rust's.)
 * [ ] docs 2nd pass
-    * [ ] links in HTML docs
+    * [x] links in HTML docs
 * [ ] gen errors 2nd pass
 * [ ] asm errors 2nd pass
 * [ ] function docs 2nd pass
@@ -441,3 +442,11 @@ Those are the main "under the hood" tools.
    * [ ] history
    * [ ] multi-lines
    * [ ] asm mode
+
+--- BIG TODOS BEFORE SHIPPING ----------------------------------------
+
+* [ ] Basic REPL
+* [ ] Parse output -> tree view (like `tree -R`)
+* [ ] Parse syntax error improvements
+* [ ] Basic code style guidelines: var names, fn names, dir structure
+* [ ] Document every function the same way.
