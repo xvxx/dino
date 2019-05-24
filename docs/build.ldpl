@@ -13,12 +13,15 @@ char is text
 link is text
 token is text
 newfile is text
+links is number
 
 PROCEDURE:
+display "loading files..." crlf
 load file "docs/index.tpl" in template
 load file "README.txt" in readme
 
 sub-procedure escape-html
+    display "escaping html..." crlf
     replace "<" from readme with "&lt;" in readme
     replace ">" from readme with "&gt;" in readme
 end sub-procedure
@@ -37,6 +40,8 @@ sub-procedure replace-link-in-token
 end sub-procedure
 
 sub-procedure replace-links
+	count "https://" from readme in links
+	display "linking " links " links..." crlf
     split readme by "" in chars
     store length of readme in len
     while i is less than len do
@@ -63,4 +68,6 @@ end sub-procedure
 call replace-links
 
 replace "{{body}}" from template with readme in html
+display "saving html..." crlf
 write html to file "docs/index.html"
+display "built docs/index.html"
