@@ -1,0 +1,23 @@
+# file.ldpl
+# create a file, open a file, write to it, append to it.
+# part of the LDPL Programming Language Test Battery
+# by Martín del Río
+# https://github.com/lartu/ldpltest
+
+DATA:
+filename is text
+filecontents is text
+myText is text
+
+PROCEDURE:
+store "file.test" in filename
+in myText join "Hello There!" crlf "How are you?" crlf
+write myText to file filename
+
+load file filename in filecontents
+join filecontents and "Fine, thank you!" in filecontents
+in filecontents join crlf "-- Again --------" crlf filecontents crlf "Lalala" crlf
+append filecontents to file filename
+
+load file filename in filecontents
+display filecontents

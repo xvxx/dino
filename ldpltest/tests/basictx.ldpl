@@ -1,0 +1,77 @@
+# basictx.ldpl
+# test basic text statements.
+# part of the LDPL Programming Language Test Battery
+# by Martín del Río
+# https://github.com/lartu/ldpltest
+
+DATA:
+string is text
+string2 is text
+long-quote is text
+length is number
+cc1 is number
+cc2 is number
+parts is text vector
+
+PROCEDURE:
+store "Hi there!" in string
+display string crlf
+store 1234567890 in string
+display string crlf
+store -1 in string
+display string crlf
+store -1.652 in string
+display string crlf
+store 1.652 in string
+display string crlf
+store 0 in string
+display string crlf
+join "Hi there!" and " How are you?" in string
+join string and " 你好" in string
+join string and " 안녕하세요" in string
+join string and " привет" in string
+join string and " こんにちは" in string
+display string crlf
+store "ＬＤＰＬは凄いよ！" in string
+display string crlf
+join "ñáñéñíñóñú" and -1.652 in string2
+display string2 crlf
+in string join string string2 "👶👦👧👨👩" 123456.123 -123.23 0.0 -0
+display string crlf
+store length of string in length
+store length in string2
+display "Length: " string2 crlf
+get character at 5 from string in string2
+display string2
+get character at 29 from string in string2
+display string2 crlf
+store quote in string
+The STORE QUOTE IN statement allows you to store multiple lines
+in a single TEXT variable. Between the STORE QUOTE IN and END QUOTE
+statements whitespace is preserved literally, escape codes like \t and
+\033[33mwork the same as they do in regular text variables\033[0m (and can themselves
+be escaped using \\), and double quotes (") don't need to be escaped.
+END QUOTE
+store string in long-quote
+display string "<--" crlf crlf crlf
+store character code of "A" in cc1
+store character code of "😃" in cc2
+if errorCode is equal to 1 then
+    display "Expected error text: \033[92m" errorText "\033[0m" crlf
+end if
+display cc1 " " cc2 crlf
+store character cc2 in string
+display string crlf
+store character cc1 in string
+display string crlf
+split long-quote by "" in parts
+display parts:4 parts:5 parts:6 parts:7 parts:8 crlf
+split long-quote by " " in parts
+display parts:4 " " parts:5 " " parts:6 " " parts:7 " " parts:8 crlf
+split "A.B.C" by "." in parts
+display parts:0 parts:1 parts:2 crlf
+replace "." from "A.B.C" with "/" in string 
+display string crlf 
+replace "LDPL" from "I think LDPL is terrific!" with "🦕" in string
+replace "ter" from string with "dino" in string
+display string crlf 

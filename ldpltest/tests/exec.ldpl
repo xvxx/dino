@@ -1,0 +1,24 @@
+# exec.ldpl
+# run a program and optionally get its output or exit code.
+# part of the LDPL Programming Language Test Battery
+# by Martín del Río
+# https://github.com/lartu/ldpltest
+DATA:
+cmd is text
+out is text
+code is number
+PROCEDURE:
+execute "echo hi" and store output in out
+display out crlf  # hi
+execute "echo hi" and store exit code in code
+display code crlf # 0
+execute "exit 112" and store exit code in code
+display code crlf # 112
+
+write "exit 2" to file "test.sh"
+execute "sh test.sh" and store exit code in code
+display code crlf
+write "echo cool" to file "test.sh"
+execute "sh test.sh" and store exit code in code
+display code crlf
+execute "rm test.sh"

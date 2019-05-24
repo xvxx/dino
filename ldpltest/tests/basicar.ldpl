@@ -1,0 +1,36 @@
+# basicar.ldpl
+# test basic arithmetic statements.
+# part of the LDPL Programming Language Test Battery
+# by Martín del Río
+# https://github.com/lartu/ldpltest
+
+DATA:
+a is number
+b is number
+c is number
+d is number
+
+PROCEDURE:
+store 912847.123 in a
+store 9875 in b
+store 0.1239 in c
+store -12.989 in d
+display a " "  b " " c " " d crlf
+add a and a in a
+multiply b by c in b
+subtract b from a in a
+divide b by d in d
+display a " "  b " " c " " d crlf
+modulo a by 678 in a
+floor b
+ceil c
+abs d
+display a " "  b " " c " " d crlf
+in a solve (a + b + c + d) / (- ( - a - b - c - d))
+display a " "  b " " c " " d crlf
+while a is less than 100 do 
+    incr a
+repeat
+decr a
+decr a
+display a crlf 
