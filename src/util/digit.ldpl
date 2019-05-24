@@ -20,6 +20,9 @@ store 1 in digit?.digits:"7"
 store 1 in digit?.digits:"8"
 store 1 in digit?.digits:"9"
 
+# Test if character is a single digit number or not.
+#  IN: digit?.in
+# OUT: digit?
 sub-procedure digit?
     store digit?.digits:digit?.in in digit?
 end sub-procedure

@@ -17,6 +17,7 @@ loader.string?  is number
 loader.chars    is text vector
 
 PROCEDURE:
+# Load text representation of bytecode (not assembly) into memory.
 #  IN: loader.input
 # OUT: vm.Code(*)
 #      vm.Text(.next)

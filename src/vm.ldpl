@@ -1,4 +1,5 @@
 # === VIRTUAL MACHINE ================================================
+# Data shared by all VM components.
 DATA:
 # instruction set version
 vm.Version     is number

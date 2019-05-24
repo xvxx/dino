@@ -74,6 +74,7 @@ store 1 in parser.vars:"ERRORCODE"
 store "ERRORTEXT" in parser.vars:@E
 store 2 in parser.vars:"ERRORTEXT"
 
+# Print error and exit.
 # IN: parser.error
 sub-procedure parser.error
     store 0 in parser.error.seen?
@@ -119,7 +120,7 @@ sub-procedure parser.token.vector?
     end if
 end sub-procedure
 
-# Stores next token in `parser.peek`
+# Stores next token in `parser.peek` without advancing.
 #  IN: parser.run.c
 # OUT: parser.peek
 sub-procedure parser.peek
@@ -252,6 +253,9 @@ sub-procedure parser.node.set-cond
 end sub-procedure
 
 # Uses the value of `parser.arg` to set c.Nodes:$id:$arg
+#  IN: parser.arg
+#      c.Nodes
+# OUT: c.Nodes
 sub-procedure parser.node.set
     in parser.key join c.Nodes* ":" parser.arg
     store parser.token in c.Nodes:parser.key
@@ -298,6 +302,7 @@ sub-procedure parser.node.set3
     call parser.node.set
 end sub-procedure
 
+# Emits multipl args, starting at value of `parser.arg`
 #  IN: parser.token
 #      parser.arg
 sub-procedure parser.node.set-vargs

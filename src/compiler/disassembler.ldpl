@@ -42,7 +42,10 @@ sub-procedure dis.text-filter
     store dis.text.t in dis.text
 end sub-procedure
 
-sub-procedure dis.print
+# Tries to turn dino bytecode into dino assembly and print it.
+#  IN: vm.Code
+#      vm.Code*
+sub-procedure dis.Print
     store $OFFSET.CODE in dis.i
     while dis.i is less than vm.Code* do
         store vm.Code:dis.i in dis.opcode

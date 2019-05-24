@@ -13,7 +13,7 @@
 # * Nested vectors don't work yet, ex vec1:vec2:2
 
 DATA:
-# shared
+# INTERNAL:
 gen.key            is text
 gen.if-stack       is number vector # open if blocks
 gen.if-stack*      is number
@@ -95,8 +95,8 @@ store  "LT" in gen.op.syms:"<"
 store "LTE" in gen.op.syms:"<="
 store  "EQ" in gen.op.syms:"=="
 
+# Prints error and exits.
 # IN : gen.error
-# OUT:
 sub-procedure gen.error
     display "CODE GEN ERROR: " gen.error crlf
     exit
@@ -141,6 +141,7 @@ sub-procedure gen.tvar
     incr gen.tvar.i
 end sub-procedure
 
+# emits vector variable for use as operand.
 #  IN: gen.vec.op
 #      gen.vec.op.a
 #      gen.vec.op.c

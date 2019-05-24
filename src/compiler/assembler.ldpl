@@ -75,6 +75,7 @@ store $OFFSET.VARS in asm.vars*
 store $OFFSET.TVAR in asm.tvars.next
 store $OFFSET.TLIT in c.Text*
 
+# Prints an error and exits.
 #  IN: asm.error
 sub-procedure asm.error
     store 0 in asm.error.seen?
@@ -106,13 +107,6 @@ sub-procedure asm.error
         end if
         incr asm.error.i
     repeat
-    exit
-end sub-procedure
-
-#  IN: asm.error
-sub-procedure asm.error-simple
-    display "\e[31;1mAssembler error \e[0;1m(" asm.pc "):\e[0m "
-    display asm.error crlf
     exit
 end sub-procedure
 

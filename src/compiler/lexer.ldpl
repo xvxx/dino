@@ -1,15 +1,9 @@
 # === LEXER ==========================================================
 # The lexer turns source code into a text vector of tokens.
 DATA:
-# USES:
-# c.Input
-
-# LOCAL:
 c.Tokens.i           is number        # for clearing the list
 c.Input*             is number        # input length
 lexer.t              is text          # temp var
-
-# SHARED:
 lexer.ci             is number        # current character index
 lexer.char           is text          # current character
 lexer.next           is number        # idx of next character
@@ -32,8 +26,9 @@ lexer.error          is text
 lexer.error.i        is number
 
 PROCEDURE:
+# Print error and exit.
 # IN: lexer.error
-# IN: lexer.ci
+#     lexer.ci
 sub-procedure lexer.error
     display "lexer.error: " lexer.error crlf
     display "character " lexer.ci " of " c.Input* crlf
@@ -81,7 +76,6 @@ end sub-procedure
 #    IN: lexer.ci
 #    IN: lexer.char
 #   OUT: lexer.end-quote?
-# SETUP:
 split "END QUOTE" by "" in lexer.check.tuchars  # 9 chars
 split "end quote" by "" in lexer.check.tlchars
 while lexer.check.i is less than 9 do
