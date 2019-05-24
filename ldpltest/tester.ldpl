@@ -74,13 +74,9 @@ store 0 in i
 while i is less than testCount do
     store tests:i in testName
     display "\033[33mTesting '" testName ".ldpl'\033[0m" crlf
-    in command join "cd tests && ldpl " testName ".ldpl -o=" testName " > /dev/null"
-    call execute-command
-    in command join "cd tests && ./" testName " > " testName ".test"
+    in command join "cd tests && dino run " testName ".ldpl > " testName ".test"
     call execute-command
     call compare-results
-    in command join "cd tests && rm " testName
-    call execute-command
     display crlf
     add 1 and i in i
 repeat
