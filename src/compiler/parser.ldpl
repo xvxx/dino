@@ -394,6 +394,7 @@ sub-procedure parser.node.create
     else if "CALL" is equal to parser.token then
         call parser.advance
         if parser.token is equal to "SUB-PROCEDURE" then
+            call parser.advance
         else if parser.token is equal to "EXTERNAL" then
             store "dino doesn't support EXTERNALs" in parser.error
             call parser.error
