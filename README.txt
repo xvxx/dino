@@ -153,7 +153,7 @@ Okay, that seems right. Next we'll run it using Dino:
     $ dino run math.ldpl
     1+2=3
 
-Great! We can stop there. But if you want to look under the hood a
+Great! We can stop here. But if you want to look under the hood a
 bit, you can see the tokens produced by Dino's lexer for this file:
 
     $ dino lex math.ldpl
@@ -168,7 +168,8 @@ bit, you can see the tokens produced by Dino's lexer for this file:
     <ADD>, <X>, <AND>, <Y>, <IN>, <Z>, <:NL:>
     <DISPLAY>, <X>, <"+">, <Y>, <"=">, <Z>, <"\r\n">, <:NL:>
 
-Pretty fun. The next step is the parser, so let's see the parse tree:
+Pretty fun. The next step would turning those tokens into the parse
+tree, so let's see it:
 
     $ dino parse math.ldpl
     vars (3):
@@ -194,7 +195,8 @@ Pretty fun. The next step is the parser, so let's see the parse tree:
         - a4(NUM): Z
         - a5(TXL): "\r\n"
 
-These nodes are used by the generator to emit dinoasm:
+These nodes are used by the generator to emit dino assembly, our VM's
+imaginary syntax and instruction set:
 
     $ dino asm math.ldpl
         SET %var0, 1
@@ -215,29 +217,35 @@ If we want, we can save this output to a .dinoasm file and run it:
     $ dino run math.dinoasm
     1+2=3
 
-This can be helpful in debugging or development of Dino itself.
+Still looks right! Running dinoasm directly can be helpful in
+debugging or development of Dino itself.
 
-There are a few files in `examples/` with hand written dinoasm you can
-examine or run, too:
+If you want to explore further, there are a few files in `examples/`
+with hand written dinoasm you can examine or run, too:
 
     $ dino run examples/99.dinoasm
     99 bottles of beer on the wall...
 
-Finally, we can see the bytecode produced by the assembler:
+Finally, we can see the bytecode produced by the assembler for our
+LDPL computer program:
 
     $ dino bytes math.ldpl
     76 68 80 76 2 09 17 01 08 18 17 09 19 02 08 20 19 20 18 20 21 31
     18 31 16384 31 20 31 16385 31 21 31 16386 06 "+" "=" "\r\n"
 
-We can also save this output to a .dinocode file and run it directly.
-Or modify it before running it:
+While internally the bytecode is stored as a vector of numbers, when
+it's printed to the screen or loaded from a file we separate each
+number with a space and display strings literally.
+
+This means we can save `dino bytes`'s output to a .dinocode file and
+run it directly. Or even modify it before running it:
 
     $ dino bytes math.ldpl | sed 's/17 01/17 13/g' > math.dinocode
     $ dino run math.dinocode
     13+2=15
 
-Or, you know, just write all our code this way:
-    $ echo "76 68 80 76 02 31 16384 31 16385 06 \"hax!\" \"\n\"" > hi.dinocode
+Some prefer to write all their code this way:
+    $ echo "76 68 80 76 02 31 16384 01 -4 06 \"hax!\n\"" > hi.dinocode
     $ dino run hi.dinocode
     hax!
 
