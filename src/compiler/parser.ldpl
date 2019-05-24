@@ -78,7 +78,6 @@ store 2 in parser.vars:"ERRORTEXT"
 sub-procedure parser.error
     store 0 in parser.error.seen?
     store 1 in parser.error.line
-    store "" in parser.error.out
     display "\e[31;1mParse error:\e[0m " parser.error crlf
     display " 01 | "
     while parser.error.i is less than c.Tokens* do
