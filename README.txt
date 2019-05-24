@@ -424,4 +424,5 @@ Those are the main "under the hood" tools.
 * [ ] Document every function the same way.
 * [ ] Parse output -> tree view (like `tree -R`)
 * [ ] Colors in parse output
-* [ ] REPL
+* [ ] New introduction
+* [ ] REPL?
