@@ -17,7 +17,11 @@ DATA:
 gen.key            is text
 gen.if-stack       is number vector # open if blocks
 gen.if-stack*      is number
+gen.else-stack     is number vector
+gen.else-stack*    is number
+gen.elses-open     is number vector
 gen.ifs            is number
+gen.elses          is number
 gen.if             is number
 gen.else           is number
 gen.while-stack    is number vector
@@ -430,43 +434,57 @@ sub-procedure generator.Run
             repeat
         else if "IF" is equal to gen.node.type then
             incr gen.ifs
-            incr gen.else
             store gen.ifs in gen.if-stack:gen.if-stack*
             incr gen.if-stack*
-            # emit test (GT x y z)
-            call gen.op.emit-cond
-            # emit jump (JIF end_if_001)
             in gen.out join gen.out "if_" gen.ifs ":" crlf
-            in gen.out join gen.out "\tJIF end_if_" gen.ifs
-        else if "ELSE IF" is equal to gen.node.type then
-            decr gen.if-stack*
-            store gen.if-stack:gen.if-stack* in gen.if
-            in gen.out join gen.out "\tJUMP end_else_" gen.else crlf
-            # emit label (end_if_001:)
-            in gen.out join gen.out "end_if_" gen.if ":" crlf
-            incr gen.ifs
-            store gen.ifs in gen.if-stack:gen.if-stack*
-            incr gen.if-stack*
             # emit test (GT x y z)
             call gen.op.emit-cond
-            # emit jump (JIF end_if_001)
-            in gen.out join gen.out "\tJIF end_if_" gen.ifs
-        else if "ELSE" is equal to gen.node.type then
+            # emit jump (JIF else_N)
+            incr gen.elses
+            store gen.elses in gen.elses-open:gen.ifs
+            store gen.elses in gen.else-stack:gen.else-stack*
+            incr gen.else-stack*
+            in gen.out join gen.out "\tJIF else_" gen.elses
+        else if "ELSE IF" is equal to gen.node.type then
+            # previous condition must jump to END IF if it gets here
             decr gen.if-stack*
             store gen.if-stack:gen.if-stack* in gen.if
-            in gen.out join gen.out "\tJUMP end_else_" gen.else crlf
-            # emit label (end_if_001:)
-            in gen.out join gen.out "end_if_" gen.if ":"
-            incr gen.ifs
-            store gen.ifs in gen.if-stack:gen.if-stack*
+            in gen.out join gen.out "\tJUMP end_if_" gen.if crlf
             incr gen.if-stack*
-        else if "END IF" is equal to gen.node.type then
+            # emit label (else_N:)
+            decr gen.else-stack*
+            store gen.else-stack:gen.else-stack* in gen.else
+            in gen.out join gen.out "else_" gen.else ":" crlf
+            # emit test (GT x y z)
+            call gen.op.emit-cond
+            # emit jump (JIF else_N)
+            incr gen.elses
+            store gen.elses in gen.elses-open:gen.if
+            store gen.elses in gen.else-stack:gen.else-stack*
+            incr gen.else-stack*
+            in gen.out join gen.out "\tJIF else_" gen.elses
+        else if "ELSE" is equal to gen.node.type then
+            # previous condition must jump to END IF if it gets here
             decr gen.if-stack*
             store gen.if-stack:gen.if-stack* in gen.if
-            # emit label (end_if_001:)
+            in gen.out join gen.out "\tJUMP end_if_" gen.if crlf
+            incr gen.if-stack*
+            # emit label (else_N:)
+            store 0 in gen.elses-open:gen.if
+            decr gen.else-stack*
+            store gen.else-stack:gen.else-stack* in gen.else
+            in gen.out join gen.out "else_" gen.else ":"
+        else if "END IF" is equal to gen.node.type then
+            # emit label (end_if_N:)
+            decr gen.if-stack*
+            store gen.if-stack:gen.if-stack* in gen.if
             in gen.out join gen.out "end_if_" gen.if ":" crlf
-            in gen.out join gen.out "end_else_" gen.else ":"
-            decr gen.else
+            if gen.elses-open:gen.if is greater than 0 then
+                decr gen.else-stack*
+                store gen.else-stack:gen.else-stack* in gen.else
+                in gen.out join gen.out "else_" gen.else ":"
+                store 0 in gen.elses-open:gen.else
+            end if
         else if "WHILE" is equal to gen.node.type then
             incr gen.whiles
             store gen.whiles in gen.while-stack:gen.while-stack*
