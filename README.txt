@@ -421,7 +421,6 @@ It's useful when debugging and checking or challenging assumptions.
 
 === TODO =============================================================
 
-* [ ] Document every function the same way.
 * [ ] Parse output -> tree view (like `tree -R`)
 * [ ] Colors in parse output
 * [ ] REPL?
