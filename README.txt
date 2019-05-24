@@ -422,12 +422,8 @@ Those are the main "under the hood" tools.
    * [ ] basicar.ldpl
       * [ ] SOLVE
 * [ ] IN - JOIN BUG
-* [ ] LDPL Programs:
-   * [ ] beKnowledge
-      * [ ] bug in displaying words
 * [ ] parser errors 2nd pass (only show broken line) (like rust's.)
 * [ ] docs 2nd pass
-    * [x] links in HTML docs
 * [ ] gen errors 2nd pass
 * [ ] asm errors 2nd pass
 * [ ] function docs 2nd pass
