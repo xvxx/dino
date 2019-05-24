@@ -287,8 +287,7 @@ Those are the main "under the hood" tools.
 
 9. The `IN - SOLVE` instruction doesn't work yet.
 
-10. The `IN - JOIN` instruction is ridiculously slow and possibly
-    bugged. Best to manually chain `JOIN` statements for now.
+10. The `IN - JOIN` instruction is ridiculously slow.
 
 === REFERENCE ========================================================
 

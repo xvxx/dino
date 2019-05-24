@@ -648,7 +648,7 @@ sub-procedure generator.Run
             call gen.arg.preload
             store gen.arg.varname in gen.var
             store gen.arg.type in gen.type
-            in gen.out join gen.out "\tSET @A, \"\""
+            in gen.out join gen.out "\tSTORE @__JOINTMP, \"\""
             store 1 in gen.arg
             while 0 is less than 1 do
                 in gen.key join gen.node ":" gen.arg ":type"
@@ -660,7 +660,7 @@ sub-procedure generator.Run
                     in gen.out join gen.out crlf
                 end if
                 call gen.arg.preload
-                in gen.out join gen.out "\tJOIN @A, " gen.arg.varname ", @A"
+                in gen.out join gen.out "\tJOIN @__JOINTMP, " gen.arg.varname ", @__JOINTMP"
                 incr gen.arg
             repeat
             if gen.type is equal to $TYPES:"TXV" then
@@ -668,13 +668,13 @@ sub-procedure generator.Run
                 in gen.out join gen.out crlf
                 store "STOREV" in gen.vec.op
                 store gen.var in gen.vec.op.a
-                store "@A" in gen.vec.op.c
+                store "@__JOINTMP" in gen.vec.op.c
                 call gen.emit-vector-op
             else if gen.type is equal to $TYPES:"NMV" then
                 store "can't join into number vector" in gen.error
                 call gen.error
             else
-                in gen.out join gen.out crlf "\tSTORE " gen.var ", @A"
+                in gen.out join gen.out crlf "\tSTORE " gen.var ", @__JOINTMP"
             end if
         else if "QUOTE" is equal to gen.node.type then
             store 0 in gen.arg
