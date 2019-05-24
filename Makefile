@@ -20,6 +20,9 @@ release: src/*.ldpl src/**/*.ldpl
 ldpltest:
 	git clone https://github.com/lartu/ldpltest
 
+test: ldpltest
+	cd ldpltest && dino run tester.ldpl
+
 # remember to escape $ in the text
 define VERSIONLDPL
 DATA:
