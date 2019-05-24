@@ -5,7 +5,6 @@ DATA:
 asm.Dinocode      is text
 
 # INTERNALS:
-asm.error         is text
 asm.labels        is number vector
 asm.tokens        is text vector
 asm.tokens*       is number
@@ -37,6 +36,13 @@ asm.prev          is text
 asm.comment?      is number
 asm.string?       is number
 asm.newline       is number vector
+
+asm.error           is text
+asm.error.i         is number
+asm.error.line      is number
+asm.error.seen?     is number
+asm.token.vector?   is number
+asm.token.vector.i  is number
 
 PROCEDURE:
 store $A    in asm.addresses:"$A"
@@ -71,7 +77,41 @@ store $OFFSET.TLIT in c.Text*
 
 #  IN: asm.error
 sub-procedure asm.error
-    display "\e[1;31mASM ERROR \e[0;1m(" asm.pc "): \e[0m"
+    store 0 in asm.error.seen?
+    store 0 in asm.error.line
+    display "\e[31;1mAssembler error:\e[0m " asm.error
+    while asm.error.i is less than asm.tokens* do
+        if asm.error.i is equal to asm.pc then
+            display "\e[33;1m" asm.tokens:asm.error.i "\e[0m "
+            store 1 in asm.error.seen?
+        else if $CODES:asm.tokens:asm.error.i is not equal to 0 then
+            if asm.error.seen? is equal to 1 then
+                break
+            end if
+            incr asm.error.line
+            if asm.error.line is less than asm.tokens* then
+                if asm.error.line is less than 10 then
+                    display crlf " 0" asm.error.line " | "
+                else if asm.error.line is less than 100 then
+                    display crlf " " asm.error.line " | "
+                else
+                    display crlf asm.error.line " | "
+                end if
+            end if
+            display asm.tokens:asm.error.i " "
+        else if asm.tokens:asm.error.i is equal to "\"\\r\\n\"" then
+            display "CRLF "
+        else
+            display asm.tokens:asm.error.i " "
+        end if
+        incr asm.error.i
+    repeat
+    exit
+end sub-procedure
+
+#  IN: asm.error
+sub-procedure asm.error-simple
+    display "\e[31;1mAssembler error \e[0;1m(" asm.pc "):\e[0m "
     display asm.error crlf
     exit
 end sub-procedure
@@ -217,7 +257,7 @@ sub-procedure asm.tokens.to-bytecode
                 else if asm.token is equal to " " then
                 else if asm.token is equal to "\n" then
                 else
-                    join "bad token: " and asm.token in asm.error
+                    join "unknown token: " and asm.token in asm.error
                     call asm.error
                 end if
             end if
