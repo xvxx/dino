@@ -417,27 +417,11 @@ Those are the main "under the hood" tools.
 
 === TODO =============================================================
 
-* [ ] IN - SOLVE
 * [ ] LDPL Test Battery:
+   * [ ] automate
    * [ ] basicar.ldpl
-      * [ ] SOLVE
-* [?] IN - JOIN BUG
-* [ ] docs 2nd pass
-* [ ] gen errors 2nd pass
-* [ ] asm errors 2nd pass
-* [ ] function docs 2nd pass
-* [ ] REPL
-   * [ ] >> input
-   * [ ] == output
-   * [ ] readline
-   * [ ] history
-   * [ ] multi-lines
-   * [ ] asm mode
-
---- BIG TODOS BEFORE SHIPPING ----------------------------------------
-
-* [ ] Basic REPL
+      * [ ] IN - SOLVE
+* [ ] Document every function the same way.
 * [ ] Parse output -> tree view (like `tree -R`)
 * [ ] Colors in parse output
-* [x] Parse syntax error improvements
-* [ ] Document every function the same way.
+* [ ] REPL
