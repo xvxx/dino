@@ -54,6 +54,7 @@ parser.peek.n          is number
 parser.error           is text
 parser.error.i         is number
 parser.error.line      is number
+parser.error.seen?     is number
 parser.token.vector?   is number
 parser.token.vector.i  is number
 
@@ -75,14 +76,19 @@ store 2 in parser.vars:"ERRORTEXT"
 
 # IN: parser.error
 sub-procedure parser.error
+    store 0 in parser.error.seen?
     store 1 in parser.error.line
-    display "parser.error: " parser.error crlf
-    display "token " parser.run.c " of " c.Tokens* crlf
+    store "" in parser.error.out
+    display "\e[31;1mParse error:\e[0m " parser.error crlf
     display " 01 | "
     while parser.error.i is less than c.Tokens* do
         if parser.error.i is equal to parser.run.c then
             display "\e[33;1m" c.Tokens:parser.error.i "\e[0m "
+            store 1 in parser.error.seen?
         else if c.Tokens:parser.error.i is equal to tokens.NEWLINE then
+            if parser.error.seen? is equal to 1 then
+                break
+            end if
             incr parser.error.line
             if parser.error.line is less than c.Tokens* then
                 if parser.error.line is less than 10 then
@@ -389,7 +395,9 @@ sub-procedure parser.node.create
     else if "CALL" is equal to parser.token then
         call parser.advance
         if parser.token is equal to "SUB-PROCEDURE" then
-            call parser.advance
+        else if parser.token is equal to "EXTERNAL" then
+            store "dino doesn't support EXTERNALs" in parser.error
+            call parser.error
         end if
         call parser.node.set0
     else if "ELSE" is equal to parser.token then
@@ -739,7 +747,7 @@ sub-procedure parser.node.create
         store "MILLISECONDS" in parser.expect
         call parser.expect
     else
-        join "unknown token: " and parser.token in parser.error
+        join "unexpected token: " and parser.token in parser.error
         call parser.error
     end if
 

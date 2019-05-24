@@ -421,16 +421,11 @@ Those are the main "under the hood" tools.
 * [ ] LDPL Test Battery:
    * [ ] basicar.ldpl
       * [ ] SOLVE
-* [ ] IN - JOIN BUG
-* [ ] parser errors 2nd pass (only show broken line) (like rust's.)
+* [?] IN - JOIN BUG
 * [ ] docs 2nd pass
 * [ ] gen errors 2nd pass
 * [ ] asm errors 2nd pass
 * [ ] function docs 2nd pass
-* [ ] error on:
-   * [ ] CALL EXTERNAL
-   * [ ] EXTERNAL SUB-PROCEDURE
-   * [ ] var is EXTERNAL data types
 * [ ] REPL
    * [ ] >> input
    * [ ] == output
@@ -443,6 +438,6 @@ Those are the main "under the hood" tools.
 
 * [ ] Basic REPL
 * [ ] Parse output -> tree view (like `tree -R`)
-* [ ] Parse syntax error improvements
-* [ ] Basic code style guidelines: var names, fn names, dir structure
+* [ ] Colors in parse output
+* [x] Parse syntax error improvements
 * [ ] Document every function the same way.
