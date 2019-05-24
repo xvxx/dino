@@ -97,7 +97,7 @@ enjoy the fruits of this installation process:
 
    ./dino -h
 
-For added security, run Dino against the official LDPL Test Battery:
+To test Dino, run it against the official LDPL Test Battery:
 
    make test
 
@@ -109,20 +109,19 @@ properly. If not, kindly report an issue at this address:
 === HOW IT WORKS =====================================================
 
 Internally, Dino is organized into three parts: compiler, virtual
-machine, and tools, with the `dino` command line program serving as
+machine, and tooling, with the `dino` command line program serving as
 the primary means of interacting with the suite.
 
-The compiler convert LDPL source code to Dino bytecode by first lexing
-and parsing the source code, then translating it to Dino assembly,
-then finally the assembling Dino bytecode. The virtual machine loads
-bytecode into its memory then performs each instruction, just like
-your old Nintendo. Tooling includes the `dino` command line program
-for running LDPL programs and using the compiler suite, the REPL, and
-`dino dis` for displaying / disassembling dinocode.
+The architecture is pretty standard: Dino's compiler converts LDPL
+source code into bytecode using a lexer, a parser, a code generator,
+and an assembler. The virtual machine then loads that bytecode into
+its memory and performs each instruction one by one, just like your
+old Nintendo. The tooling is just the `dino` command line program that
+drives the compiler suite.
 
-The classic bytecode/VM architecture means Dino could (with changes)
-support languages other than LDPL in the future, but for now it's
-focused on supporting the full LDPL 3.0.4 specification on Linux,
+The traditional bytecode/VM architecture means Dino could (with a few
+changes) support languages other than LDPL in the future, but for now
+it's focused on supporting the full LDPL 3.0.5 specification on Linux,
 MacOS, Windows, WebAssembly, and Raspberry Pi.
 
 === BASIC USAGE ======================================================
@@ -243,8 +242,7 @@ Or, you know, just write all our code this way:
     hax!
 
 There's also `dino dis` which turns dinocode back into dinoasm, kinda.
-
-Those are the main "under the hood" tools.
+It's useful when debugging and checking or challenging assumptions.
 
 === TECHNICAL SPECIFICATION ==========================================
 
@@ -286,8 +284,6 @@ Those are the main "under the hood" tools.
    treated as the same index. This is a bug.
 
 9. The `IN - SOLVE` instruction doesn't work yet.
-
-10. The `IN - JOIN` instruction is ridiculously slow.
 
 === REFERENCE ========================================================
 
@@ -417,10 +413,6 @@ Those are the main "under the hood" tools.
 
 === TODO =============================================================
 
-* [ ] LDPL Test Battery:
-   * [ ] automate
-   * [ ] basicar.ldpl
-      * [ ] IN - SOLVE
 * [ ] Document every function the same way.
 * [ ] Parse output -> tree view (like `tree -R`)
 * [ ] Colors in parse output
