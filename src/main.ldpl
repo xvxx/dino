@@ -119,26 +119,40 @@ sub-procedure main.parse
     display "\e[1mvars (\e[34m" parser.vars* "\e[0;1m):\e[0m\n"
     store 0 in main.i
     while main.i is less than parser.vars* do
-        display "  #<" $TYPENAMES:parser.vars:parser.vars:main.i ": " parser.vars:main.i ">" crlf
+        display "  \e[33m" main.i ". \e[0m" $TYPENAMES:parser.vars:parser.vars:main.i ": " parser.vars:main.i crlf
         incr main.i
     repeat
     display "\e[0m"
     store 0 in main.i
     display "\e[1mnodes (\e[34m" c.Nodes* "\e[0;1m):\e[0m\n"
     while main.i is less than c.Nodes* do
-        display "  " c.Nodes:main.i crlf
+        display "  \e[36m" c.Nodes:main.i "\e[0m" crlf
         store 0 in main.x
         while main.x is less than 16 do
             in main.key join main.i ":" main.x
             if c.Nodes:main.key is not equal to "" then
                 join main.key and ":type" in main.tkey
-                display "    - a" main.x "(" $TYPENAMES:c.Nodes:main.tkey "): " c.Nodes:main.key crlf
+                display "    \e[33m" main.x ".\e[0m "
+                store $TYPENAMES:c.Nodes:main.tkey in main.tkey
+                if main.tkey is equal to "NML" then
+                else if main.tkey is equal to "TXL" then
+                else
+                    display "\e[0;1m<" main.tkey ">\e[0m "
+                end if
+                display c.Nodes:main.key crlf
                 store 0 in main.y
                 while main.y is less than 16 do
                     in main.akey join main.key ":" main.y
                     join main.akey and ":type" in main.tkey
                     if c.Nodes:main.akey is not equal to "" then
-                        display "      - v" main.y "(" $TYPENAMES:c.Nodes:main.tkey "): " c.Nodes:main.akey crlf
+                        display "      \e[35m" main.y ".\e[0m "
+                        store $TYPENAMES:c.Nodes:main.tkey in main.tkey
+                        if main.tkey is equal to "NML" then
+                        else if main.tkey is equal to "TXL" then
+                        else
+                            display "\e[0;1m<" main.tkey ">\e[0m "
+                        end if
+                        display c.Nodes:main.akey crlf
                     end if
                     incr main.y
                 repeat
