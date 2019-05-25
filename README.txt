@@ -109,24 +109,6 @@ properly. If not, kindly report an issue at this address:
 [1] We actually use a slightly modified version of the official LDPL
 Test Battery, since dino doesn't have a compilation step.
 
-=== HOW IT WORKS =====================================================
-
-Internally, Dino is organized into three parts: compiler, virtual
-machine, and tooling, with the `dino` command line program serving as
-the primary means of interacting with the suite.
-
-The architecture is pretty standard: Dino's compiler converts LDPL
-source code into bytecode using a lexer, a parser, a code generator,
-and an assembler. The virtual machine then loads that bytecode into
-its memory and performs each instruction one by one, just like your
-old Nintendo. The tooling is just the `dino` command line program that
-drives the compiler suite.
-
-The traditional bytecode/VM architecture means Dino could (with a few
-changes) support languages other than LDPL in the future, but for now
-it's focused on supporting the full LDPL 3.0.5 specification on Linux,
-MacOS, Windows, WebAssembly, and Raspberry Pi.
-
 === BASIC USAGE ======================================================
 
 Let's look at a simple LDPL program:
@@ -295,6 +277,24 @@ It's useful when debugging and checking or challenging assumptions.
    treated as the same index. This is a bug.
 
 9. The `IN - SOLVE` instruction doesn't work yet.
+
+=== HOW IT WORKS =====================================================
+
+Internally, Dino is organized into three parts: compiler, virtual
+machine, and tooling, with the `dino` command line program serving as
+the primary means of interacting with the suite.
+
+The architecture is pretty standard: Dino's compiler converts LDPL
+source code into bytecode using a lexer, a parser, a code generator,
+and an assembler. The virtual machine then loads that bytecode into
+its memory and performs each instruction one by one, just like your
+old Nintendo. The tooling is just the `dino` command line program that
+drives the compiler suite.
+
+The traditional bytecode/VM architecture means Dino could (with a few
+changes) support languages other than LDPL in the future, but for now
+it's focused on supporting the full LDPL 3.0.5 specification on Linux,
+MacOS, Windows, WebAssembly, and Raspberry Pi.
 
 === REFERENCE ========================================================
 
