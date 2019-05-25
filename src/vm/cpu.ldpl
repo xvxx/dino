@@ -557,8 +557,14 @@ sub-procedure cpu.Run
                 end if
                 store "" in vm.vec.keys:cpu.ty
                 store "" in vm.vec.keys:cpu.key
+                store 0 in vm.vec.keys:cpu.x
                 incr cpu.i
             repeat
+        else if $CODES:"INDEXC" is equal to cpu.code then
+            incr cpu.pc
+            store vm.Code:cpu.pc in cpu.x  # vector id
+            incr cpu.pc
+            store vm.vec.keys:cpu.x in vm.RAM:vm.Code:cpu.pc
         else
             join "BAD OPCODE: " and cpu.code in cpu.error
             if $NAMES:cpu.code is not equal to "" then

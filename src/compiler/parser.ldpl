@@ -372,6 +372,18 @@ sub-procedure parser.node.create
             call parser.expect
             call parser.advance
             call parser.node.set1
+        else if parser.token is equal to "INDEX" then
+            store "INDEX COUNT" in c.Nodes:c.Nodes*
+            store "COUNT" in parser.expect
+            call parser.expect
+            store "OF" in parser.expect
+            call parser.expect
+            call parser.advance
+            call parser.node.set0
+            store "IN" in parser.expect
+            call parser.expect
+            call parser.advance
+            call parser.node.set1
         else if parser.token is equal to "QUOTE" then
             store "QUOTE" in c.Nodes:c.Nodes*
             store "IN" in parser.expect
