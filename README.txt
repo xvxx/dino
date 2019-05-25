@@ -418,9 +418,3 @@ It's useful when debugging and checking or challenging assumptions.
 |  48  | SPLIT @x @y @a    | Split @x by @y and put in vector @a
 |  49  | REPLCE @x @y @z @a| Replace @x from @y with @z in @a
 |  4A  | TRIM @x @a        | Strip L/R whitespace from @x, put in @a.
-
-=== TODO =============================================================
-
-* [ ] Parse output -> tree view (like `tree -R`)
-* [ ] Colors in parse output
-* [ ] REPL?
