@@ -816,8 +816,7 @@ sub-procedure parser.Run
         else if parser.token is equal to tokens.NEWLINE then
             # ignore rogue newlines
         else
-            in parser.error join "unknown parser.mode: " parser.mode
-            in parser.error join parser.error " token: " parser.token
+            store "expected DATA: or PROCEDURE: section" in parser.error
             call parser.error
         end if
 
