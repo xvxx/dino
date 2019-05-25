@@ -16,6 +16,7 @@ release: src/*.ldpl src/**/*.ldpl
 	ldpl $(LDPL_FILES) src/main.ldpl -o=dino -f=-O3
 	strip dino
 	@git checkout src/version.ldpl
+	make docs
 
 ldpltest:
 	git clone https://github.com/lartu/ldpltest
