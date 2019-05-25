@@ -751,6 +751,9 @@ sub-procedure parser.node.create
         call parser.node.set0
         store "MILLISECONDS" in parser.expect
         call parser.expect
+    else if "CLEAR" is equal to parser.token then
+        call parser.advance
+        call parser.node.set0
     else
         join "unexpected token: " and parser.token in parser.error
         call parser.error

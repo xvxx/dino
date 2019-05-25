@@ -22,6 +22,7 @@ vm.Text*       is number
 vm.vec.n       is number vector
 vm.vec.t       is text vector
 vm.vec.tmp     is text vector
+vm.vec.keys    is text vector # "$id:$num": keyname, "$id:keyname": 1 or 0
 
 # tmp
 __vm.i         is number

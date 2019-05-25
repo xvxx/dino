@@ -13,6 +13,7 @@ cpu.a            is number
 cpu.x            is number
 cpu.y            is number
 cpu.z            is number
+cpu.n            is number
 cpu.i            is number
 cpu.t            is text
 cpu.ta           is text
@@ -20,6 +21,7 @@ cpu.tx           is text
 cpu.ty           is text
 cpu.tz           is text
 cpu.var          is text
+cpu.key          is text
 
 PROCEDURE:
 # Print an error and crashes.
@@ -168,6 +170,18 @@ sub-procedure cpu.Run
             else
                 join cpu.x and vm.Text:cpu.y in cpu.t
             end if
+
+            # track vector keys
+            store vm.vec.keys:cpu.t in cpu.n        # does key exist?
+            if cpu.n is equal to 0 then
+                store 1 in vm.vec.keys:cpu.t        # now it does
+                store vm.vec.keys:cpu.x in cpu.n    # vec's key count
+                incr cpu.n
+                store cpu.n in vm.vec.keys:cpu.x
+                join cpu.x and cpu.n in cpu.key
+                store cpu.t in vm.vec.keys:cpu.key  # key id to key map
+            end if
+
             if cpu.x is less than $OFFSET.TEXT then
                 if cpu.z is less than $OFFSET.TEXT then
                     store vm.RAM:cpu.z in vm.vec.n:cpu.t
@@ -181,7 +195,6 @@ sub-procedure cpu.Run
                     store vm.Text:cpu.z in vm.vec.t:cpu.t
                 end if
             end if
-
         else if $CODES:"PUTV" is equal to cpu.code then
             incr cpu.pc
             store vm.Code:cpu.pc in cpu.x # vec ID
@@ -527,6 +540,25 @@ sub-procedure cpu.Run
             store vm.Text:vm.Code:cpu.pc in cpu.tx
             incr cpu.pc
             trim cpu.tx in vm.Text:vm.Code:cpu.pc
+
+        # --- VECTOR OPERATIONS --------------------------------------
+        else if $CODES:"CLEAR" is equal to cpu.code then
+            incr cpu.pc
+            store vm.Code:cpu.pc in cpu.x        # vector id
+            store vm.vec.keys:cpu.x in cpu.n     # key count
+            store 0 in cpu.i
+            while cpu.i is less than or equal to cpu.n do
+                join cpu.x and cpu.i in cpu.ty
+                store vm.vec.keys:cpu.ty in cpu.key
+                if cpu.x is less than $OFFSET.TEXT then
+                    store 0 in vm.vec.n:cpu.key
+                else
+                    store "" in vm.vec.t:cpu.key
+                end if
+                store "" in vm.vec.keys:cpu.ty
+                store "" in vm.vec.keys:cpu.key
+                incr cpu.i
+            repeat
         else
             join "BAD OPCODE: " and cpu.code in cpu.error
             if $NAMES:cpu.code is not equal to "" then

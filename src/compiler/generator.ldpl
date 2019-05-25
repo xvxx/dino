@@ -64,6 +64,7 @@ gen.op.tkey is text
 gen.op.i is number
 gen.op.z is number
 gen.op.syms is text vector
+gen.vec.name is text
 
 # gen.emit-vector-op
 gen.vec.op   is text
@@ -410,6 +411,21 @@ sub-procedure gen.storev.emit-ops
     in gen.out join gen.out "\tSTOREV " gen.vec.op.a ", " gen.vec.op.b ", " gen.arg.varname
 end sub-procedure
 
+# Put the name sans index of a vector argument into `gen.vec.name`.
+#  IN: gen.arg
+# OUT: gen.vec.name
+sub-procedure gen.vector-name
+    call gen.arg.fetch
+    if gen.arg.type is equal to $TYPES:"NMV" then
+        join "%" and gen.arg.value in gen.vec.name
+    else if gen.arg.type is equal to $TYPES:"TXV" then
+        join "@" and gen.arg.value in gen.vec.name
+    else
+        in gen.error join "expected vector, got " gen.arg.type
+        call gen.error
+    end if
+end sub-procedure
+
 # IN: c.Nodes
 sub-procedure generator.Run
     store "" in c.Asm
@@ -655,6 +671,10 @@ sub-procedure generator.Run
                 call gen.error
             end if
             in gen.out join gen.out "\t" gen.op " " gen.op.a ", " gen.op.b ", " gen.op.c
+        else if "CLEAR" is equal to gen.node.type then
+            store 0 in gen.arg
+            call gen.vector-name
+            in gen.out join gen.out "\tCLEAR " gen.vec.name
         else if "IN JOIN" is equal to gen.node.type then
             store 0 in gen.arg
             store 1 in gen.arg.preload.no-set?
