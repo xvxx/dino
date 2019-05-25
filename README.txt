@@ -16,8 +16,8 @@ Dino is an interpreter for the LDPL programming language, written in
 LDPL. Because LDPL is a compiled language, Dino's goal is to provide a
 lightweight, scriptable version of the language that can be used to
 quickly prototype ideas or perform system tasks. Dino can also be used
-to run basic LDPL programs on systems which lack a C++11 compiler, or
-to experiment with new LDPL features. Mostly, though, Dino is a
+to run basic LDPL programs on systems which lack a C++ compiler, or to
+experiment with new LDPL features. Mostly, though, Dino is a
 prehistoric toy.
 
 === EXAMPLES =========================================================
