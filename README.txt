@@ -268,7 +268,7 @@ It's useful when debugging and checking or challenging assumptions.
 
 1. This first iteration plays fast and loose with the "byte" in
    bytecode. The .dinocode files aren't really binary and we're not
-   doing any bit shifting or funny stuff like that. Once LDPL supports
+   doing any bit shifting or fun stuff like that. Once LDPL supports
    bitwise operations we'll revisit the core design so it's more bit-
    tastic. For now, we're just using numbers.
 
