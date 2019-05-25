@@ -45,8 +45,9 @@ Dino is an interpreter for the LDPL programming language, written in
 LDPL. Because LDPL is a compiled language, Dino's goal is to provide a
 lightweight, scriptable version of the language that can be used to
 quickly prototype ideas or perform system tasks. Dino can also be used
-to run basic LDPL programs on systems which lack a C++11 compiler.
-Mostly, though, it's just a prehistoric toy.
+to run basic LDPL programs on systems which lack a C++ compiler, or to
+experiment with new LDPL features. Mostly, though, Dino is a
+prehistoric toy.
 
 === EXAMPLES =========================================================
 
@@ -125,7 +126,7 @@ enjoy the fruits of this installation process:
 
    ./dino -h
 
-For added security, run Dino against the official LDPL Test Battery:
+To test Dino, run it against the official LDPL Test Battery:
 
    make test
 
@@ -137,20 +138,19 @@ properly. If not, kindly report an issue at this address:
 === HOW IT WORKS =====================================================
 
 Internally, Dino is organized into three parts: compiler, virtual
-machine, and tools, with the `dino` command line program serving as
+machine, and tooling, with the `dino` command line program serving as
 the primary means of interacting with the suite.
 
-The compiler convert LDPL source code to Dino bytecode by first lexing
-and parsing the source code, then translating it to Dino assembly,
-then finally the assembling Dino bytecode. The virtual machine loads
-bytecode into its memory then performs each instruction, just like
-your old Nintendo. Tooling includes the `dino` command line program
-for running LDPL programs and using the compiler suite, the REPL, and
-`dino dis` for displaying / disassembling dinocode.
+The architecture is pretty standard: Dino's compiler converts LDPL
+source code into bytecode using a lexer, a parser, a code generator,
+and an assembler. The virtual machine then loads that bytecode into
+its memory and performs each instruction one by one, just like your
+old Nintendo. The tooling is just the `dino` command line program that
+drives the compiler suite.
 
-The classic bytecode/VM architecture means Dino could (with changes)
-support languages other than LDPL in the future, but for now it's
-focused on supporting the full LDPL 3.0.4 specification on Linux,
+The traditional bytecode/VM architecture means Dino could (with a few
+changes) support languages other than LDPL in the future, but for now
+it's focused on supporting the full LDPL 3.0.5 specification on Linux,
 MacOS, Windows, WebAssembly, and Raspberry Pi.
 
 === BASIC USAGE ======================================================
@@ -182,7 +182,7 @@ Okay, that seems right. Next we'll run it using Dino:
     $ dino run math.ldpl
     1+2=3
 
-Great! We can stop there. But if you want to look under the hood a
+Great! We can stop here. But if you want to look under the hood a
 bit, you can see the tokens produced by Dino's lexer for this file:
 
     $ dino lex math.ldpl
@@ -197,7 +197,8 @@ bit, you can see the tokens produced by Dino's lexer for this file:
     &lt;ADD&gt;, &lt;X&gt;, &lt;AND&gt;, &lt;Y&gt;, &lt;IN&gt;, &lt;Z&gt;, &lt;:NL:&gt;
     &lt;DISPLAY&gt;, &lt;X&gt;, &lt;"+"&gt;, &lt;Y&gt;, &lt;"="&gt;, &lt;Z&gt;, &lt;"\r\n"&gt;, &lt;:NL:&gt;
 
-Pretty fun. The next step is the parser, so let's see the parse tree:
+Pretty fun. The next step would turning those tokens into the parse
+tree, so let's see it:
 
     $ dino parse math.ldpl
     vars (3):
@@ -223,7 +224,8 @@ Pretty fun. The next step is the parser, so let's see the parse tree:
         - a4(NUM): Z
         - a5(TXL): "\r\n"
 
-These nodes are used by the generator to emit dinoasm:
+These nodes are used by the generator to emit dino assembly, our VM's
+imaginary syntax and instruction set:
 
     $ dino asm math.ldpl
         SET %var0, 1
@@ -244,35 +246,40 @@ If we want, we can save this output to a .dinoasm file and run it:
     $ dino run math.dinoasm
     1+2=3
 
-This can be helpful in debugging or development of Dino itself.
+Still looks right! Running dinoasm directly can be helpful in
+debugging or development of Dino itself.
 
-There are a few files in `examples/` with hand written dinoasm you can
-examine or run, too:
+If you want to explore further, there are a few files in `examples/`
+with hand written dinoasm you can examine or run, too:
 
     $ dino run examples/99.dinoasm
     99 bottles of beer on the wall...
 
-Finally, we can see the bytecode produced by the assembler:
+Finally, we can see the bytecode produced by the assembler for our
+LDPL computer program:
 
     $ dino bytes math.ldpl
     76 68 80 76 2 09 17 01 08 18 17 09 19 02 08 20 19 20 18 20 21 31
     18 31 16384 31 20 31 16385 31 21 31 16386 06 "+" "=" "\r\n"
 
-We can also save this output to a .dinocode file and run it directly.
-Or modify it before running it:
+While internally the bytecode is stored as a vector of numbers, when
+it's printed to the screen or loaded from a file we separate each
+number with a space and display strings literally.
+
+This means we can save `dino bytes`'s output to a .dinocode file and
+run it directly. Or even modify it before running it:
 
     $ dino bytes math.ldpl | sed 's/17 01/17 13/g' &gt; math.dinocode
     $ dino run math.dinocode
     13+2=15
 
-Or, you know, just write all our code this way:
-    $ echo "76 68 80 76 02 31 16384 31 16385 06 \"hax!\" \"\n\"" &gt; hi.dinocode
+Some prefer to write all their code this way:
+    $ echo "76 68 80 76 02 31 16384 01 -4 06 \"hax!\n\"" &gt; hi.dinocode
     $ dino run hi.dinocode
     hax!
 
 There's also `dino dis` which turns dinocode back into dinoasm, kinda.
-
-Those are the main "under the hood" tools.
+It's useful when debugging and checking or challenging assumptions.
 
 === TECHNICAL SPECIFICATION ==========================================
 
@@ -290,12 +297,12 @@ Those are the main "under the hood" tools.
 
 1. This first iteration plays fast and loose with the "byte" in
    bytecode. The .dinocode files aren't really binary and we're not
-   doing any bit shifting or funny stuff like that. Once LDPL supports
+   doing any bit shifting or fun stuff like that. Once LDPL supports
    bitwise operations we'll revisit the core design so it's more bit-
    tastic. For now, we're just using numbers.
 
 2. Dino is super slow, but that's okay. Performance may never be a
-   priority for our prehistoric VM.
+   priority.
 
 3. The bytecode format, version number, and set of CPU instructions
    are going to change a lot while this is still in development.
@@ -314,9 +321,6 @@ Those are the main "under the hood" tools.
    treated as the same index. This is a bug.
 
 9. The `IN - SOLVE` instruction doesn't work yet.
-
-10. The `IN - JOIN` instruction is ridiculously slow and possibly
-    bugged. Best to manually chain `JOIN` statements for now.
 
 === REFERENCE ========================================================
 
@@ -443,18 +447,6 @@ Those are the main "under the hood" tools.
 |  48  | SPLIT @x @y @a    | Split @x by @y and put in vector @a
 |  49  | REPLCE @x @y @z @a| Replace @x from @y with @z in @a
 |  4A  | TRIM @x @a        | Strip L/R whitespace from @x, put in @a.
-
-=== TODO =============================================================
-
-* [ ] LDPL Test Battery:
-   * [ ] automate
-   * [ ] basicar.ldpl
-      * [ ] IN - SOLVE
-* [ ] Document every function the same way.
-* [ ] Parse output -&gt; tree view (like `tree -R`)
-* [ ] Colors in parse output
-* [ ] New introduction
-* [ ] REPL?
 
    </div>
 </body>
