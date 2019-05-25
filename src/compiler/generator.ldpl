@@ -671,6 +671,13 @@ sub-procedure generator.Run
                 call gen.error
             end if
             in gen.out join gen.out "\t" gen.op " " gen.op.a ", " gen.op.b ", " gen.op.c
+        else if "INDICES" is equal to gen.node.type then
+            store 0 in gen.arg
+            call gen.vector-name
+            store 1 in gen.arg
+            store 1 in gen.arg.preload.no-set?
+            call gen.arg.preload
+            in gen.out join gen.out "\tINDEXS " gen.vec.name ", " gen.arg.varname
         else if "INDEX COUNT" is equal to gen.node.type then
             store 0 in gen.arg
             call gen.vector-name

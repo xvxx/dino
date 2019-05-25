@@ -22,6 +22,7 @@ cpu.ty           is text
 cpu.tz           is text
 cpu.var          is text
 cpu.key          is text
+cpu.parts        is text vector
 
 PROCEDURE:
 # Print an error and crashes.
@@ -166,20 +167,19 @@ sub-procedure cpu.Run
             store vm.Code:cpu.pc in cpu.z # value
             # set key
             if cpu.y is less than $OFFSET.TEXT then
-                join cpu.x and vm.RAM:cpu.y in cpu.t
+                in cpu.t join cpu.x ":" vm.RAM:cpu.y
             else
-                join cpu.x and vm.Text:cpu.y in cpu.t
+                in cpu.t join cpu.x ":" vm.Text:cpu.y
             end if
-
             # track vector keys
             store vm.vec.keys:cpu.t in cpu.n        # does key exist?
             if cpu.n is equal to 0 then
                 store 1 in vm.vec.keys:cpu.t        # now it does
                 store vm.vec.keys:cpu.x in cpu.n    # vec's key count
+                in cpu.key join cpu.x ":" cpu.n
+                store cpu.t in vm.vec.keys:cpu.key  # key id to key map
                 incr cpu.n
                 store cpu.n in vm.vec.keys:cpu.x
-                join cpu.x and cpu.n in cpu.key
-                store cpu.t in vm.vec.keys:cpu.key  # key id to key map
             end if
 
             if cpu.x is less than $OFFSET.TEXT then
@@ -204,9 +204,9 @@ sub-procedure cpu.Run
             store vm.Code:cpu.pc in cpu.z # target
             # set key
             if cpu.y is less than $OFFSET.TEXT then
-                join cpu.x and vm.RAM:cpu.y in cpu.t
+                in cpu.t join cpu.x ":" vm.RAM:cpu.y
             else
-                join cpu.x and vm.Text:cpu.y in cpu.t
+                in cpu.t join cpu.x ":" vm.Text:cpu.y
             end if
             if cpu.x is less than $OFFSET.TEXT then
                 if cpu.z is less than $OFFSET.TEXT then
@@ -548,7 +548,7 @@ sub-procedure cpu.Run
             store vm.vec.keys:cpu.x in cpu.n     # key count
             store 0 in cpu.i
             while cpu.i is less than or equal to cpu.n do
-                join cpu.x and cpu.i in cpu.ty
+                in cpu.ty join cpu.x ":" cpu.i
                 store vm.vec.keys:cpu.ty in cpu.key
                 if cpu.x is less than $OFFSET.TEXT then
                     store 0 in vm.vec.n:cpu.key
@@ -560,11 +560,35 @@ sub-procedure cpu.Run
                 store 0 in vm.vec.keys:cpu.x
                 incr cpu.i
             repeat
+        else if $CODES:"INDEXS" is equal to cpu.code then
+            incr cpu.pc
+            store vm.Code:cpu.pc in cpu.x        # vector id
+            incr cpu.pc
+            store vm.Code:cpu.pc in cpu.y        # target vector id
+            if cpu.y is less than $OFFSET.TEXT then
+                store "INDICES must go into text vector" in cpu.error
+                call cpu.error
+            end if
+            store vm.vec.keys:cpu.x in cpu.n     # key count
+            store 0 in cpu.i
+            while cpu.i is less than or equal to cpu.n do
+                in cpu.tx join cpu.x ":" cpu.i
+                in cpu.ty join cpu.y ":" cpu.i
+                store vm.vec.keys:cpu.tx in vm.vec.t:cpu.ty
+                split vm.vec.t:cpu.ty by ":" in cpu.parts
+                store cpu.parts:1 in vm.vec.t:cpu.ty
+                incr cpu.i
+            repeat
         else if $CODES:"INDEXC" is equal to cpu.code then
             incr cpu.pc
             store vm.Code:cpu.pc in cpu.x  # vector id
             incr cpu.pc
-            store vm.vec.keys:cpu.x in vm.RAM:vm.Code:cpu.pc
+            store vm.Code:cpu.pc in cpu.y  # count var
+            if cpu.y is greater than or equal to $OFFSET.TEXT then
+                store "INDEX COUNT must go into number variable" in cpu.error
+                call cpu.error
+            end if
+            store vm.vec.keys:cpu.x in vm.RAM:cpu.y
         else
             join "BAD OPCODE: " and cpu.code in cpu.error
             if $NAMES:cpu.code is not equal to "" then
