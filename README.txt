@@ -397,6 +397,29 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 |  52  | INDEXC %v %a      | Store index count of vector %v in %a
 |  53  | INDEXS %v @v      | Store indices of vector %v in vector @v
 
+=== TODO =============================================================
+
+* [ ] CLEAR
+        * [ ] OPCODE
+        * [ ] PARSER
+        * [ ] GENERATOR
+        * [ ] CPU
+* [ ] COPY
+        * [ ] OPCODE
+        * [ ] PARSER
+        * [ ] GENERATOR
+        * [ ] CPU
+* [ ] INDEXC
+        * [ ] OPCODE
+        * [ ] PARSER
+        * [ ] GENERATOR
+        * [ ] CPU
+* [ ] INDEXS
+        * [ ] OPCODE
+        * [ ] PARSER
+        * [ ] GENERATOR
+        * [ ] CPU
+
 === ISSUES ===========================================================
 
 1. This first iteration plays fast and loose with the "byte" in
