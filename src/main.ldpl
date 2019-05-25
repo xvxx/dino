@@ -131,13 +131,13 @@ sub-procedure main.parse
     store 0 in main.i
     display "\e[1mnodes (\e[34m" c.Nodes* "\e[0;1m):\e[0m\n"
     while main.i is less than c.Nodes* do
-        display "  \e[36m" c.Nodes:main.i "\e[0m" crlf
+        display "\e[36m" c.Nodes:main.i "\e[0m" crlf
         store 0 in main.x
         while main.x is less than 16 do
             in main.key join main.i ":" main.x
             if c.Nodes:main.key is not equal to "" then
                 join main.key and ":type" in main.tkey
-                display "    \e[33m" main.x ".\e[0m "
+                display "  \e[33m" main.x ".\e[0m "
                 store $TYPENAMES:c.Nodes:main.tkey in main.tkey
                 if main.tkey is equal to "NML" then
                 else if main.tkey is equal to "TXL" then
@@ -150,7 +150,7 @@ sub-procedure main.parse
                     in main.akey join main.key ":" main.y
                     join main.akey and ":type" in main.tkey
                     if c.Nodes:main.akey is not equal to "" then
-                        display "      \e[35m" main.y ".\e[0m "
+                        display "    \e[35m" main.y ".\e[0m "
                         store $TYPENAMES:c.Nodes:main.tkey in main.tkey
                         if main.tkey is equal to "NML" then
                         else if main.tkey is equal to "TXL" then
