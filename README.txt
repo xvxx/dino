@@ -17,8 +17,8 @@ LDPL. Because LDPL is a compiled language, Dino's goal is to provide a
 lightweight, scriptable version of the language that can be used to
 quickly prototype ideas or perform system tasks. Dino can also be used
 to run basic LDPL programs on systems which lack a C++ compiler, or to
-experiment with new LDPL features. Mostly, though, Dino is a
-prehistoric toy.
+experiment with new LDPL language features and syntax. Mostly, though,
+it's a prehistoric toy.
 
 === EXAMPLES =========================================================
 
@@ -27,21 +27,21 @@ HELLO:
     $ cat hi.ldpl
     PROCEDURE:
     display "Hey pardner" crlf
-    $ dino run hi.ldpl
+    $ dino hi.ldpl
     Hey pardner
 
 LDPL-SPARK:
 
     $ git clone https://github.com/photogabble/ldpl-spark
-    $ dino run ldpl-spark/spark.ldpl 9 13 5 17 1
+    $ dino ldpl-spark/spark.ldpl 9 13 5 17 1
     ▄▆▂█▁
-    $ dino run ldpl-spark/spark.ldpl 0 30 55 80 33 150
+    $ dino ldpl-spark/spark.ldpl 0 30 55 80 33 150
     ▁▂▃▄▂█
 
 LDPL-SPACE-MINES:
 
     $ git clone https://github.com/photogabble/ldpl-space-mines
-    $ dino run ldpl-space-mines/spacemines.ldpl
+    $ dino ldpl-space-mines/spacemines.ldpl
     ==================================================
     YEAR 1:
 
@@ -50,13 +50,12 @@ LDPL-SPACE-MINES:
 LBI:
 
     $ git clone https://github.com/Lartu/LBI
-    $ dino run LBI/src/LBI.ldpl LBI/examples/fib.b
-    dino run LBI/src/LBI.ldpl LBI/examples/fib.b
+    $ dino LBI/src/LBI.ldpl LBI/examples/fib.b
     0
     1
     1
     2...
-    $ dino run LBI/src/LBI.ldpl LBI/examples/squares.b
+    $ dino LBI/src/LBI.ldpl LBI/examples/squares.b
     0
     1
     4
@@ -65,12 +64,12 @@ LBI:
 LDPL Examples:
 
     $ git clone https://github.com/lartu/ldpl
-    $ dino run ldpl/examples/explode.ldpl
+    $ dino ldpl/examples/explode.ldpl
     Enter a sentence: That's all folks!
     That's
     all
     folks!
-    $ dino run ldpl/examples/sqrt.ldpl
+    $ dino ldpl/examples/sqrt.ldpl
     Enter a number: 50
     sqrt(50) = 7.07106781186548
 
@@ -107,7 +106,7 @@ properly. If not, kindly report an issue at this address:
    https://github.com/dvkt/dino/issues
 
 [1] We actually use a slightly modified version of the official LDPL
-Test Battery, since dino doesn't have a compilation step.
+Test Battery, since Dino doesn't have a compilation step.
 
 === BASIC USAGE ======================================================
 
@@ -135,7 +134,7 @@ First we'll run it using LDPL 3.0.5 as a sanity check:
 
 Okay, that seems right. Next we'll run it using Dino:
 
-    $ dino run math.ldpl
+    $ dino math.ldpl
     1+2=3
 
 Great! We can stop here. But if you want to look under the hood a
@@ -158,27 +157,27 @@ tree, so let's see it:
 
     $ dino parse math.ldpl
     vars (3):
-    #<NUM: X>
-    #<NUM: Y>
-    #<NUM: Z>
+    0. NUM: X
+    1. NUM: Y
+    2. NUM: Z
     nodes (4):
     STORE
-        - a0(NML): 1
-        - a1(NUM): X
+    0. 1
+    1. <NUM> X
     STORE
-        - a0(NML): 2
-        - a1(NUM): Y
+    0. 2
+    1. <NUM> Y
     ADD
-        - a0(NUM): X
-        - a1(NUM): Y
-        - a2(NUM): Z
+    0. <NUM> X
+    1. <NUM> Y
+    2. <NUM> Z
     DISPLAY
-        - a0(NUM): X
-        - a1(TXL): "+"
-        - a2(NUM): Y
-        - a3(TXL): "="
-        - a4(NUM): Z
-        - a5(TXL): "\r\n"
+    0. <NUM> X
+    1. "+"
+    2. <NUM> Y
+    3. "="
+    4. <NUM> Z
+    5. "\r\n"
 
 These nodes are used by the generator to emit dino assembly, our VM's
 imaginary syntax and instruction set:
@@ -199,7 +198,7 @@ imaginary syntax and instruction set:
 
 If we want, we can save this output to a .dinoasm file and run it:
 
-    $ dino run math.dinoasm
+    $ dino math.dinoasm
     1+2=3
 
 Still looks right! Running dinoasm directly can be helpful in
@@ -208,7 +207,7 @@ debugging or development of Dino itself.
 If you want to explore further, there are a few files in `examples/`
 with hand written dinoasm you can examine or run, too:
 
-    $ dino run examples/99.dinoasm
+    $ dino examples/99.dinoasm
     99 bottles of beer on the wall...
 
 Finally, we can see the bytecode produced by the assembler for our
@@ -226,57 +225,16 @@ This means we can save `dino bytes`'s output to a .dinocode file and
 run it directly. Or even modify it before running it:
 
     $ dino bytes math.ldpl | sed 's/17 01/17 13/g' > math.dinocode
-    $ dino run math.dinocode
+    $ dino math.dinocode
     13+2=15
 
 Some prefer to write all their code this way:
     $ echo "76 68 80 76 02 31 16384 01 -4 06 \"hax!\n\"" > hi.dinocode
-    $ dino run hi.dinocode
+    $ dino hi.dinocode
     hax!
 
 There's also `dino dis` which turns dinocode back into dinoasm, kinda.
 It's useful when debugging and checking or challenging assumptions.
-
-=== TECHNICAL SPECIFICATION ==========================================
-
-* "Words" are LDPL numbers.
-* Instructions are 1-4 words: opcode and then operands.
-* Two native types are number and text.
-* 11 number registers: $a, $x, $y, $z, $e, $c, $i, $t, $sp, $pc, $ac
-* $sp is stack pointer, $pc is program counter, $ac is argc, $e error code
-* 5 text registers: @a, @x, @y, @t, @e
-* One address space for number registers, number variables, text
-  registers, text variables, and text literals.
-* Parallel address space for number vectors and text vectors.
-
-=== ISSUES ===========================================================
-
-1. This first iteration plays fast and loose with the "byte" in
-   bytecode. The .dinocode files aren't really binary and we're not
-   doing any bit shifting or fun stuff like that. Once LDPL supports
-   bitwise operations we'll revisit the core design so it's more bit-
-   tastic. For now, we're just using numbers.
-
-2. Dino is super slow, but that's okay. Performance may never be a
-   priority.
-
-3. The bytecode format, version number, and set of CPU instructions
-   are going to change a lot while this is still in development.
-
-4. Extensions are not, and probably won't ever be, supported.
-
-5. Nothing is optimized at all, not even number constants. There are
-   way too many instructions generated in most cases.
-
-6. There is hardly any error checking yet, so you might end up
-   generating bytecode that can't be run without knowing why.
-
-7. Nested vectors don't work yet, like: `vec1:vec2:2`
-
-8. Due to the way vectors are stored internally, both "1" and 1 are
-   treated as the same index. This is a bug.
-
-9. The `IN - SOLVE` instruction doesn't work yet.
 
 === HOW IT WORKS =====================================================
 
@@ -295,6 +253,18 @@ The traditional bytecode/VM architecture means Dino could (with a few
 changes) support languages other than LDPL in the future, but for now
 it's focused on supporting the full LDPL 3.0.5 specification on Linux,
 MacOS, Windows, WebAssembly, and Raspberry Pi.
+
+=== TECHNICAL SPECIFICATION ==========================================
+
+* "Words" are LDPL numbers.
+* Instructions are 1-4 words: opcode and then operands.
+* Two native types are number and text.
+* 11 number registers: $a, $x, $y, $z, $e, $c, $i, $t, $sp, $pc, $ac
+* $sp is stack pointer, $pc is program counter, $ac is argc, $e error code
+* 5 text registers: @a, @x, @y, @t, @e
+* One address space for number registers, number variables, text
+  registers, text variables, and text literals.
+* Parallel address space for number vectors and text vectors.
 
 === REFERENCE ========================================================
 
@@ -423,3 +393,31 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 |  4A  | TRIM @x @a        | Strip L/R whitespace from @x, put in @a.
 | ==== | ================  | VECTOR OPERATIONS =======================
 |  50  | CLEAR %v          | Clears vector %v.
+
+=== ISSUES ===========================================================
+
+1. This first iteration plays fast and loose with the "byte" in
+   bytecode. The .dinocode files aren't really binary and we're not
+   doing any bit shifting or fun stuff like that. Once LDPL supports
+   bitwise operations we'll revisit the core design so it's more bit-
+   tastic. For now, we're just using numbers.
+
+2. Dino is super slow. Performance may never be a priority.
+
+3. The bytecode format, version number, and set of CPU instructions
+   are going to change a lot while this is still in development.
+
+4. Extensions are not, and probably won't ever be, supported.
+
+5. Nothing is optimized at all, not even number constants. There are
+   way too many instructions generated in most cases.
+
+6. There is hardly any error checking yet, so you might end up
+   generating bytecode that can't be run without knowing why.
+
+7. Nested vectors don't work yet, like: `vec1:vec2:2`
+
+8. Due to the way vectors are stored internally, both "1" and 1 are
+   treated as the same index. This is a bug.
+
+9. The `IN - SOLVE` instruction doesn't work yet.
