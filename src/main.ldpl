@@ -89,12 +89,6 @@ sub-procedure main.help
     display "    $ dino asm spacemines.ldpl          # print dino assembly" crlf
 end sub-procedure
 
-# --- READ-EVAL-PRINT-LOOP -------------------------------------------
-# $ dino repl
-# The REPL reads, evaluates, and prints LDPL source code in a loop.
-sub-procedure main.repl
-end sub-procedure
-
 # --- LEX FILE -------------------------------------------------------
 # $ dino lex file.ldpl
 # IN: main.file
