@@ -393,6 +393,9 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 |  4A  | TRIM @x @a        | Strip L/R whitespace from @x, put in @a.
 | ==== | ================  | VECTOR OPERATIONS =======================
 |  50  | CLEAR %v          | Clears vector %v.
+|  51  | COPY %x %y        | Copies contents of vector %x to vector %y
+|  52  | INDEXC %v %a      | Store index count of vector %v in %a
+|  53  | INDEXS %v @v      | Store indices of vector %v in vector @v
 
 === ISSUES ===========================================================
 
