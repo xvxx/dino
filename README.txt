@@ -399,21 +399,13 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 
 === TODO =============================================================
 
-* [ ] CLEAR
-        * [ ] OPCODE
-        * [ ] PARSER
-        * [ ] GENERATOR
-        * [ ] CPU
+* [x] CLEAR
 * [ ] COPY
         * [ ] OPCODE
         * [ ] PARSER
         * [ ] GENERATOR
         * [ ] CPU
-* [ ] INDEXC
-        * [ ] OPCODE
-        * [ ] PARSER
-        * [ ] GENERATOR
-        * [ ] CPU
+* [x] INDEXC
 * [ ] INDEXS
         * [ ] OPCODE
         * [ ] PARSER
