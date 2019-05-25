@@ -153,7 +153,7 @@ bit, you can see the tokens produced by Dino's lexer for this file:
     <DISPLAY>, <X>, <"+">, <Y>, <"=">, <Z>, <"\r\n">, <:NL:>
 
 Pretty fun. The next step would turning those tokens into the parse
-tree, so let's see it:
+tree, which you can see using `dino parse`:
 
     $ dino parse math.ldpl
     vars (3):
@@ -447,3 +447,11 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
    treated as the same index. This is a bug.
 
 9. The `IN - SOLVE` instruction doesn't work yet.
+
+10. You can't use `-i=` to include files yet. For now, `cat` them all
+    together and use `dino -` to run a program from stdin.
+
+    So this:
+        $ ldpl -i=lib.ldpl main.ldpl
+    becomes:
+        $ cat lib.ldpl main.ldpl | dino -
