@@ -97,7 +97,7 @@ enjoy the fruits of this installation process:
 
    ./dino -h
 
-To test Dino, run it against the official LDPL Test Battery:
+To test Dino, run it against the official LDPL Test Battery[1]:
 
    make test
 
@@ -105,6 +105,9 @@ You should see another "success" message if everything is working
 properly. If not, kindly report an issue at this address:
 
    https://github.com/dvkt/dino/issues
+
+[1] We actually use a slightly modified version of the official LDPL
+Test Battery, since dino doesn't have a compilation step.
 
 === HOW IT WORKS =====================================================
 
@@ -406,7 +409,7 @@ It's useful when debugging and checking or challenging assumptions.
 |  37  | READ @x @a        | Read file at path @x into @a. Sets $e, @e
 |  38  | WRITE @x @y       | Write @x to file at path @y.
 |  39  | APPEND @x @y      | Append @x to file at path @y.
-| ==== | ================  | TEXT OPERATIONS =========================
+| ==== | ================= | TEXT OPERATIONS =========================
 |  40  | LEN @x $a         | Get length of string in @x.
 |  41  | JOIN @x @y @a     | Concatenate text in registers into @a.
 |  42  | GETC $x @str @a   | Get character in @str at $x and put into @a.
@@ -418,3 +421,5 @@ It's useful when debugging and checking or challenging assumptions.
 |  48  | SPLIT @x @y @a    | Split @x by @y and put in vector @a
 |  49  | REPLCE @x @y @z @a| Replace @x from @y with @z in @a
 |  4A  | TRIM @x @a        | Strip L/R whitespace from @x, put in @a.
+| ==== | ================  | VECTOR OPERATIONS =======================
+|  50  | CLEAR %v          | Clears vector %v.
