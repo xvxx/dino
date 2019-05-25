@@ -332,11 +332,16 @@ sub-procedure main
         call main.version
     else
         store main.command in main.ext
+        store main.command in main.file
         call main.ext
         if main.ext is equal to "LDPL" then
+            call main.run.ldpl
         else if main.ext is equal to "LSC" then
+            call main.run.ldpl
         else if main.ext is equal to "DINOASM" then
+            call main.run.dinoasm
         else if main.ext is equal to "DINOCODE" then
+            call main.run.dinocode
         else
             call main.help
         end if
