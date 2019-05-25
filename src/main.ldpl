@@ -70,7 +70,7 @@ end sub-procedure
 # --- DISPLAY HELP ---------------------------------------------------
 # $ dino help
 sub-procedure main.help
-    display "Usage: $ dino [command] [options...]" crlf
+    display "Usage: dino <command> [path]" crlf
     display crlf
     display "Commands:" crlf
     display "    " "run  " "    " "execute .ldpl, .dinoasm, or .dinocode file" crlf
@@ -81,10 +81,12 @@ sub-procedure main.help
     display "    " "parse" "    " "parse .ldpl file and print nodes" crlf
     display "    " "help " "    " "print help screen" crlf
     display crlf
+    display "    When no command is given, `run` is assumed." crlf
+    display crlf
     display "Examples:" crlf
-    display "    $ dino run spark.ldpl 1 3 7 12 22 31  # run file with args" crlf
-    display "    $ dino bytes gild.ldpl                # print dino bytecode" crlf
-    display "    $ dino asm spacemines.ldpl            # print dino assembly" crlf
+    display "    $ dino spark.ldpl 1 3 7 12 22 31    # run file with args" crlf
+    display "    $ dino bytes gild.ldpl              # print dino bytecode" crlf
+    display "    $ dino asm spacemines.ldpl          # print dino assembly" crlf
 end sub-procedure
 
 # --- READ-EVAL-PRINT-LOOP -------------------------------------------
