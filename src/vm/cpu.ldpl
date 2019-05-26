@@ -521,7 +521,7 @@ sub-procedure cpu.Run
             store 0 in cpu.i
             store vm.vec.tmp:0 in cpu.t
             while cpu.i is less than cpu.y do
-                join cpu.x and cpu.i in cpu.tz # key
+                in cpu.tz join cpu.x ":" cpu.i  # key
                 store vm.vec.tmp:cpu.i in cpu.t
                 store cpu.t in vm.vec.t:cpu.tz
                 incr cpu.i
