@@ -19,10 +19,12 @@ release: src/*.ldpl src/**/*.ldpl
 	make docs
 
 ldpltest:
-	git clone https://github.com/lartu/ldpltest
+	git clone https://github.com/dvkt/ldpltest
+	cd ldpltest && git checkout test-runner
 
-test: ldpltest
-	cd ldpltest && dino run tester.ldpl
+test: ldpltest dino
+	cd ldpltest && git pull
+	cd ldpltest && dino tester.ldpl -r=dino
 
 # remember to escape $ in the text
 define VERSIONLDPL
@@ -40,3 +42,4 @@ version:
 
 clean:
 	rm -f dino
+	rm -rf ldpltest
