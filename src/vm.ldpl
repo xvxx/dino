@@ -49,7 +49,7 @@ sub-procedure vm.Boot
     end if
     store 0 in __vm.x
     while __vm.i is less than ARGC do
-        join $OFFSET.ARGV and __vm.x in __vm.key
+        in __vm.key join $OFFSET.ARGV ":" __vm.x
         store ARGV:__vm.i in vm.vec.t:__vm.key
         incr __vm.i
         incr __vm.x
