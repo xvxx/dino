@@ -32,7 +32,8 @@ __vm.key       is text
 
 PROCEDURE:
 # vm must be booted (initalized) before it can run
-sub-procedure vm.boot
+# TODO: call this in vm.Run or something instead.
+sub-procedure vm.Boot
     if __vm.boot is not equal to 0 then
         return
     end if
