@@ -776,6 +776,13 @@ sub-procedure parser.node.create
     else if "CLEAR" is equal to parser.token then
         call parser.advance
         call parser.node.set0
+    else if "COPY" is equal to parser.token then
+        call parser.advance
+        call parser.node.set0
+        store "TO" in parser.expect
+        call parser.expect
+        call parser.advance
+        call parser.node.set1
     else
         join "unexpected token: " and parser.token in parser.error
         call parser.error

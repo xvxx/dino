@@ -560,6 +560,38 @@ sub-procedure cpu.Run
                 store 0 in vm.vec.keys:cpu.x
                 incr cpu.i
             repeat
+        else if $CODES:"COPY" is equal to cpu.code then
+            incr cpu.pc
+            store vm.Code:cpu.pc in cpu.x        # src vector
+            incr cpu.pc
+            store vm.Code:cpu.pc in cpu.y        # dst vector
+            store vm.vec.keys:cpu.x in cpu.n     # key count
+            store cpu.n in vm.vec.keys:cpu.y
+            store 0 in cpu.i
+            while cpu.i is less than cpu.n do
+                in cpu.tx join cpu.x ":" cpu.i
+                in cpu.ty join cpu.y ":" cpu.i
+                store vm.vec.keys:cpu.tx in cpu.key
+                split cpu.key by ":" in cpu.parts
+                store cpu.parts:1 in cpu.key
+                in cpu.key join cpu.y ":" cpu.key
+                store cpu.key in vm.vec.keys:cpu.ty
+                store 1 in vm.vec.keys:cpu.key
+                if cpu.x is less than $OFFSET.TEXT then
+                    if cpu.y is less than $OFFSET.TEXT then
+                        store vm.vec.n:cpu.tx in vm.vec.n:cpu.ty
+                    else
+                        store vm.vec.n:cpu.tx in vm.vec.t:cpu.ty
+                    end if
+                else
+                    if cpu.y is less than $OFFSET.TEXT then
+                        store vm.vec.t:cpu.tx in vm.vec.n:cpu.ty
+                    else
+                        store vm.vec.t:cpu.tx in vm.vec.t:cpu.ty
+                    end if
+                end if
+                incr cpu.i
+            repeat
         else if $CODES:"INDEXS" is equal to cpu.code then
             incr cpu.pc
             store vm.Code:cpu.pc in cpu.x        # vector id

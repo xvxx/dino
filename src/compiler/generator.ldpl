@@ -684,6 +684,13 @@ sub-procedure generator.Run
             store 1 in gen.arg
             call gen.arg.preload
             in gen.out join gen.out "\tINDEXC " gen.vec.name ", " gen.arg.varname
+        else if "COPY" is equal to gen.node.type then
+            store 0 in gen.arg
+            call gen.vector-name
+            store gen.vec.name in gen.op.a
+            store 1 in gen.arg
+            call gen.vector-name
+            in gen.out join gen.out "\tCOPY " gen.op.a ", " gen.vec.name
         else if "CLEAR" is equal to gen.node.type then
             store 0 in gen.arg
             call gen.vector-name
