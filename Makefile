@@ -19,8 +19,7 @@ release: src/*.ldpl src/**/*.ldpl
 	make docs
 
 ldpltest:
-	git clone https://github.com/dvkt/ldpltest
-	cd ldpltest && git checkout test-runner
+	git clone https://github.com/lartu/ldpltest
 
 test: ldpltest dino
 	cd ldpltest && git pull
