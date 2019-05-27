@@ -449,13 +449,10 @@ MacOS, Windows, WebAssembly, and Raspberry Pi.
 
 7. Nested vectors don't work yet, like: `vec1:vec2:2`
 
-8. Due to the way vectors are stored internally, both "1" and 1 are
-   treated as the same index. This is a bug.
+8. The `IN - SOLVE` instruction doesn't work yet.
 
-9. The `IN - SOLVE` instruction doesn't work yet.
-
-10. You can't use `-i=` to include files yet. For now, `cat` them all
-    together and use `dino -` to run a program from stdin.
+9. You can't use `-i=` to include files yet. For now, `cat` them all
+   together and use `dino -` to run a program from stdin.
 
     So this:
         $ ldpl -i=lib.ldpl main.ldpl
