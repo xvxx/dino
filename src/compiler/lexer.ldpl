@@ -207,4 +207,8 @@ sub-procedure lexer.Run
         # increment reader counter
         add 1 and lexer.ci in lexer.ci
     repeat
+
+    if lexer.token is not equal to "" then
+        call lexer.token.push
+    end if
 end sub-procedure
