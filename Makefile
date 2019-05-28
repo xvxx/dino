@@ -23,7 +23,7 @@ ldpltest:
 
 test: ldpltest dino
 	cd ldpltest && git pull
-	cd ldpltest && dino tester.ldpl -r=dino
+	cd ldpltest && ../dino tester.ldpl -r=../../dino
 
 # remember to escape $ in the text
 define VERSIONLDPL
