@@ -8,7 +8,7 @@
       }
       body {
          background-color: white;
-         background: url(./bg.png);
+         background: url(./img/bg.png);
       }
       #manual {
          padding: 0 10px;
@@ -24,6 +24,9 @@
          font-weight: bold;
       }
    </style>
+   <link rel="apple-touch-icon" sizes="180x180" href="./img/apple-touch-icon.png">
+   <link rel="icon" type="image/png" sizes="32x32" href="./img/favicon-32x32.png">
+   <link rel="icon" type="image/png" sizes="16x16" href="./img/favicon-16x16.png">
 </head>
 <body>
    <div id="manual">
