@@ -82,7 +82,7 @@ in your $PATH:
 
 Once that's done, clone Dino:
 
-   git clone https://github.com/dvkt/dino
+   git clone https://github.com/xvxx/dino
 
 And build it:
 
@@ -103,7 +103,7 @@ To test Dino, run it against the official LDPL Test Battery[1]:
 You should see another "success" message if everything is working
 properly. If not, kindly report an issue at this address:
 
-   https://github.com/dvkt/dino/issues
+   https://github.com/xvxx/dino/issues
 
 [1] We actually use a slightly modified version of the official LDPL
 Test Battery, since Dino doesn't have a compilation step.
